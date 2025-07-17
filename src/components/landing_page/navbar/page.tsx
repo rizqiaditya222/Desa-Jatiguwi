@@ -17,7 +17,7 @@ const Navbar = () => {
         <NavButton text="Kontak" href=""/>
       </div>
       
-      <PrimaryLinkButton text="Login" href="/login" />
+      <PrimaryLinkButton text="Login" href="/auth/login" />
 
     </div>
   )

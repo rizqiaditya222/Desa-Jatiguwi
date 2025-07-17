@@ -5,6 +5,7 @@ import SelayangPandang from '@/components/landing_page/selayang_pandang/page'
 import VideoSection from '@/components/landing_page/video/page'
 import VisiMisi from '@/components/landing_page/visi_misi/page'
 import React from 'react'
+import AuthComponent from './auth/login/page'
 
 const Home = () => {
   return (
