@@ -2,7 +2,7 @@ import React from "react";
 
 const SelayangPandang = () => {
   return (
-    <div className="bg-[#0E4D45]  p-12 space-y-10 w-full flex flex-col ">
+    <div className="bg-[#0E4D45]  py-12 px-24 space-y-10 w-full flex flex-col ">
       <div className="flex justify-between ">
         <p className="text-4xl font-bold text-white">Selayang Pandang</p>
         <p className="w-2/5 text-end text-[#fafafa]">
