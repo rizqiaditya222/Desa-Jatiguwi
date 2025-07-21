@@ -79,26 +79,26 @@ const SelayangPandang = () => {
             src="img/bulat2.png"
             alt="Decoration"
           />
-          <div className="grid grid-cols-4 gap-4 mx-auto 2xl:w-360 place-items-center ">
-            <div className="content-center p-4 text-center transform rotate-45 bg-white rounded-4xl size-36 2xl:size-48 ">
+          <div className="grid grid-cols-4 gap-4  2xl:w-auto max-w-360 mx-auto place-items-center">
+            <div className="content-center p-4 text-center transform rotate-45 bg-white rounded-4xl size-30 2xl:size-36">
               <div className="flex flex-col -rotate-45 ">
                 <p className="text-4xl font-bold text-[#0E4D45]">3</p>
                 <p className="text-2xl text-[#0E4D45]">Dusun</p>
               </div>
             </div>
-            <div className="content-center p-4 text-center transform rotate-45 translate-y-24 bg-white rounded-4xl size-36 2xl:size-48 ">
+            <div className="content-center p-4 text-center transform rotate-45 translate-y-24 bg-white rounded-4xl size-30 2xl:size-36 ">
               <div className="flex flex-col -rotate-45 ">
                 <p className="text-4xl font-bold text-[#0E4D45]">9</p>
                 <p className="text-[#0E4D45] text-2xl">RW</p>
               </div>
             </div>
-            <div className="content-center p-4 text-center transform rotate-45 bg-white rounded-4xl size-36 2xl:size-48">
+            <div className="content-center p-4 text-center transform rotate-45 bg-white rounded-4xl size-30 2xl:size-36">
               <div className="flex flex-col -rotate-45">
                 <p className="text-4xl font-bold text-[#0E4D45]">40</p>
                 <p className="text-[#0E4D45] text-2xl ">RT</p>
               </div>
             </div>
-            <div className="content-center p-4 text-center transform rotate-45 translate-y-24 bg-white rounded-4xl size-36 2xl:size-48 ">
+            <div className="content-center p-4 text-center transform rotate-45 translate-y-24 bg-white rounded-4xl size-30 2xl:size-36">
               <div className="flex flex-col -rotate-45">
                 <p className="text-4xl font-bold text-[#0E4D45]">2126</p>
                 <p className="text-[#0E4D45] text-2xl">KK</p>

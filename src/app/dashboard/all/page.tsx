@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import {
   getFirestore,
   collection,
@@ -20,6 +22,10 @@ import {
 } from 'firebase/firestore';
 
 import app from '@/lib/firebase/clientApps';
+
+// Import xlsx and file-saver
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 
 const db = getFirestore(app);
 
@@ -85,6 +91,20 @@ export default function AllPendudukPage() {
   // Form data
   const [formData, setFormData] = useState<Partial<PendudukData>>({});
 
+  const router = useRouter();
+  const auth = getAuth(app);
+
+  // --- Authentication Redirect Logic ---
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        router.replace('/auth/login');
+      }
+    });
+
+    return () => unsubscribe();
+  }, [auth, router]);
+
   const emptyFormData: Partial<PendudukData> = {
     AGAMA: '',
     AGAMA_KET: '',
@@ -120,61 +140,66 @@ export default function AllPendudukPage() {
     TELP: '',
     TGL_KWN: '',
   };
-const fetchData = async (reset = false) => {
-  setLoading(true);
-  setError(null);
 
-  try {
-    let baseQuery = query(
-      collection(db, 'Penduduk'),
-      orderBy(orderField, orderDirection)
-    );
+  const fetchData = async (reset = false) => {
+    setLoading(true);
+    setError(null);
 
-    // Tambahkan pencarian jika ada
-    if (searchTerm) {
-      baseQuery = query(
+    try {
+      let baseQuery = query(
         collection(db, 'Penduduk'),
-        where(searchField, '>=', searchTerm),
-        where(searchField, '<=', searchTerm + '\uf8ff'),
-        orderBy(searchField, orderDirection)
+        orderBy(orderField, orderDirection)
       );
+
+      // Add search if searchTerm exists
+      if (searchTerm) {
+        baseQuery = query(
+          collection(db, 'Penduduk'),
+          where(searchField, '>=', searchTerm),
+          where(searchField, '<=', searchTerm + '\uf8ff'),
+          orderBy(searchField, orderDirection) // orderBy is crucial for where clauses
+        );
+      }
+
+      // Add pagination
+      let finalQuery;
+      if (reset) {
+        finalQuery = query(baseQuery, limit(DATA_PER_PAGE));
+      } else if (lastDoc) {
+        finalQuery = query(baseQuery, startAfter(lastDoc), limit(DATA_PER_PAGE));
+      } else {
+        finalQuery = query(baseQuery, limit(DATA_PER_PAGE)); // Initial load if no lastDoc
+      }
+
+      const snapshot = await getDocs(finalQuery);
+      const docs = snapshot.docs;
+
+      const fetchedData = docs.map((doc) => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          ...data,
+          NIK: String(data.NIK),
+          NO_KK: String(data.NO_KK),
+        } as PendudukData;
+      });
+
+      if (reset) {
+        setData(fetchedData);
+      } else {
+        setData((prev) => [...prev, ...fetchedData]);
+      }
+
+      setLastDoc(docs[docs.length - 1] || null);
+      setIsLastPage(docs.length < DATA_PER_PAGE);
+    } catch (err) {
+      console.error('Error fetching data:', err);
+      setError('Gagal mengambil data dari Firestore');
+    } finally {
+      setLoading(false);
     }
+  };
 
-    // Tambahkan pagination
-    if (reset) {
-      baseQuery = query(baseQuery, limit(DATA_PER_PAGE));
-    } else if (lastDoc) {
-      baseQuery = query(baseQuery, startAfter(lastDoc), limit(DATA_PER_PAGE));
-    }
-
-    const snapshot = await getDocs(baseQuery);
-    const docs = snapshot.docs;
-
-    const fetchedData = docs.map((doc) => {
-      const data = doc.data();
-      return {
-        id: doc.id,
-        ...data,
-        NIK: String(data.NIK),
-        NO_KK: String(data.NO_KK),
-      } as PendudukData;
-    });
-
-    if (reset) {
-      setData(fetchedData);
-    } else {
-      setData((prev) => [...prev, ...fetchedData]);
-    }
-
-    setLastDoc(docs[docs.length - 1] || null);
-    setIsLastPage(docs.length < DATA_PER_PAGE);
-  } catch (err) {
-    console.error('Error fetching data:', err);
-    setError('Gagal mengambil data dari Firestore');
-  } finally {
-    setLoading(false);
-  }
-};
   useEffect(() => {
     setData([]);
     setLastDoc(null);
@@ -199,10 +224,7 @@ const fetchData = async (reset = false) => {
 
   const clearSearch = () => {
     setSearchTerm('');
-    setData([]);
-    setLastDoc(null);
-    setPage(1);
-    fetchData(true);
+    // useEffect will re-trigger fetchData(true) because searchTerm changes
   };
 
   const handleRowClick = (person: PendudukData) => {
@@ -231,6 +253,8 @@ const fetchData = async (reset = false) => {
           setData(prev => prev.filter(p => p.id !== person.id));
           setShowDetail(false);
           alert('Data berhasil dihapus');
+          // Re-fetch data to ensure pagination is correct after deletion
+          fetchData(true);
         }
       } catch (err) {
         console.error('Error deleting document:', err);
@@ -242,12 +266,12 @@ const fetchData = async (reset = false) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    
+
     try {
       if (formMode === 'add') {
         const docRef = await addDoc(collection(db, 'Penduduk'), formData);
         const newData = { id: docRef.id, ...formData } as PendudukData;
-        setData(prev => [newData, ...prev]);
+        setData(prev => [newData, ...prev]); // Add new data to the beginning for immediate display
         alert('Data berhasil ditambahkan');
       } else {
         if (formData.id) {
@@ -258,6 +282,8 @@ const fetchData = async (reset = false) => {
       }
       setShowForm(false);
       setFormData(emptyFormData);
+      // Re-fetch data to ensure correct sorting/pagination after add/edit
+      fetchData(true);
     } catch (err) {
       console.error('Error saving document:', err);
       alert('Gagal menyimpan data');
@@ -270,6 +296,116 @@ const fetchData = async (reset = false) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
+    const handleExportToExcel = async () => {
+    setLoading(true);
+    try {
+        console.log('Starting Excel export...');
+        
+        // Fetch all data for export, ignoring current pagination
+        let allDataQuery;
+        
+        // Apply search filter if exists
+        if (searchTerm) {
+        allDataQuery = query(
+            collection(db, 'Penduduk'),
+            where(searchField, '>=', searchTerm),
+            where(searchField, '<=', searchTerm + '\uf8ff'),
+            orderBy(searchField, orderDirection)
+        );
+        } else {
+        allDataQuery = query(
+            collection(db, 'Penduduk'), 
+            orderBy(orderField, orderDirection)
+        );
+        }
+        
+        console.log('Fetching data from Firestore...');
+        const snapshot = await getDocs(allDataQuery);
+        console.log(`Found ${snapshot.docs.length} documents`);
+        
+        if (snapshot.docs.length === 0) {
+        alert('Tidak ada data untuk diekspor.');
+        setLoading(false);
+        return;
+        }
+
+        const allFetchedData: PendudukData[] = snapshot.docs.map((doc) => {
+        const data = doc.data();
+        const cleanData = { ...data };
+        delete cleanData.id; // Remove Firestore document ID from export
+        
+        return {
+            ...cleanData,
+            NIK: String(data.NIK || ''),
+            NO_KK: String(data.NO_KK || ''),
+        } as PendudukData;
+        });
+
+        console.log('Creating Excel worksheet...');
+        
+        // Create worksheet with proper headers
+        const worksheet = XLSX.utils.json_to_sheet(allFetchedData, {
+        header: Object.keys(allFetchedData[0]), // Ensure consistent column order
+        });
+        
+        // Set column widths for better readability
+        const colWidths = Object.keys(allFetchedData[0]).map(() => ({ wch: 15 }));
+        worksheet['!cols'] = colWidths;
+        
+        console.log('Creating workbook...');
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Data Penduduk');
+
+        console.log('Generating Excel file...');
+        
+        // Try different export methods based on browser compatibility
+        try {
+        // Method 1: Using writeFile (most compatible)
+        const fileName = `Data_Penduduk_${new Date().toISOString().split('T')[0]}.xlsx`;
+        XLSX.writeFile(workbook, fileName);
+        alert('Data berhasil diekspor ke Excel!');
+        } catch (writeFileError) {
+        console.log('writeFile failed, trying alternative method...', writeFileError);
+        
+        // Method 2: Using write + saveAs (fallback)
+        const excelBuffer = XLSX.write(workbook, { 
+            bookType: 'xlsx', 
+            type: 'array',
+            bookSST: false, // Disable shared string table for better compatibility
+        });
+        
+        const dataBlob = new Blob([excelBuffer], { 
+            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 
+        });
+        
+        const fileName = `Data_Penduduk_${new Date().toISOString().split('T')[0]}.xlsx`;
+        saveAs(dataBlob, fileName);
+        alert('Data berhasil diekspor ke Excel!');
+        }
+        
+    } catch (err) {
+        console.error('Detailed error during Excel export:', err);
+        
+        // Provide more specific error messages
+        if (err instanceof Error) {
+        if (err.message.includes('quota')) {
+            alert('Gagal mengekspor: Kuota Firestore terlampaui. Coba lagi nanti.');
+        } else if (err.message.includes('permission')) {
+            alert('Gagal mengekspor: Tidak memiliki izin akses data.');
+        } else if (err.message.includes('network')) {
+            alert('Gagal mengekspor: Masalah koneksi internet.');
+        } else {
+            alert(`Gagal mengekspor data ke Excel: ${err.message}`);
+        }
+        } else {
+        alert('Gagal mengekspor data ke Excel. Silakan coba lagi.');
+        }
+    } finally {
+        setLoading(false);
+    }
+    };
+
+
   // Daftar field yang bisa digunakan untuk sorting dan pencarian
   const availableFields: (keyof PendudukData)[] = [
     'NIK', 'NAMA_LGKP', 'ALAMAT', 'DUSUN', 'AGAMA_KET', 'JENIS_KLMIN_KET',
@@ -281,7 +417,7 @@ const fetchData = async (reset = false) => {
     <div className="p-6">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold text-[#0E4D45]">Data Penduduk</h1>
-        
+
         <div className="flex items-center gap-4">
           {/* Search */}
           <form onSubmit={handleSearch} className="flex items-center gap-2">
@@ -347,6 +483,15 @@ const fetchData = async (reset = false) => {
           >
             Tambah Data
           </button>
+
+          {/* Export to Excel button */}
+          <button
+            onClick={handleExportToExcel}
+            disabled={loading}
+            className="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
+          >
+            {loading ? 'Mengekspor...' : 'Export ke Excel'}
+          </button>
         </div>
       </div>
 
@@ -374,8 +519,8 @@ const fetchData = async (reset = false) => {
           </thead>
           <tbody>
             {data.map((person, index) => (
-              <tr 
-                key={`${person.NIK}-${index}`} 
+              <tr
+                key={`${person.NIK}-${index}`}
                 className="border-b hover:bg-gray-100 cursor-pointer"
                 onClick={() => handleRowClick(person)}
               >
@@ -417,7 +562,7 @@ const fetchData = async (reset = false) => {
 
       {/* Detail Modal */}
       {showDetail && selectedPerson && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 backdrop-blur-sm bg-black/30 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 max-w-4xl w-full max-h-[80vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-2xl font-bold text-[#0E4D45]">Detail Data Penduduk</h2>
@@ -428,7 +573,7 @@ const fetchData = async (reset = false) => {
                 ✕
               </button>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {Object.entries(selectedPerson).map(([key, value]) => (
                 key !== 'id' && (
@@ -439,7 +584,7 @@ const fetchData = async (reset = false) => {
                 )
               ))}
             </div>
-            
+
             <div className="flex justify-end gap-2 mt-6">
               <button
                 onClick={() => handleEdit(selectedPerson)}
@@ -479,7 +624,7 @@ const fetchData = async (reset = false) => {
                 ✕
               </button>
             </div>
-            
+
             <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {Object.keys(emptyFormData).map((field) => (
                 <div key={field}>
@@ -495,7 +640,7 @@ const fetchData = async (reset = false) => {
                   />
                 </div>
               ))}
-              
+
               <div className="md:col-span-2 flex justify-end gap-2 mt-6">
                 <button
                   type="button"
