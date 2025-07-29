@@ -15,17 +15,21 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
   const buttonHref = isLoggedIn ? "/dashboard/all" : "/auth/login";
 
   return (
-    <div className="w-full px-24 py-12 flex items-center justify-between">
+    <div className="flex items-center justify-between w-full px-24 py-12">
       {/* Logo image */}
-      <img className="w-2xs" src="img/logo_full.png" alt="Logo Desa" />
+      <img
+        className="w-auto max-w-80"
+        src="img/logo_full.png"
+        alt="Logo Desa"
+      />
 
       {/* Navigation buttons */}
-      <div className="flex space-x-8 items-center gap-8">
-        <NavButton text="Beranda" href="/" />{" "}
-        <NavButton text="Profil" href="/profil" />{" "}
-        <NavButton text="Selayang Pandang" href="/selayang-pandang" />{" "}
-        <NavButton text="Sejarah" href="/sejarah" />{" "}
-        <NavButton text="Galeri" href="/galeri" />{" "}
+      <div className="flex items-center gap-8 mx-auto space-x-8">
+        <NavButton text="Beranda" href="/" />
+        <NavButton text="Profil" href="/Profil" />
+        <NavButton text="Selayang Pandang" href="/selayang-pandang" />
+        <NavButton text="Sejarah" href="/sejarah" />
+        <NavButton text="Galeri" href="/galeri" />
         <NavButton text="Kontak" href="/kontak" />
       </div>
 

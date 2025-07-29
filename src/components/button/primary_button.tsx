@@ -14,7 +14,7 @@ const PrimaryLinkButton: React.FC<PrimaryLinkButtonProps> = ({
   return (
     <Link href={href}>
       <button
-        className={`font-semibold h-fit px-7 py-3 bg-[#0E4D45] rounded-xl text-white hover:bg-[#63be86] ${className}`}
+        className={`font-semibold px-7 py-3 bg-[#0E4D45] rounded-xl text-white hover:bg-[#63be86] ${className}`}
       >
         {text}
       </button>
