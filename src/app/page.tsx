@@ -48,7 +48,6 @@ const Home = () => {
       <VisiMisi />
       <PengumumanBerita />
       <SelayangPandang />
-      <Sejarah />
       <Galeri />
       <Footer />
     </div>
