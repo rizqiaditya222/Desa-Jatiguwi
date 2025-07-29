@@ -3,9 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-// Assuming '@/lib/firebase/clientApps' correctly initializes and exports the Firebase app instance
 import app from '@/lib/firebase/clientApps';
-
 import Hero from "@/components/landing_page/hero/page";
 import Navbar from "@/components/landing_page/navbar/page";
 import PerangkatDesa from "@/components/landing_page/perangkat_desa/page";
@@ -50,7 +48,6 @@ const Home = () => {
       <VisiMisi />
       <PengumumanBerita />
       <SelayangPandang />
-      <Sejarah />
       <Galeri />
       <Footer />
     </div>

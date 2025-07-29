@@ -1,7 +1,7 @@
-import React from 'react';
-import NavButton from './nav_button/page';
-import PrimaryLinkButton from '@/components/button/primary_button';
-import SecondaryLinkButton from '@/components/button/secondary_button';
+import React from "react";
+import NavButton from "./nav_button/page";
+import PrimaryLinkButton from "@/components/button/primary_button";
+import SecondaryLinkButton from "@/components/button/secondary_button";
 
 // Define the props interface for Navbar
 interface NavbarProps {
@@ -15,23 +15,28 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
   const buttonHref = isLoggedIn ? "/dashboard/all" : "/auth/login";
 
   return (
-    <div className='w-full px-24 py-12 flex items-center justify-between'>
+    <div className="w-full px-24 py-12 flex items-center justify-between">
       {/* Logo image */}
-      <img className='w-2xs' src="\img\logo_full.png" alt="Logo Desa" />
+      <img className="w-2xs" src="img/logo_full.png" alt="Logo Desa" />
 
       {/* Navigation buttons */}
       <div>
-        <NavButton text="Beranda" href="/" /> {/* Added a default href for Beranda */}
-        <NavButton text="Profil" href="/profil" /> {/* Added a default href for Profil */}
-        <NavButton text="Selayang Pandang" href="/selayang-pandang" /> {/* Added a default href */}
-        <NavButton text="Sejarah" href="/sejarah" /> {/* Added a default href */}
+        <NavButton text="Beranda" href="/" />{" "}
+        {/* Added a default href for Beranda */}
+        <NavButton text="Profil" href="/profil" />{" "}
+        {/* Added a default href for Profil */}
+        <NavButton text="Selayang Pandang" href="/selayang-pandang" />{" "}
+        {/* Added a default href */}
+        <NavButton text="Sejarah" href="/sejarah" />{" "}
+        {/* Added a default href */}
         <NavButton text="Galeri" href="/galeri" /> {/* Added a default href */}
         <NavButton text="Kontak" href="/kontak" /> {/* Added a default href */}
       </div>
-      
+
       {/* PrimaryLinkButton will change based on login status */}
       <PrimaryLinkButton text={buttonText} href={buttonHref} />
 
+      <PrimaryLinkButton text="Login" href="/auth/login" />
     </div>
   );
 };

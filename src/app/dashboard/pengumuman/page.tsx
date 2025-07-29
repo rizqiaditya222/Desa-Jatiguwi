@@ -1,36 +1,34 @@
 'use client';
 
 import React, { useState, FormEvent, useEffect } from 'react';
-import { addNews, updateNews, deleteNews } from '@/service/berita/newsService';
+import { AddPengumuman, updatePengumuman, deletePengumuman } from '@/service/pengumuman/pengumumanService';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase/clientApps';
-import { NewsArticle } from '@/types/berita';
+import { PengumumanArticle } from '@/types/pengumuman';
 
-export default function ManageNewsPage() {
+export default function ManagePengumumanPage() {
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
-  const [imageFile, setImageFile] = useState<File | null>(null);
   const [statusMessage, setStatusMessage] = useState<string>('');
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
-  const [newsList, setNewsList] = useState<NewsArticle[]>([]);
-  const [editingNewsId, setEditingNewsId] = useState<string | null>(null);
-  const [editingImageUrl, setEditingImageUrl] = useState<string | null>(null);
+  const [pengumumanList, setPengumumanList] = useState<PengumumanArticle[]>([]);
+  const [editingPengumumanId, setEditingPengumumanId] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchNews();
+    fetchPengumuman();
   }, []);
 
-  const fetchNews = async () => {
+  const fetchPengumuman = async () => {
     try {
-      const querySnapshot = await getDocs(collection(db, 'berita'));
-      const newsData = querySnapshot.docs.map(doc => ({
+      const querySnapshot = await getDocs(collection(db, 'pengumuman'));
+      const pengumumanData = querySnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
-      })) as NewsArticle[];
-      setNewsList(newsData);
+      })) as PengumumanArticle[];
+      setPengumumanList(pengumumanData);
     } catch (error: any) {
-      console.error('Error fetching news:', error);
-      setStatusMessage(`Gagal memuat daftar berita: ${error.message}`);
+      console.error('Error fetching pengumuman:', error);
+      setStatusMessage(`Gagal memuat daftar pengumuman: ${error.message}`);
     }
   };
 
@@ -40,94 +38,70 @@ export default function ManageNewsPage() {
     setIsSuccess(false);
 
     if (!title || !content) {
-      setStatusMessage('Judul dan konten harus diisi.');
+      setStatusMessage('Judul dan konten pengumuman harus diisi.');
       return;
     }
 
     try {
-      if (editingNewsId) {
-        const updateData: Partial<NewsArticle & { imageFile?: File }> = {
-          title,
-          content,
-        };
-        if (imageFile) {
-          updateData.imageFile = imageFile;
-        } else if (editingImageUrl) {
-          // If no new file is selected, but there was an old image, retain it
-          updateData.imageUrl = editingImageUrl;
-        }
-
-        await updateNews(editingNewsId, updateData);
-        setStatusMessage('Berita berhasil diperbarui!');
+      if (editingPengumumanId) {
+        // If an ID exists, we are updating an existing announcement
+        await updatePengumuman(editingPengumumanId, { title, content });
+        setStatusMessage('Pengumuman berhasil diperbarui!');
         setIsSuccess(true);
-        setEditingNewsId(null);
-        setEditingImageUrl(null);
+        setEditingPengumumanId(null); // Exit editing mode
       } else {
-        // Add new news
-        if (!imageFile) {
-          setStatusMessage('Gambar harus dipilih untuk berita baru.');
-          return;
-        }
-        await addNews({ title, content, imageFile });
-        setStatusMessage('Berita berhasil ditambahkan!');
+        // Otherwise, add a new announcement
+        await AddPengumuman({ title, content });
+        setStatusMessage('Pengumuman berhasil ditambahkan!');
         setIsSuccess(true);
       }
+      // Clear form and refresh list after successful operation
       setTitle('');
       setContent('');
-      setImageFile(null);
-      (document.getElementById('image') as HTMLInputElement).value = '';
-      fetchNews(); // Refresh the list
+      fetchPengumuman();
     } catch (error: any) {
-      setStatusMessage(`Gagal operasi berita: ${error.message}`);
+      setStatusMessage(`Gagal menyimpan pengumuman: ${error.message}`);
       setIsSuccess(false);
     }
   };
 
-  const handleEdit = (news: NewsArticle) => {
-    setEditingNewsId(news.id);
-    setTitle(news.title);
-    setContent(news.content);
-    setEditingImageUrl(news.imageUrl);
-    setImageFile(null); // Clear image file input when editing
-    (document.getElementById('image') as HTMLInputElement).value = ''; // Clear file input visual
+  const handleEdit = (pengumuman: PengumumanArticle) => {
+    setEditingPengumumanId(pengumuman.id);
+    setTitle(pengumuman.title);
+    setContent(pengumuman.content);
+    setStatusMessage(''); // Clear any previous status messages
+    setIsSuccess(false);
   };
 
-  const handleDelete = async (newsId: string, imageUrl: string) => {
-    if (window.confirm('Apakah Anda yakin ingin menghapus berita ini?')) {
+  const handleDelete = async (pengumumanId: string) => {
+    if (window.confirm('Apakah Anda yakin ingin menghapus pengumuman ini?')) {
       try {
-        await deleteNews(newsId, imageUrl);
-        setStatusMessage('Berita berhasil dihapus!');
+        await deletePengumuman(pengumumanId);
+        setStatusMessage('Pengumuman berhasil dihapus!');
         setIsSuccess(true);
-        fetchNews(); // Refresh the list
+        fetchPengumuman(); // Refresh the list
+        // If the deleted item was being edited, clear the form
+        if (editingPengumumanId === pengumumanId) {
+          handleCancelEdit();
+        }
       } catch (error: any) {
-        setStatusMessage(`Gagal menghapus berita: ${error.message}`);
+        setStatusMessage(`Gagal menghapus pengumuman: ${error.message}`);
         setIsSuccess(false);
       }
     }
   };
 
   const handleCancelEdit = () => {
-    setEditingNewsId(null);
-    setEditingImageUrl(null);
+    setEditingPengumumanId(null);
     setTitle('');
     setContent('');
-    setImageFile(null);
-    (document.getElementById('image') as HTMLInputElement).value = '';
     setStatusMessage('');
     setIsSuccess(false);
   };
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
-      setImageFile(event.target.files[0]);
-    } else {
-      setImageFile(null);
-    }
-  };
-
   return (
     <div style={{ maxWidth: '800px', margin: '50px auto', padding: '20px', border: '1px solid #ccc', borderRadius: '8px', fontFamily: 'Arial, sans-serif' }}>
-      <h1>{editingNewsId ? 'Edit Berita' : 'Tambah Berita Baru'}</h1>
+      <h1>{editingPengumumanId ? 'Edit Pengumuman' : 'Tambah Pengumuman Baru'}</h1>
       <form onSubmit={handleSubmit} style={{ marginBottom: '40px' }}>
         <div style={{ marginBottom: '15px' }}>
           <label htmlFor="title" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Judul:</label>
@@ -142,7 +116,7 @@ export default function ManageNewsPage() {
         </div>
 
         <div style={{ marginBottom: '15px' }}>
-          <label htmlFor="content" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Isi Konten:</label>
+          <label htmlFor="content" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Isi Pengumuman:</label>
           <textarea
             id="content"
             value={content}
@@ -152,24 +126,6 @@ export default function ManageNewsPage() {
             required
             style={{ width: '100%', padding: '10px', boxSizing: 'border-box', border: '1px solid #ddd', borderRadius: '4px' }}
           ></textarea>
-        </div>
-
-        <div style={{ marginBottom: '20px' }}>
-          <label htmlFor="image" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Gambar Berita:</label>
-          <input
-            type="file"
-            id="image"
-            accept="image/*"
-            onChange={handleFileChange}
-            style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }}
-          />
-          {editingNewsId && editingImageUrl && !imageFile && (
-            <p style={{ fontSize: '0.9em', color: '#666', marginTop: '5px' }}>
-              Gambar saat ini: <a href={editingImageUrl} target="_blank" rel="noopener noreferrer">Lihat Gambar</a>
-              <br />
-              (Pilih file baru di atas untuk mengubah gambar)
-            </p>
-          )}
         </div>
 
         <div style={{ display: 'flex', gap: '10px' }}>
@@ -186,9 +142,9 @@ export default function ManageNewsPage() {
               flexGrow: 1
             }}
           >
-            {editingNewsId ? 'Perbarui Berita' : 'Tambah Berita'}
+            {editingPengumumanId ? 'Perbarui Pengumuman' : 'Tambah Pengumuman'}
           </button>
-          {editingNewsId && (
+          {editingPengumumanId && (
             <button
               type="button"
               onClick={handleCancelEdit}
@@ -215,25 +171,22 @@ export default function ManageNewsPage() {
         </p>
       )}
 
-      <hr style={{ margin: '40px 0', borderTop: '1px solid #eee' }} />
+      ---
 
-      <h2>Daftar Berita</h2>
-      {newsList.length === 0 ? (
-        <p>Tidak ada berita yang tersedia.</p>
+      <h2>Daftar Pengumuman</h2>
+      {pengumumanList.length === 0 ? (
+        <p>Tidak ada pengumuman yang tersedia.</p>
       ) : (
         <ul style={{ listStyle: 'none', padding: 0 }}>
-          {newsList.map((news) => (
-            <li key={news.id} style={{ border: '1px solid #eee', borderRadius: '8px', padding: '15px', marginBottom: '15px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <h3 style={{ margin: 0, color: '#333' }}>{news.title}</h3>
-              {/* --- CHANGE MADE HERE --- */}
-              <ClientSideFormattedDate timestamp={news.date.seconds * 1000} />
-              {/* --- END CHANGE --- */}
-              {news.imageUrl && (
-                <img src={news.imageUrl} alt={news.title} style={{ maxWidth: '100%', height: 'auto', borderRadius: '4px', marginTop: '10px' }} />
-              )}
+          {pengumumanList.map((pengumuman) => (
+            <li key={pengumuman.id} style={{ border: '1px solid #eee', borderRadius: '8px', padding: '15px', marginBottom: '15px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <h3 style={{ margin: 0, color: '#333' }}>{pengumuman.title}</h3>
+              <p style={{ margin: '5px 0', color: '#555' }}>{pengumuman.content}</p>
+              {/* Using a client-side component for date formatting to prevent hydration errors */}
+              <ClientSideFormattedDate timestamp={pengumuman.date.seconds * 1000} />
               <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
                 <button
-                  onClick={() => handleEdit(news)}
+                  onClick={() => handleEdit(pengumuman)}
                   style={{
                     padding: '8px 15px',
                     backgroundColor: '#ffc107',
@@ -247,7 +200,7 @@ export default function ManageNewsPage() {
                   Edit
                 </button>
                 <button
-                  onClick={() => handleDelete(news.id, news.imageUrl)}
+                  onClick={() => handleDelete(pengumuman.id)}
                   style={{
                     padding: '8px 15px',
                     backgroundColor: '#dc3545',
@@ -269,7 +222,7 @@ export default function ManageNewsPage() {
   );
 }
 
-// New helper component for client-side date formatting
+// Helper component to handle client-side date formatting and prevent hydration errors
 function ClientSideFormattedDate({ timestamp }: { timestamp: number }) {
   const [formattedDate, setFormattedDate] = useState('');
 
