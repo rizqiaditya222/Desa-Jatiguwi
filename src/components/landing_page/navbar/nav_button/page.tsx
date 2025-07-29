@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from "next/link";
 
 interface NavButtonProps {
   text: string;
@@ -8,9 +8,7 @@ interface NavButtonProps {
 const NavButton: React.FC<NavButtonProps> = ({ text, href }) => {
   return (
     <Link href={href}>
-      <button className='mx-12 font-semibold hover:text-[#0E4D45]'>
-        {text}
-      </button>
+      <button className="font-semibold hover:text-[#0E4D45]">{text}</button>
     </Link>
   );
 };

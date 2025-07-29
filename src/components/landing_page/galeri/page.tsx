@@ -4,10 +4,11 @@ import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import { type CustomArrowProps } from 'react-slick';
 
 const Slider = dynamic(() => import('react-slick'), { ssr: false });
 
-const CustomPrevArrow = (props) => {
+const CustomPrevArrow = (props: CustomArrowProps) => {
   const { onClick } = props;
   return (
     <div
@@ -19,7 +20,7 @@ const CustomPrevArrow = (props) => {
   );
 };
 
-const CustomNextArrow = (props) => {
+const CustomNextArrow = (props: CustomArrowProps) => {
   const { onClick } = props;
   return (
     <div
@@ -45,7 +46,7 @@ const Galeri = () => {
     arrows: true,
     prevArrow: <CustomPrevArrow />,
     nextArrow: <CustomNextArrow />,
-    beforeChange: (current, next) => setActiveSlide(next),
+    beforeChange: (_current: number, next: number) => setActiveSlide(next),
     responsive: [
       {
         breakpoint: 1024,
@@ -74,7 +75,7 @@ const Galeri = () => {
     <div className="bg-white px-24 py-16">
       <div className="flex justify-between items-start mb-6">
         <p className="text-3xl font-bold text-[#0E4D45]">Galeri Jatiguwi</p>
-        <p className="text-base text-end text-[#0E4D45] w-1/2">
+        <p className="text-base text-end text-[#0E4D45] w-4/12">
           Intip Cerita Desa Jatiguwi di Galeri! Kumpulan momen dan potret kehidupan desa yang penuh makna, semua tersaji di sini.
         </p>
       </div>
