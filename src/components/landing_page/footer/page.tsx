@@ -104,7 +104,7 @@ const Footer = () => {
           <button className="flex items-center gap-2 font-light duration-200 hover:ease-in-out hover:scale-120 hover:font-bold">
             <img
               className="w-6 h-6 invert "
-              src="./svg/telephone.svg"
+              src="/svg/telephone.svg"
               alt="whatsapp icon"
               color="#FFFFFF"
             />
