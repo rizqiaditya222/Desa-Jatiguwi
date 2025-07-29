@@ -6,7 +6,7 @@ const Footer = () => {
       <section className=" grid grid-cols-12 border-b-1 border-white pb-8">
         <section className="flex flex-col col-span-6 space-y-4">
           <div className="min-w-10 md:w-20 flex">
-            <img className="lg:w-120" src="img/logo_desa.png" alt="Logo Desa" />
+            <img className="lg:w-120" src="/img/logo_desa.png" alt="Logo Desa" />
             <div>
               <p className="text-white text-3xl font-semibold">Desa Jatiguwi</p>
               <p className="text-nowrap text-white font-light   ">
@@ -55,7 +55,7 @@ const Footer = () => {
             <button>
               <img
                 className=" w-6 h-6 invert"
-                src="./svg/email.svg"
+                src="/svg/email.svg"
                 alt="email icon"
                 color="#FFFFFF"
               />
@@ -63,7 +63,7 @@ const Footer = () => {
             <button>
               <img
                 className=" w- h-8 invert"
-                src="./svg/tiktok.svg"
+                src="/svg/tiktok.svg"
                 alt="tiktok icon"
                 color="#FFFFFF"
               />
@@ -71,7 +71,7 @@ const Footer = () => {
             <button>
               <img
                 className=" w-6 h-6 invert"
-                src="./svg/youtube.svg"
+                src="/svg/youtube.svg"
                 alt="yt icon"
                 color="#FFFFFF"
               />
@@ -80,7 +80,7 @@ const Footer = () => {
           <button className="flex items-center gap-2">
             <img
               className=" w-6 h-6 invert "
-              src="./svg/instagram.svg"
+              src="/svg/instagram.svg"
               alt="whatsapp icon"
               color="#FFFFFF"
             />
@@ -89,7 +89,7 @@ const Footer = () => {
           <button className="flex items-center gap-2">
             <img
               className="w-6 h-6 invert "
-              src="./svg/telephone.svg"
+              src="/svg/telephone.svg"
               alt="whatsapp icon"
               color="#FFFFFF"
             />

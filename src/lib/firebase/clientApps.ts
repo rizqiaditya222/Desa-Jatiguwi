@@ -1,5 +1,6 @@
 
 import { initializeApp, getApps, getApp, FirebaseApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
 
 interface FirebaseConfig {
   apiKey: string;
@@ -28,3 +29,9 @@ if (!getApps().length) {
   app = getApp();
 }
 export default app;
+
+// tambahkan ini
+const db = getFirestore(app);
+
+// export keduanya
+export { db };

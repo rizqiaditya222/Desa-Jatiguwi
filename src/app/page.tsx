@@ -14,7 +14,7 @@ import VideoSection from "@/components/landing_page/video/page";
 import VisiMisi from "@/components/landing_page/visi_misi/page";
 import Sejarah from "@/components/landing_page/sejarah/page";
 import Galeri from "@/components/landing_page/galeri/page";
-import Footer from "@/components/landing_page/footer/footer";
+import Footer from '@/components/landing_page/footer/page';
 import PengumumanBerita from "@/components/landing_page/Pengumuman&Berita/page";
 import AuthComponent from "./auth/login/page";
 
