@@ -35,7 +35,7 @@ const VisiMisi = () => {
             text="Lihat Profil Desa"
             href="/profil_desa"
             key={"Button Profil Desa"}
-            className="w-full border-2 border-[#fafafa] hover:bg-[#fafafa] hover:text-[#0E4D45]"
+            className="w-full border-2 border-[#fafafa] hover:bg-[#fafafa] hover:text-[#0E4D45] hover:ease-in-out hover:duration-300"
           />
         </section>
         <section className="flex flex-col col-span-6 col-start-6">
