@@ -2,6 +2,8 @@
 import React from "react";
 import { useAnimatedNumber } from "@/components/AnimatedNumber/useAnimatedNumber";
 import { useIsInViewport } from "@/components/AnimatedNumber/useIsInViewport";
+import PetaDesa from "@/components/Map/PetaDesa";
+import PrimaryLinkButton from "@/components/button/primary_button";
 const SelayangPandang = () => {
   const { ref, isIntersecting } = useIsInViewport({
     threshold: 0.2, // Trigger ketika 10% element terlihat
@@ -13,7 +15,7 @@ const SelayangPandang = () => {
   const rtCount = useAnimatedNumber(40, 2000, isIntersecting);
   const kkCount = useAnimatedNumber(2126, 2000, isIntersecting);
   return (
-    <div className="bg-[#0E4D45]  py-12 px-24 space-y-10 w-full flex flex-col ">
+    <div className="bg-[#0E4D45]  py-12 px-24 space-y-10 w-full flex flex-col">
       <div className="flex justify-between ">
         <p className="text-4xl font-bold text-white">Selayang Pandang</p>
         <p className="w-2/5 text-end text-[#fafafa]">
@@ -22,8 +24,16 @@ const SelayangPandang = () => {
         </p>
       </div>
       <div className="my-5 w-full h-[1px] bg-[#fafafa]"></div>
-      <div className="flex flex-col items-center w-full py-12">
-        <img className="" src="img/perangkat_desa.png" alt="" />
+      <div className="flex flex-col w-full">
+        <PetaDesa />
+        <div className="w-full max-w-6xl mx-auto">
+          <PrimaryLinkButton
+            text="Lihat Detail Selayang Pandang"
+            href="/SelayangPandang"
+            key={"Button Profil Desa"}
+            className="w-full border-2 border-[#fafafa] hover:bg-[#fafafa] hover:text-[#0E4D45] hover:ease-in-out hover:duration-300"
+          />
+        </div>
       </div>
       <div className="flex flex-col space-y-6">
         <p className="w-full text-4xl font-semibold text-white ">
