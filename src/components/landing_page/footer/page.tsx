@@ -1,6 +1,6 @@
 import React from "react";
 
-const footer = () => {
+const Footer = () => {
   return (
     <div className="w-full flex flex-col bg-[#0E4D45] px-16 py-16">
       <section className="grid grid-cols-12 pb-8 border-white border-b-1">
@@ -125,4 +125,4 @@ const footer = () => {
   );
 };
 
-export default footer;
+export default Footer;
