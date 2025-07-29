@@ -19,7 +19,7 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
       {/* Logo image */}
       <img
         className="w-auto max-w-80"
-        src="img/logo_full.png"
+        src="/img/logo_full.png"
         alt="Logo Desa"
       />
 

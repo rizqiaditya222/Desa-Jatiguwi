@@ -1,291 +1,176 @@
 'use client';
 
-import React, { useState, FormEvent, useEffect } from 'react';
-import { addGallery, updateGallery, deleteGallery } from '@/service/gallery/galleryService'; // Import gallery services
-import { collection, getDocs } from 'firebase/firestore';
+import React from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { collection, getDocs, orderBy, query } from 'firebase/firestore';
 import { db } from '@/lib/firebase/clientApps';
-import { Gallery, AddGallery } from '@/types/gallery'; // Import Gallery and AddGallery types
+import { deleteGalleryBySlug } from '@/service/gallery/galleryService';
+import { Gallery } from '@/types/gallery';
 
-export default function ManageGalleryPage() {
-  const [title, setTitle] = useState<string>('');
-  const [content, setContent] = useState<string>('');
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [statusMessage, setStatusMessage] = useState<string>('');
-  const [isSuccess, setIsSuccess] = useState<boolean>(false);
-  const [galleryList, setGalleryList] = useState<Gallery[]>([]); // State for gallery items
-  const [editingGalleryId, setEditingGalleryId] = useState<string | null>(null); // Track ID of item being edited
-  const [editingImageUrl, setEditingImageUrl] = useState<string | null>(null); // Track current image URL for editing
+const BASE_PATH = '/dashboard/galeri';
+const COLLECTION_NAME = 'galeri';
 
-  useEffect(() => {
-    fetchGallery(); // Fetch gallery items on component mount
+export default function GalleryListPage() {
+  const [items, setItems] = React.useState<Gallery[]>([]);
+  const [statusMessage, setStatusMessage] = React.useState('');
+  const [isSuccess, setIsSuccess] = React.useState(false);
+  const router = useRouter();
+
+  React.useEffect(() => {
+    (async () => {
+      try {
+        const q = query(collection(db, COLLECTION_NAME), orderBy('date', 'desc'));
+        const snap = await getDocs(q);
+        const data = snap.docs.map((d) => ({ id: d.id, ...(d.data() as Omit<Gallery, 'id'>) })) as Gallery[];
+        setItems(data);
+      } catch (e: any) {
+        setStatusMessage(`Gagal memuat galeri: ${e.message}`);
+        setIsSuccess(false);
+      }
+    })();
   }, []);
 
-  const fetchGallery = async () => {
+  const handleDelete = async (slug: string) => {
+    if (!confirm('Hapus item galeri ini?')) return;
     try {
-      const querySnapshot = await getDocs(collection(db, 'gallery')); // Fetch from 'gallery' collection
-      const galleryData = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as Gallery[];
-      setGalleryList(galleryData);
-    } catch (error: any) {
-      console.error('Error fetching gallery items:', error);
-      setStatusMessage(`Gagal memuat daftar galeri: ${error.message}`);
-    }
-  };
-
-  const handleSubmit = async (event: FormEvent) => {
-    event.preventDefault();
-    setStatusMessage('');
-    setIsSuccess(false);
-
-    if (!title || !content) {
-      setStatusMessage('Judul dan deskripsi harus diisi.');
-      return;
-    }
-
-    try {
-      if (editingGalleryId) {
-        // If editing an existing item
-        const updateData: Partial<AddGallery & { imageUrl?: string }> = {
-          title,
-          content,
-        };
-        if (imageFile) {
-          updateData.imageFile = imageFile; // New image provided
-        } else if (editingImageUrl) {
-          // If no new file is selected, but there was an old image, retain its URL
-          updateData.imageUrl = editingImageUrl;
-        }
-
-        await updateGallery(editingGalleryId, updateData); // Call updateGallery service
-        setStatusMessage('Item galeri berhasil diperbarui!');
-        setIsSuccess(true);
-        setEditingGalleryId(null); // Exit editing mode
-        setEditingImageUrl(null);
-      } else {
-        // If adding a new item
-        if (!imageFile) {
-          setStatusMessage('Gambar harus dipilih untuk item galeri baru.');
-          return;
-        }
-        await addGallery({ title, content, imageFile }); // Call addGallery service
-        setStatusMessage('Item galeri berhasil ditambahkan!');
-        setIsSuccess(true);
-      }
-      // Clear form fields after successful operation
-      setTitle('');
-      setContent('');
-      setImageFile(null);
-      (document.getElementById('image') as HTMLInputElement).value = ''; // Clear file input visually
-      fetchGallery(); // Refresh the list of gallery items
-    } catch (error: any) {
-      setStatusMessage(`Gagal operasi galeri: ${error.message}`);
+      await deleteGalleryBySlug(slug);
+      setItems((prev) => prev.filter((it) => it.slug !== slug));
+      setStatusMessage('Item galeri berhasil dihapus!');
+      setIsSuccess(true);
+    } catch (e: any) {
+      setStatusMessage(`Gagal menghapus: ${e.message}`);
       setIsSuccess(false);
     }
   };
 
-  const handleEdit = (galleryItem: Gallery) => {
-    setEditingGalleryId(galleryItem.id);
-    setTitle(galleryItem.title);
-    setContent(galleryItem.content);
-    setEditingImageUrl(galleryItem.imageUrl);
-    setImageFile(null); // Clear image file input when editing
-    (document.getElementById('image') as HTMLInputElement).value = ''; // Clear file input visual
-    setStatusMessage(''); // Clear previous messages
-    setIsSuccess(false);
-  };
-
-  const handleDelete = async (galleryId: string, imageUrl: string) => {
-    if (window.confirm('Apakah Anda yakin ingin menghapus item galeri ini?')) {
-      try {
-        await deleteGallery(galleryId, imageUrl); // Call deleteGallery service
-        setStatusMessage('Item galeri berhasil dihapus!');
-        setIsSuccess(true);
-        fetchGallery(); // Refresh the list
-        // If the deleted item was being edited, clear the form
-        if (editingGalleryId === galleryId) {
-          handleCancelEdit();
-        }
-      } catch (error: any) {
-        setStatusMessage(`Gagal menghapus item galeri: ${error.message}`);
-        setIsSuccess(false);
-      }
-    }
-  };
-
-  const handleCancelEdit = () => {
-    setEditingGalleryId(null);
-    setEditingImageUrl(null);
-    setTitle('');
-    setContent('');
-    setImageFile(null);
-    (document.getElementById('image') as HTMLInputElement).value = '';
-    setStatusMessage('');
-    setIsSuccess(false);
-  };
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
-      setImageFile(event.target.files[0]);
-    } else {
-      setImageFile(null);
-    }
-  };
-
   return (
-    <div style={{ maxWidth: '800px', margin: '50px auto', padding: '20px', border: '1px solid #ccc', borderRadius: '8px', fontFamily: 'Arial, sans-serif' }}>
-      <h1>{editingGalleryId ? 'Edit Item Galeri' : 'Tambah Item Galeri Baru'}</h1>
-      <form onSubmit={handleSubmit} style={{ marginBottom: '40px' }}>
-        <div style={{ marginBottom: '15px' }}>
-          <label htmlFor="title" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Judul:</label>
-          <input
-            type="text"
-            id="title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-            style={{ width: '100%', padding: '10px', boxSizing: 'border-box', border: '1px solid #ddd', borderRadius: '4px' }}
-          />
-        </div>
-
-        <div style={{ marginBottom: '15px' }}>
-          <label htmlFor="content" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Deskripsi:</label>
-          <textarea
-            id="content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            rows={5} // Reduced rows for description
-            cols={50}
-            required
-            style={{ width: '100%', padding: '10px', boxSizing: 'border-box', border: '1px solid #ddd', borderRadius: '4px' }}
-          ></textarea>
-        </div>
-
-        <div style={{ marginBottom: '20px' }}>
-          <label htmlFor="image" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Gambar Galeri:</label>
-          <input
-            type="file"
-            id="image"
-            accept="image/*"
-            onChange={handleFileChange}
-            style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }}
-          />
-          {editingGalleryId && editingImageUrl && !imageFile && (
-            <p style={{ fontSize: '0.9em', color: '#666', marginTop: '5px' }}>
-              Gambar saat ini: <a href={editingImageUrl} target="_blank" rel="noopener noreferrer">Lihat Gambar</a>
-              <br />
-              (Pilih file baru di atas untuk mengubah gambar)
-            </p>
-          )}
-        </div>
-
-        <div style={{ display: 'flex', gap: '10px' }}>
-          <button
-            type="submit"
-            style={{
-              padding: '10px 20px',
-              backgroundColor: '#0070f3',
-              color: 'white',
-              border: 'none',
-              borderRadius: '5px',
-              cursor: 'pointer',
-              fontSize: '1em',
-              flexGrow: 1
-            }}
-          >
-            {editingGalleryId ? 'Perbarui Item Galeri' : 'Tambah Item Galeri'}
-          </button>
-          {editingGalleryId && (
-            <button
-              type="button"
-              onClick={handleCancelEdit}
-              style={{
-                padding: '10px 20px',
-                backgroundColor: '#dc3545',
-                color: 'white',
-                border: 'none',
-                borderRadius: '5px',
-                cursor: 'pointer',
-                fontSize: '1em',
-                flexGrow: 1
-              }}
-            >
-              Batal Edit
-            </button>
-          )}
-        </div>
-      </form>
+    <div className="px-24 mx-auto px-4 sm:px-6 py-8">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#0E4D45]">
+          Edit Galeri
+        </h1>
+        <Link
+          href={`${BASE_PATH}/add`}
+          className="inline-flex items-center justify-center w-11 h-11 rounded-2xl shadow-md bg-[#0E4D45] text-white hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0E4D45]"
+          aria-label="Tambah Item"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M12 5v14M5 12h14" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </Link>
+      </div>
 
       {statusMessage && (
-        <p style={{ marginTop: '20px', padding: '10px', borderRadius: '4px', backgroundColor: isSuccess ? '#d4edda' : '#f8d7da', color: isSuccess ? '#155724' : '#721c24', border: isSuccess ? '1px solid #c3e6cb' : '1px solid #f5c6cb' }}>
+        <div
+          className={`mb-8 rounded-xl px-4 py-3 text-sm border ${
+            isSuccess
+              ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+              : 'bg-red-50 text-red-800 border-red-200'
+          }`}
+        >
           {statusMessage}
-        </p>
+        </div>
       )}
 
-      ---
+      {/* List */}
+      <div className="space-y-6">
+        {items.length === 0 ? (
+          <p className="text-gray-600">Belum ada data galeri.</p>
+        ) : (
+          items.map((it) => (
+            <article key={it.id} className="rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+              <div className="flex flex-col sm:flex-row">
+                {/* Thumbnail kiri */}
+                <div className="sm:w-72 p-4 sm:p-5">
+                  <div className="h-44 w-full overflow-hidden rounded-xl">
+                    <img
+                      src={it.imageUrl || '/placeholder.jpg'}
+                      alt={it.title}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                </div>
 
-      <h2>Daftar Galeri</h2>
-      {galleryList.length === 0 ? (
-        <p>Tidak ada item galeri yang tersedia.</p>
-      ) : (
-        <ul style={{ listStyle: 'none', padding: 0 }}>
-          {galleryList.map((galleryItem) => (
-            <li key={galleryItem.id} style={{ border: '1px solid #eee', borderRadius: '8px', padding: '15px', marginBottom: '15px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <h3 style={{ margin: 0, color: '#333' }}>{galleryItem.title}</h3>
-              <p style={{ margin: '5px 0', fontSize: '0.95em', color: '#555' }}>{galleryItem.content}</p>
-              {/* Using ClientSideFormattedDate for hydration safety */}
-              <ClientSideFormattedDate timestamp={galleryItem.date.seconds * 1000} />
-              {galleryItem.imageUrl && (
-                <img src={galleryItem.imageUrl} alt={galleryItem.title} style={{ maxWidth: '100%', height: 'auto', borderRadius: '4px', marginTop: '10px' }} />
-              )}
-              <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
-                <button
-                  onClick={() => handleEdit(galleryItem)}
-                  style={{
-                    padding: '8px 15px',
-                    backgroundColor: '#ffc107',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '5px',
-                    cursor: 'pointer',
-                    fontSize: '0.9em'
-                  }}
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDelete(galleryItem.id, galleryItem.imageUrl)}
-                  style={{
-                    padding: '8px 15px',
-                    backgroundColor: '#dc3545',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '5px',
-                    cursor: 'pointer',
-                    fontSize: '0.9em'
-                  }}
-                >
-                  Hapus
-                </button>
+                {/* Konten tengah */}
+                <div className="flex-1 px-4 sm:px-6 py-4 sm:py-5">
+                  <h3 className="text-lg sm:text-xl font-semibold text-[#0E4D45] leading-snug">
+                    {it.title}
+                  </h3>
+                  <div className="mt-3">
+                    <ClientSideFormattedDate timestamp={(it.date?.seconds || 0) * 1000} />
+                  </div>
+                </div>
+
+                {/* Panel aksi kanan */}
+                <div className="sm:w-24 flex sm:flex-col items-center justify-center gap-3 bg-[#0E4D45] px-4 py-3 sm:py-0">
+                  <button
+                    onClick={() => router.push(`${BASE_PATH}/edit/${it.slug}`)}
+                    className="p-3 rounded-xl border border-white/20 bg-white/10 hover:bg-white/20 text-white transition focus:outline-none focus:ring-2 focus:ring-white/50"
+                    title="Edit"
+                    aria-label="Edit"
+                  >
+                    <PencilIcon />
+                  </button>
+                  <button
+                    onClick={() => handleDelete(it.slug)}
+                    className="p-3 rounded-xl border border-white/20 bg-white/10 hover:bg-white/20 text-white transition focus:outline-none focus:ring-2 focus:ring-white/50"
+                    title="Hapus"
+                    aria-label="Hapus"
+                  >
+                    <TrashIcon />
+                  </button>
+                </div>
               </div>
-            </li>
-          ))}
-        </ul>
-      )}
+            </article>
+          ))
+        )}
+      </div>
     </div>
   );
 }
 
-// Helper component to handle client-side date formatting and prevent hydration errors
+/* Helpers */
 function ClientSideFormattedDate({ timestamp }: { timestamp: number }) {
-  const [formattedDate, setFormattedDate] = useState('');
-
-  useEffect(() => {
-    // This code only runs on the client after hydration
-    setFormattedDate(new Date(timestamp).toLocaleDateString('id-ID'));
-  }, [timestamp]); // Recalculate if timestamp changes
-
-  // Render an empty string on the server, and the actual date once hydrated on the client.
-  return <p style={{ fontSize: '0.9em', color: '#666' }}>{formattedDate || ''}</p>;
+  const [formattedDate, setFormattedDate] = React.useState('');
+  React.useEffect(() => {
+    if (!timestamp) return;
+    const d = new Date(timestamp);
+    setFormattedDate(
+      d.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
+    );
+  }, [timestamp]);
+  return (
+    <p className="text-sm text-gray-600 inline-flex items-center gap-2">
+      <CalendarIcon className="w-4 h-4 text-gray-500" />
+      {formattedDate || ''}
+    </p>
+  );
+}
+function CalendarIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" {...props}>
+      <rect x="3" y="4" width="18" height="18" rx="2" />
+      <path d="M8 2v4M16 2v4M3 10h18" strokeLinecap="round" />
+    </svg>
+  );
+}
+function PencilIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5" {...props}>
+      <path d="M3 21l3.6-.6L19 8l-2.9-2.9L3.7 17.5 3 21z" />
+      <path d="M14.5 4.5l5 5" strokeLinecap="round" />
+    </svg>
+  );
+}
+function TrashIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
+      <path d="M4 7h16" strokeLinecap="round" />
+      <path d="M10 11v6M14 11v6" strokeLinecap="round" />
+      <path d="M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12" />
+      <path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2" />
+    </svg>
+  );
 }

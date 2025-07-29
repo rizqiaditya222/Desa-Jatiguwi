@@ -1,4 +1,3 @@
-// app/penduduk/layout.tsx
 'use client';
 
 import Link from 'next/link';
@@ -36,7 +35,7 @@ export default function PendudukLayout({ children }: { children: React.ReactNode
     setError(null); // Clear any previous errors
     try {
       await signOut(auth);
-      router.replace('/'); 
+      router.replace('/');
     } catch (err: any) {
       console.error("Error signing out:", err); // Log the actual error for debugging
       setError("Gagal keluar: " + err.message); // Set error message for display
@@ -44,8 +43,9 @@ export default function PendudukLayout({ children }: { children: React.ReactNode
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
-      <aside className="w-64 bg-[#FAFAFA] text-white flex flex-col"> {/* Added flex-col */}
+    // Changed min-h-screen to h-screen for the main flex container
+    <div className="flex h-screen bg-gray-100">
+      <aside className="w-64 bg-[#FAFAFA] text-white flex flex-col h-screen fixed top-0 left-0"> {/* Added h-screen, fixed, top-0, left-0 */}
         <Link href="/" className="flex p-4 items-center hover:bg-gray-200">
           <div className="w-20">
             <img src="/img/logo_desa.png" alt="Logo Desa" />
@@ -69,7 +69,7 @@ export default function PendudukLayout({ children }: { children: React.ReactNode
           ))}
         </nav>
 
-        <div className="p-4 mt-auto"> 
+        <div className="p-4 mt-auto">
           {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
           <button
             onClick={handleSignOut}
@@ -79,7 +79,11 @@ export default function PendudukLayout({ children }: { children: React.ReactNode
           </button>
         </div>
       </aside>
-      <main className="flex-1 p-6">{children}</main>
+      {/* Added ml-64 to offset the main content by the sidebar's width */}
+      {/* Added overflow-y-auto for vertical scrolling */}
+      <main className="flex-1 p-6 ml-64 overflow-y-auto">
+        {children}
+      </main>
     </div>
   );
 }
