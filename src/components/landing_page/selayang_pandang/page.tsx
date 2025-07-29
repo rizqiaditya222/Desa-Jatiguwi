@@ -1,6 +1,17 @@
+"use client";
 import React from "react";
-
+import { useAnimatedNumber } from "@/components/AnimatedNumber/useAnimatedNumber";
+import { useIsInViewport } from "@/components/AnimatedNumber/useIsInViewport";
 const SelayangPandang = () => {
+  const { ref, isIntersecting } = useIsInViewport({
+    threshold: 0.2, // Trigger ketika 10% element terlihat
+  });
+
+  // Gunakan hook untuk masing-masing nilai
+  const dusunCount = useAnimatedNumber(3, 2000, isIntersecting);
+  const rwCount = useAnimatedNumber(9, 2000, isIntersecting);
+  const rtCount = useAnimatedNumber(40, 2000, isIntersecting);
+  const kkCount = useAnimatedNumber(2126, 2000, isIntersecting);
   return (
     <div className="bg-[#0E4D45]  py-12 px-24 space-y-10 w-full flex flex-col ">
       <div className="flex justify-between ">
@@ -65,10 +76,10 @@ const SelayangPandang = () => {
         </p>
       </div>
       <div className="flex flex-col space-y-12">
-        <p className="w-full text-4xl font-semibold text-white ">
+        <p className="w-full text-4xl font-semibold text-white">
           Kondisi Demografis
         </p>
-        <div className="relative w-full pb-40 ">
+        <div ref={ref} className="relative w-full pb-40">
           <img
             className="absolute bottom-0 left-0 z-0 md:size-12"
             src="img/bulat2.png"
@@ -79,28 +90,30 @@ const SelayangPandang = () => {
             src="img/bulat2.png"
             alt="Decoration"
           />
-          <div className="grid grid-cols-4 gap-4  2xl:w-auto max-w-360 mx-auto place-items-center">
+          <div className="grid grid-cols-4 gap-4 mx-auto 2xl:w-auto max-w-360 place-items-center">
             <div className="content-center p-4 text-center transform rotate-45 bg-white rounded-4xl size-30 2xl:size-36">
-              <div className="flex flex-col -rotate-45 ">
-                <p className="text-4xl font-bold text-[#0E4D45]">3</p>
+              <div className="flex flex-col -rotate-45">
+                <p className="text-4xl font-bold text-[#0E4D45]">
+                  {dusunCount}
+                </p>
                 <p className="text-2xl text-[#0E4D45]">Dusun</p>
               </div>
             </div>
-            <div className="content-center p-4 text-center transform rotate-45 translate-y-24 bg-white rounded-4xl size-30 2xl:size-36 ">
-              <div className="flex flex-col -rotate-45 ">
-                <p className="text-4xl font-bold text-[#0E4D45]">9</p>
+            <div className="content-center p-4 text-center transform rotate-45 translate-y-24 bg-white rounded-4xl size-30 2xl:size-36">
+              <div className="flex flex-col -rotate-45">
+                <p className="text-4xl font-bold text-[#0E4D45]">{rwCount}</p>
                 <p className="text-[#0E4D45] text-2xl">RW</p>
               </div>
             </div>
             <div className="content-center p-4 text-center transform rotate-45 bg-white rounded-4xl size-30 2xl:size-36">
               <div className="flex flex-col -rotate-45">
-                <p className="text-4xl font-bold text-[#0E4D45]">40</p>
-                <p className="text-[#0E4D45] text-2xl ">RT</p>
+                <p className="text-4xl font-bold text-[#0E4D45]">{rtCount}</p>
+                <p className="text-[#0E4D45] text-2xl">RT</p>
               </div>
             </div>
             <div className="content-center p-4 text-center transform rotate-45 translate-y-24 bg-white rounded-4xl size-30 2xl:size-36">
               <div className="flex flex-col -rotate-45">
-                <p className="text-4xl font-bold text-[#0E4D45]">2126</p>
+                <p className="text-4xl font-bold text-[#0E4D45]">{kkCount}</p>
                 <p className="text-[#0E4D45] text-2xl">KK</p>
               </div>
             </div>
