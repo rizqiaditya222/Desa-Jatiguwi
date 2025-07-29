@@ -16,7 +16,6 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
 
   return (
     <div className="w-full px-24 py-12 flex items-center justify-between">
-      {/* Logo image */}
       <img className="w-2xs" src="img/logo_full.png" alt="Logo Desa" />
 
       {/* Navigation buttons */}
