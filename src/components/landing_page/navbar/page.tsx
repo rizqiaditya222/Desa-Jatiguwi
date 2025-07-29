@@ -30,7 +30,7 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
         <NavButton text="Selayang Pandang" href="/selayang-pandang" />
         <NavButton text="Sejarah" href="/sejarah" />
         <NavButton text="Galeri" href="/galeri" />
-        <NavButton text="Kontak" href="/kontak" />
+        <NavButton text="Berita" href="/berita" />
       </div>
 
       {/* PrimaryLinkButton will change based on login status */}
