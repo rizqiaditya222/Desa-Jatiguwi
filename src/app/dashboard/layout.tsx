@@ -8,7 +8,9 @@ import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth'; // Import 
 import app from '@/lib/firebase/clientApps'; // Import your Firebase app instance
 
 const sidebarItems = [
-  { name: 'Semua Penduduk', href: '/penduduk/all' },
+  { name: 'Semua Penduduk', href: '/dashboard/all' },
+  { name: 'Berita', href: '/dashboard/berita' },
+  { name: 'Pengumuman', href: '/dashboard/pengumuman' },
 ];
 
 export default function PendudukLayout({ children }: { children: React.ReactNode }) {
@@ -16,7 +18,6 @@ export default function PendudukLayout({ children }: { children: React.ReactNode
   const router = useRouter(); // Initialize useRouter
   const auth = getAuth(app); // Get Firebase Auth instance
 
-  // State for handling potential sign-out errors
   const [error, setError] = useState<string | null>(null);
 
   // Authentication check: Redirect if user is not logged in
@@ -35,7 +36,7 @@ export default function PendudukLayout({ children }: { children: React.ReactNode
     setError(null); // Clear any previous errors
     try {
       await signOut(auth);
-      router.replace('/'); // Redirect to the root path after successful sign out
+      router.replace('/'); 
     } catch (err: any) {
       console.error("Error signing out:", err); // Log the actual error for debugging
       setError("Gagal keluar: " + err.message); // Set error message for display
@@ -55,12 +56,12 @@ export default function PendudukLayout({ children }: { children: React.ReactNode
           </div>
         </Link>
 
-        <nav className="flex flex-col p-4 gap-2 flex-grow"> {/* Added flex-grow */}
+        <nav className="flex flex-col p-4 gap-2 flex-grow">
           {sidebarItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className={`py-2 px-4 bg-[#0E4D45] rounded hover:bg-[#145C53] ${pathname === item.href ? 'bg-[#145C53]' : ''
+              className={`py-2 px-4 text-[#0E4D45] font-medium ${pathname === item.href ? 'bg-[#0E4D45] rounded text-white' : ''
                 }`}
             >
               {item.name}
@@ -68,9 +69,8 @@ export default function PendudukLayout({ children }: { children: React.ReactNode
           ))}
         </nav>
 
-        {/* Sign Out Button - Placed at the bottom of the sidebar */}
-        <div className="p-4 mt-auto"> {/* Use mt-auto to push to the bottom */}
-          {error && <p className="text-red-500 text-sm mb-2">{error}</p>} {/* Display sign-out error */}
+        <div className="p-4 mt-auto"> 
+          {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
           <button
             onClick={handleSignOut}
             className="w-full px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition duration-150 ease-in-out"

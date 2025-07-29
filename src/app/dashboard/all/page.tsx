@@ -3,70 +3,22 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
-import {
-  getFirestore,
-  collection,
-  query,
-  orderBy,
-  limit,
-  startAfter,
-  getDocs,
-  DocumentData,
-  QueryDocumentSnapshot,
-  where,
-  doc,
-  getDoc,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-} from 'firebase/firestore';
+import { QueryDocumentSnapshot } from 'firebase/firestore';
 
 import app from '@/lib/firebase/clientApps';
+import { PendudukData } from '@/types/penduduk';
+import {
+  fetchPendudukData,
+  addPenduduk,
+  updatePenduduk,
+  deletePenduduk,
+  emptyPendudukFormData,
+} from '@/service/penduduk/pendudukService'
 
-// Import xlsx and file-saver
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 
-const db = getFirestore(app);
-
-const DATA_PER_PAGE = 10;
-
-interface PendudukData {
-  id?: string;
-  AGAMA: string;
-  AGAMA_KET: string;
-  ALAMAT: string;
-  DUSUN: string;
-  GOL_DRH: string;
-  ID: string;
-  JENIS_KLMIN: string;
-  JENIS_KLMIN_KET: string;
-  JENIS_PKRJN: string;
-  JENIS_PKRJN_KET: string;
-  KODE_POS: string;
-  NAMA_KAB: string;
-  NAMA_KEC: string;
-  NAMA_KEL: string;
-  NAMA_LGKP: string;
-  NAMA_LGKP_AYAH: string;
-  NAMA_LGKP_IBU: string;
-  NAMA_PROP: string;
-  NIK: string;
-  NO_KAB: string;
-  NO_KEC: string;
-  NO_KEL: string;
-  NO_KK: string;
-  NO_PROP: string;
-  NO_RT: string;
-  NO_RW: string;
-  PDDK_AKH: string;
-  PENDIDIKAN_AKH_KET: string;
-  STAT_HBKEL: string;
-  STAT_HBKEL_1: string;
-  STAT_KWN_KET: string;
-  TELP: string;
-  TGL_KWN: string;
-}
+const DATA_PER_PAGE = 10; 
 
 export default function AllPendudukPage() {
   const [data, setData] = useState<PendudukData[]>([]);
@@ -105,83 +57,18 @@ export default function AllPendudukPage() {
     return () => unsubscribe();
   }, [auth, router]);
 
-  const emptyFormData: Partial<PendudukData> = {
-    AGAMA: '',
-    AGAMA_KET: '',
-    ALAMAT: '',
-    DUSUN: '',
-    GOL_DRH: '',
-    ID: '',
-    JENIS_KLMIN: '',
-    JENIS_KLMIN_KET: '',
-    JENIS_PKRJN: '',
-    JENIS_PKRJN_KET: '',
-    KODE_POS: '',
-    NAMA_KAB: '',
-    NAMA_KEC: '',
-    NAMA_KEL: '',
-    NAMA_LGKP: '',
-    NAMA_LGKP_AYAH: '',
-    NAMA_LGKP_IBU: '',
-    NAMA_PROP: '',
-    NIK: '',
-    NO_KAB: '',
-    NO_KEC: '',
-    NO_KEL: '',
-    NO_KK: '',
-    NO_PROP: '',
-    NO_RT: '',
-    NO_RW: '',
-    PDDK_AKH: '',
-    PENDIDIKAN_AKH_KET: '',
-    STAT_HBKEL: '',
-    STAT_HBKEL_1: '',
-    STAT_KWN_KET: '',
-    TELP: '',
-    TGL_KWN: '',
-  };
-
-  const fetchData = async (reset = false) => {
+  const loadData = async (reset = false) => {
     setLoading(true);
     setError(null);
 
     try {
-      let baseQuery = query(
-        collection(db, 'Penduduk'),
-        orderBy(orderField, orderDirection)
-      );
-
-      // Add search if searchTerm exists
-      if (searchTerm) {
-        baseQuery = query(
-          collection(db, 'Penduduk'),
-          where(searchField, '>=', searchTerm),
-          where(searchField, '<=', searchTerm + '\uf8ff'),
-          orderBy(searchField, orderDirection) // orderBy is crucial for where clauses
-        );
-      }
-
-      // Add pagination
-      let finalQuery;
-      if (reset) {
-        finalQuery = query(baseQuery, limit(DATA_PER_PAGE));
-      } else if (lastDoc) {
-        finalQuery = query(baseQuery, startAfter(lastDoc), limit(DATA_PER_PAGE));
-      } else {
-        finalQuery = query(baseQuery, limit(DATA_PER_PAGE)); // Initial load if no lastDoc
-      }
-
-      const snapshot = await getDocs(finalQuery);
-      const docs = snapshot.docs;
-
-      const fetchedData = docs.map((doc) => {
-        const data = doc.data();
-        return {
-          id: doc.id,
-          ...data,
-          NIK: String(data.NIK),
-          NO_KK: String(data.NO_KK),
-        } as PendudukData;
+      const { data: fetchedData, lastVisible, isLastPage: newIsLastPage } = await fetchPendudukData({
+        limitNumber: DATA_PER_PAGE,
+        lastDoc: reset ? null : lastDoc,
+        orderField,
+        orderDirection,
+        searchTerm,
+        searchField,
       });
 
       if (reset) {
@@ -190,8 +77,8 @@ export default function AllPendudukPage() {
         setData((prev) => [...prev, ...fetchedData]);
       }
 
-      setLastDoc(docs[docs.length - 1] || null);
-      setIsLastPage(docs.length < DATA_PER_PAGE);
+      setLastDoc(lastVisible);
+      setIsLastPage(newIsLastPage);
     } catch (err) {
       console.error('Error fetching data:', err);
       setError('Gagal mengambil data dari Firestore');
@@ -204,12 +91,12 @@ export default function AllPendudukPage() {
     setData([]);
     setLastDoc(null);
     setPage(1);
-    fetchData(true);
+    loadData(true);
   }, [orderField, orderDirection, searchTerm, searchField]);
 
   const handleNextPage = () => {
     if (!isLastPage && !loading) {
-      fetchData();
+      loadData();
       setPage((prev) => prev + 1);
     }
   };
@@ -219,12 +106,12 @@ export default function AllPendudukPage() {
     setData([]);
     setLastDoc(null);
     setPage(1);
-    fetchData(true);
+    loadData(true);
   };
 
   const clearSearch = () => {
     setSearchTerm('');
-    // useEffect will re-trigger fetchData(true) because searchTerm changes
+    // useEffect will re-trigger loadData(true) because searchTerm changes
   };
 
   const handleRowClick = (person: PendudukData) => {
@@ -234,7 +121,7 @@ export default function AllPendudukPage() {
 
   const handleAdd = () => {
     setFormMode('add');
-    setFormData(emptyFormData);
+    setFormData(emptyPendudukFormData);
     setShowForm(true);
   };
 
@@ -249,12 +136,12 @@ export default function AllPendudukPage() {
     if (window.confirm('Apakah Anda yakin ingin menghapus data ini?')) {
       try {
         if (person.id) {
-          await deleteDoc(doc(db, 'Penduduk', person.id));
+          await deletePenduduk(person.id);
           setData(prev => prev.filter(p => p.id !== person.id));
           setShowDetail(false);
           alert('Data berhasil dihapus');
           // Re-fetch data to ensure pagination is correct after deletion
-          fetchData(true);
+          loadData(true);
         }
       } catch (err) {
         console.error('Error deleting document:', err);
@@ -269,21 +156,20 @@ export default function AllPendudukPage() {
 
     try {
       if (formMode === 'add') {
-        const docRef = await addDoc(collection(db, 'Penduduk'), formData);
-        const newData = { id: docRef.id, ...formData } as PendudukData;
+        const newData = await addPenduduk(formData);
         setData(prev => [newData, ...prev]); // Add new data to the beginning for immediate display
         alert('Data berhasil ditambahkan');
       } else {
         if (formData.id) {
-          await updateDoc(doc(db, 'Penduduk', formData.id), formData);
+          await updatePenduduk(formData.id, formData);
           setData(prev => prev.map(p => p.id === formData.id ? { ...formData } as PendudukData : p));
           alert('Data berhasil diupdate');
         }
       }
       setShowForm(false);
-      setFormData(emptyFormData);
+      setFormData(emptyPendudukFormData);
       // Re-fetch data to ensure correct sorting/pagination after add/edit
-      fetchData(true);
+      loadData(true);
     } catch (err) {
       console.error('Error saving document:', err);
       alert('Gagal menyimpan data');
@@ -296,114 +182,93 @@ export default function AllPendudukPage() {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-    const handleExportToExcel = async () => {
+  const handleExportToExcel = async () => {
     setLoading(true);
     try {
-        console.log('Starting Excel export...');
-        
-        // Fetch all data for export, ignoring current pagination
-        let allDataQuery;
-        
-        // Apply search filter if exists
-        if (searchTerm) {
-        allDataQuery = query(
-            collection(db, 'Penduduk'),
-            where(searchField, '>=', searchTerm),
-            where(searchField, '<=', searchTerm + '\uf8ff'),
-            orderBy(searchField, orderDirection)
-        );
-        } else {
-        allDataQuery = query(
-            collection(db, 'Penduduk'), 
-            orderBy(orderField, orderDirection)
-        );
-        }
-        
-        console.log('Fetching data from Firestore...');
-        const snapshot = await getDocs(allDataQuery);
-        console.log(`Found ${snapshot.docs.length} documents`);
-        
-        if (snapshot.docs.length === 0) {
+      console.log('Starting Excel export...');
+
+      // Fetch all data for export, ignoring current pagination
+      const { data: allFetchedData } = await fetchPendudukData({
+        limitNumber: Infinity, // Fetch all data
+        orderField,
+        orderDirection,
+        searchTerm,
+        searchField,
+      });
+
+      console.log(`Found ${allFetchedData.length} documents for export`);
+
+      if (allFetchedData.length === 0) {
         alert('Tidak ada data untuk diekspor.');
         setLoading(false);
         return;
-        }
+      }
 
-        const allFetchedData: PendudukData[] = snapshot.docs.map((doc) => {
-        const data = doc.data();
-        const cleanData = { ...data };
-        delete cleanData.id; // Remove Firestore document ID from export
-        
-        return {
-            ...cleanData,
-            NIK: String(data.NIK || ''),
-            NO_KK: String(data.NO_KK || ''),
-        } as PendudukData;
-        });
+      // Prepare data for Excel (remove 'id' field)
+      const dataForExport = allFetchedData.map(person => {
+        const { id, ...rest } = person;
+        return rest;
+      });
 
-        console.log('Creating Excel worksheet...');
-        
-        // Create worksheet with proper headers
-        const worksheet = XLSX.utils.json_to_sheet(allFetchedData, {
-        header: Object.keys(allFetchedData[0]), // Ensure consistent column order
-        });
-        
-        // Set column widths for better readability
-        const colWidths = Object.keys(allFetchedData[0]).map(() => ({ wch: 15 }));
-        worksheet['!cols'] = colWidths;
-        
-        console.log('Creating workbook...');
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, 'Data Penduduk');
+      console.log('Creating Excel worksheet...');
 
-        console.log('Generating Excel file...');
-        
-        // Try different export methods based on browser compatibility
-        try {
-        // Method 1: Using writeFile (most compatible)
+      // Create worksheet with proper headers
+      const worksheet = XLSX.utils.json_to_sheet(dataForExport, {
+        header: Object.keys(dataForExport[0] || {}), // Ensure consistent column order
+      });
+
+      const colWidths = Object.keys(dataForExport[0] || {}).map(() => ({ wch: 15 }));
+      worksheet['!cols'] = colWidths;
+
+      console.log('Creating workbook...');
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Data Penduduk');
+
+      console.log('Generating Excel file...');
+
+      try {
         const fileName = `Data_Penduduk_${new Date().toISOString().split('T')[0]}.xlsx`;
         XLSX.writeFile(workbook, fileName);
         alert('Data berhasil diekspor ke Excel!');
-        } catch (writeFileError) {
+      } catch (writeFileError) {
         console.log('writeFile failed, trying alternative method...', writeFileError);
-        
-        // Method 2: Using write + saveAs (fallback)
-        const excelBuffer = XLSX.write(workbook, { 
-            bookType: 'xlsx', 
-            type: 'array',
-            bookSST: false, // Disable shared string table for better compatibility
+
+        const excelBuffer = XLSX.write(workbook, {
+          bookType: 'xlsx',
+          type: 'array',
+          bookSST: false, 
         });
-        
-        const dataBlob = new Blob([excelBuffer], { 
-            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 
+
+        const dataBlob = new Blob([excelBuffer], {
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         });
-        
+
         const fileName = `Data_Penduduk_${new Date().toISOString().split('T')[0]}.xlsx`;
         saveAs(dataBlob, fileName);
         alert('Data berhasil diekspor ke Excel!');
-        }
-        
+      }
+
     } catch (err) {
-        console.error('Detailed error during Excel export:', err);
-        
-        // Provide more specific error messages
-        if (err instanceof Error) {
+      console.error('Detailed error during Excel export:', err);
+
+      // Provide more specific error messages
+      if (err instanceof Error) {
         if (err.message.includes('quota')) {
-            alert('Gagal mengekspor: Kuota Firestore terlampaui. Coba lagi nanti.');
+          alert('Gagal mengekspor: Kuota Firestore terlampaui. Coba lagi nanti.');
         } else if (err.message.includes('permission')) {
-            alert('Gagal mengekspor: Tidak memiliki izin akses data.');
+          alert('Gagal mengekspor: Tidak memiliki izin akses data.');
         } else if (err.message.includes('network')) {
-            alert('Gagal mengekspor: Masalah koneksi internet.');
+          alert('Gagal mengekspor: Masalah koneksi internet.');
         } else {
-            alert(`Gagal mengekspor data ke Excel: ${err.message}`);
+          alert(`Gagal mengekspor data ke Excel: ${err.message}`);
         }
-        } else {
+      } else {
         alert('Gagal mengekspor data ke Excel. Silakan coba lagi.');
-        }
+      }
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
-    };
+  };
 
 
   // Daftar field yang bisa digunakan untuk sorting dan pencarian
@@ -626,7 +491,7 @@ export default function AllPendudukPage() {
             </div>
 
             <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {Object.keys(emptyFormData).map((field) => (
+              {Object.keys(emptyPendudukFormData).map((field) => (
                 <div key={field}>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     {field}
