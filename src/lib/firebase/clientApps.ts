@@ -1,5 +1,6 @@
 
 import { initializeApp, getApps, getApp, FirebaseApp } from "firebase/app";
+import { getFirestore } from 'firebase/firestore';
 
 interface FirebaseConfig {
   apiKey: string;
@@ -20,11 +21,8 @@ const firebaseConfig: FirebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID!,
 };
 
-let app: FirebaseApp;
-if (!getApps().length) { 
-  app = initializeApp(firebaseConfig);
-} else {
-  
-  app = getApp();
-}
+const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+const db = getFirestore(app); 
+
 export default app;
+export { db };
