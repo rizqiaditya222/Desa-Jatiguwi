@@ -11,6 +11,7 @@ const sidebarItems = [
   { name: 'Semua Penduduk', href: '/dashboard/all' },
   { name: 'Berita', href: '/dashboard/berita' },
   { name: 'Pengumuman', href: '/dashboard/pengumuman' },
+  { name: 'Galeri', href: '/dashboard/galeri' },
 ];
 
 export default function PendudukLayout({ children }: { children: React.ReactNode }) {
@@ -20,7 +21,6 @@ export default function PendudukLayout({ children }: { children: React.ReactNode
 
   const [error, setError] = useState<string | null>(null);
 
-  // Authentication check: Redirect if user is not logged in
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (!user) {
