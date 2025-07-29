@@ -6,6 +6,7 @@ export interface NewsArticle {
   content: string;
   imageUrl: string;
   date: Timestamp;
+  slug: string;
 }
 
 export interface AddNewsData {

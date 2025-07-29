@@ -3,11 +3,28 @@ import {
   collection,
   addDoc,
   Timestamp,
-  doc, // Import doc for referencing a specific document
-  updateDoc, // Import updateDoc for updating documents
-  deleteDoc, // Import deleteDoc for deleting documents
+  doc,
+  updateDoc,
+  deleteDoc,
 } from 'firebase/firestore';
 import { PengumumanArticle, AddPengumuman as AddPengumumanData } from '@/types/pengumuman';
+
+/**
+ * Generates a URL-friendly slug from a given string.
+ * @param {string} text - The input string (e.g., title).
+ * @returns {string} The generated slug.
+ */
+function generateSlug(text: string): string {
+  return text
+    .toString()
+    .normalize('NFD') // Normalize diacritics
+    .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/[^\w-]+/g, '') // Remove all non-word chars
+    .replace(/--+/g, '-'); // Replace multiple hyphens with single
+}
 
 /**
  * Menambahkan pengumuman baru ke Firebase.
@@ -16,16 +33,17 @@ import { PengumumanArticle, AddPengumuman as AddPengumumanData } from '@/types/p
  */
 export async function AddPengumuman(pengumumanData: AddPengumumanData): Promise<void> {
   const { title, content } = pengumumanData;
+  const slug = generateSlug(title); // Generate the slug here
 
   try {
-    // 1. Simpan data pengumuman ke Firebase Firestore
     const newPengumuman: Omit<PengumumanArticle, 'id'> = {
       title: title,
       content: content,
-      date: Timestamp.now(), // Gunakan Timestamp.now() untuk mendapatkan tanggal saat ini
+      date: Timestamp.now(),
+      slug: slug, // Add the generated slug
     };
 
-    await addDoc(collection(db, 'pengumuman'), newPengumuman); // Changed collection to 'pengumuman'
+    await addDoc(collection(db, 'pengumuman'), newPengumuman);
 
     console.log('Pengumuman berhasil ditambahkan!');
   } catch (error: any) {
@@ -34,17 +52,20 @@ export async function AddPengumuman(pengumumanData: AddPengumumanData): Promise<
   }
 }
 
-
 /**
  * Memperbarui pengumuman yang sudah ada di Firebase.
  * @param {string} pengumumanId - ID dokumen pengumuman yang akan diperbarui.
- * @param {Partial<AddPengumumanData>} updateData - Objek yang berisi data yang akan diperbarui (judul atau konten).
+ * @param {Partial<AddPengumumanData & { slug?: string }>} updateData - Objek yang berisi data yang akan diperbarui (judul, konten, atau slug).
  * @returns {Promise<void>}
  */
-export async function updatePengumuman(pengumumanId: string, updateData: Partial<AddPengumumanData>): Promise<void> {
+export async function updatePengumuman(pengumumanId: string, updateData: Partial<AddPengumumanData & { slug?: string }>): Promise<void> {
   try {
-    const pengumumanRef = doc(db, 'pengumuman', pengumumanId); // Get a reference to the specific document
-    await updateDoc(pengumumanRef, updateData); // Update the document with the provided data
+    if (updateData.title) {
+      updateData.slug = generateSlug(updateData.title);
+    }
+
+    const pengumumanRef = doc(db, 'pengumuman', pengumumanId);
+    await updateDoc(pengumumanRef, updateData);
 
     console.log(`Pengumuman dengan ID ${pengumumanId} berhasil diperbarui!`);
   } catch (error: any) {
@@ -53,8 +74,6 @@ export async function updatePengumuman(pengumumanId: string, updateData: Partial
   }
 }
 
-
-
 /**
  * Menghapus pengumuman dari Firebase.
  * @param {string} pengumumanId - ID dokumen pengumuman yang akan dihapus.
@@ -62,8 +81,8 @@ export async function updatePengumuman(pengumumanId: string, updateData: Partial
  */
 export async function deletePengumuman(pengumumanId: string): Promise<void> {
   try {
-    const pengumumanRef = doc(db, 'pengumuman', pengumumanId); // Get a reference to the specific document
-    await deleteDoc(pengumumanRef); // Delete the document
+    const pengumumanRef = doc(db, 'pengumuman', pengumumanId);
+    await deleteDoc(pengumumanRef);
 
     console.log(`Pengumuman dengan ID ${pengumumanId} berhasil dihapus!`);
   } catch (error: any) {
