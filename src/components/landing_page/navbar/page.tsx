@@ -20,23 +20,17 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
       <img className="w-2xs" src="img/logo_full.png" alt="Logo Desa" />
 
       {/* Navigation buttons */}
-      <div>
+      <div className="flex space-x-8 items-center gap-8">
         <NavButton text="Beranda" href="/" />{" "}
-        {/* Added a default href for Beranda */}
         <NavButton text="Profil" href="/profil" />{" "}
-        {/* Added a default href for Profil */}
         <NavButton text="Selayang Pandang" href="/selayang-pandang" />{" "}
-        {/* Added a default href */}
         <NavButton text="Sejarah" href="/sejarah" />{" "}
-        {/* Added a default href */}
-        <NavButton text="Galeri" href="/galeri" /> {/* Added a default href */}
-        <NavButton text="Kontak" href="/kontak" /> {/* Added a default href */}
+        <NavButton text="Galeri" href="/galeri" />{" "}
+        <NavButton text="Kontak" href="/kontak" />
       </div>
 
       {/* PrimaryLinkButton will change based on login status */}
       <PrimaryLinkButton text={buttonText} href={buttonHref} />
-
-      <PrimaryLinkButton text="Login" href="/auth/login" />
     </div>
   );
 };
