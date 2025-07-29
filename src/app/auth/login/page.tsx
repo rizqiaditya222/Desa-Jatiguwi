@@ -16,11 +16,11 @@ const AuthComponent = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState<User | null>(null);
-  const [error, setError] = useState<string | null>(null); // State untuk pesan error
-  const [loading, setLoading] = useState(true); // State untuk indikator loading
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const auth = getAuth(app);
-  const router = useRouter(); // Inisialisasi router
+  const router = useRouter();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -29,28 +29,31 @@ const AuthComponent = () => {
     });
 
     return () => unsubscribe();
-  }, [auth]); // Dependensi auth agar listener diperbarui jika instance auth berubah
-
-  const handleSignUp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      setEmail("");
-      setPassword("");
-    } catch (err: any) {
-      setError(err.message);
-    }
-  };
+  }, [auth]);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+
+    if (!email || !password) {
+      setError("Email dan password wajib diisi.");
+      return;
+    }
+
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      router.push("/");
+      router.push("/dashboard/all");
     } catch (err: any) {
-      setError(err.message);
+      const message =
+        err.code === "auth/user-not-found"
+          ? "Pengguna tidak ditemukan."
+          : err.code === "auth/wrong-password"
+          ? "Password salah."
+          : err.code === "auth/invalid-email"
+          ? "Format email tidak valid."
+          : err.message;
+
+      setError(message);
     }
   };
 
@@ -59,7 +62,7 @@ const AuthComponent = () => {
     try {
       await signOut(auth);
     } catch (err: any) {
-      setError(err.message);
+      setError("Gagal keluar: " + err.message);
     }
   };
 
@@ -87,21 +90,20 @@ const AuthComponent = () => {
             </p>
           </div>
         </div>
-        {/* Welcome Text */}
+
         <div className="mb-8 mt-8">
           <h2 className="text-3xl font-bold text-[#0E4D45] mb-2">
             Selamat Datang Kembali
           </h2>
           <p className="text-gray-600 text-xl">
-            Masukkan username dan password
+            Masukkan email dan password Anda
           </p>
         </div>
 
         {user ? (
           <div className="text-center">
             <p className="text-lg text-gray-700 mb-4">
-              Selamat datang,{" "}
-              <span className="font-semibold">{user.email}</span>!
+              Selamat datang, <span className="font-semibold">{user.email}</span>!
             </p>
             <button
               onClick={handleSignOut}
@@ -111,19 +113,21 @@ const AuthComponent = () => {
             </button>
           </div>
         ) : (
-          <form className="flex flex-col space-y-4 mt-8">
+          <form onSubmit={handleSignIn} className="flex flex-col space-y-4 mt-8">
             {error && (
-              <p className="text-red-500 text-sm text-center bg-red-100 p-2 rounded-md border border-red-200">
+              <p className="text-red-600 text-sm bg-red-100 p-3 rounded-md border border-red-200">
                 {error}
               </p>
             )}
             <div>
               <label className="block text-lg font-medium text-[#0E4D45] mb-1">
-                Username
+                Email
               </label>
               <input
-                type="text"
-                placeholder="Masukkan username di sini"
+                type="email"
+                placeholder="Masukkan email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0E4D45]"
                 required
               />
@@ -134,7 +138,9 @@ const AuthComponent = () => {
               </label>
               <input
                 type="password"
-                placeholder="Masukkan password di sini"
+                placeholder="Masukkan password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0E4D45]"
                 required
               />
@@ -150,16 +156,10 @@ const AuthComponent = () => {
             >
               Masuk
             </button>
-            {/* <button
-              type="submit"
-              onClick={handleSignUp}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 ease-in-out transform hover:scale-105"
-            >
-              Daftar
-            </button> */}
           </form>
         )}
       </div>
+
       <div className="hidden lg:flex w-1/2 items-center justify-center p-16">
         <div className="w-[640px] h-full bg-gray-300 rounded-bl-3xl rounded-tr-3xl"></div>
       </div>
