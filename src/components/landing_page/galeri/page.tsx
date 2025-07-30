@@ -1,9 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import { listGallery } from '@/service/gallery/galleryService';
+import { Gallery } from '@/types/gallery'; // Assuming you have this type defined
 
 const Slider = dynamic(() => import('react-slick'), { ssr: false });
 
@@ -13,14 +15,26 @@ const Galeri = () => {
   const [hoveredSlide, setHoveredSlide] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<{ src: string; title: string } | null>(null);
+  const [images, setImages] = useState<Gallery[]>([]); // State to store fetched images
+  const [loading, setLoading] = useState(true); // State to manage loading status
+  const [error, setError] = useState<string | null>(null); // State to manage errors
 
-  const images = [
-    { src: '/img/gambar1.jpeg', title: 'Upacara Adat Desa Jatiguwi' },
-    { src: '/img/gambar2.jpeg', title: 'Kegiatan Kerja Bakti Warga' },
-    { src: '/img/gambar3.jpeg', title: 'Festival Budaya Tahunan' },
-    { src: '/img/gambar4.jpeg', title: 'Pemandangan Sawah Desa' },
-    { src: '/img/gambar5.jpeg', title: 'Gotong Royong Membangun Jalan' },
-  ];
+  useEffect(() => {
+    async function fetchImages() {
+      try {
+        setLoading(true);
+        const fetchedImages = await listGallery();
+        setImages(fetchedImages);
+      } catch (err) {
+        console.error('Failed to fetch gallery images:', err);
+        setError('Failed to load gallery images. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchImages();
+  }, []); // Empty dependency array means this effect runs once on mount
 
   const settings = {
     centerMode: true,
@@ -48,8 +62,8 @@ const Galeri = () => {
     ],
   };
 
-  const handleImageClick = (index: number) => {
-    setSelectedImage(images[index]);
+  const handleImageClick = (image: Gallery) => {
+    setSelectedImage({ src: image.imageUrl, title: image.title });
     setIsModalOpen(true);
   };
 
@@ -57,6 +71,30 @@ const Galeri = () => {
     setIsModalOpen(false);
     setSelectedImage(null);
   };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <p className="text-[#0E4D45] text-xl">Loading gallery...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <p className="text-red-600 text-xl">{error}</p>
+      </div>
+    );
+  }
+
+  if (images.length === 0) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <p className="text-[#0E4D45] text-xl">No gallery images available yet.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white px-6 md:px-24 py-16">
@@ -69,26 +107,24 @@ const Galeri = () => {
       </div>
       <hr className="border-[#0E4D45] border-t-2 mb-6" />
 
-      {/* Slider */}
       <div className="relative">
         <Slider ref={setSliderRef} {...settings}>
           {images.map((image, index) => (
-            <div key={index} className="px-2">
+            <div key={image.id} className="px-2">
               <div
                 className="relative group cursor-pointer"
                 onMouseEnter={() => setHoveredSlide(index)}
                 onMouseLeave={() => setHoveredSlide(null)}
-                onClick={() => handleImageClick(index)}
+                onClick={() => handleImageClick(image)}
               >
                 <img
-                  src={image.src}
+                  src={image.imageUrl}
                   alt={image.title}
                   className={`rounded-lg shadow-lg object-cover h-[250px] w-full transition-all duration-300 ${
                     index === activeSlide ? 'scale-110 z-10' : 'scale-90 opacity-60'
-                  } ${hoveredSlide === index && index === activeSlide ? 'blur-sm' : ''}`}
+                  } ${hoveredSlide === index && index === activeSlide ? 'blur-sm brightness-70' : ''}`}
                 />
 
-                {/* Hover Overlay */}
                 {hoveredSlide === index && index === activeSlide && (
                   <div className="absolute inset-0 flex items-center justify-center z-20 transition-opacity duration-300 rounded-lg">
                     <div className="flex flex-col items-center justify-center">
@@ -111,7 +147,10 @@ const Galeri = () => {
                           d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
                         />
                       </svg>
-                      <span className="text-white text-xl font-semibold">Preview</span>
+                      {/* Changed from static "Preview" to dynamic image.title */}
+                      <span className="text-white text-xl font-semibold text-center px-2">
+                        {image.title}
+                      </span>
                     </div>
                   </div>
                 )}
@@ -141,33 +180,42 @@ const Galeri = () => {
 
       {/* Modal */}
       {isModalOpen && selectedImage && (
-        <div
-          className="fixed inset-0 bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-80 p-4"
-          onClick={closeModal}
-        >
-          <div className="relative max-w-4xl max-h-[90vh] w-full" onClick={(e) => e.stopPropagation()}>
-            {/* Tombol Tutup */}
-            <button className="absolute -top-12 right-0 text-grey hover:text-gray-500 transition-colors" onClick={closeModal}>
-              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
+  <div
+    className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+    onClick={closeModal}
+  >
+    <div
+      className="relative max-w-4xl max-h-[90vh] w-full"
+      onClick={(e) => e.stopPropagation()}
+    >
+      {/* Tombol Tutup */}
+      <button
+        className="absolute -top-12 right-0 text-gray-400 hover:text-gray-500 transition-colors"
+        onClick={closeModal}
+      >
+        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
 
-            {/* Konten Gambar */}
-            <div className="bg-transparent rounded-lg overflow-hidden shadow-2xl flex flex-col items-center">
-              <img
-                src={selectedImage.src}
-                alt={selectedImage.title}
-                className="w-full h-auto max-h-[70vh] object-contain"
-              />
-              <p className="mt-4 text-white text-2xl font-semibold text-center"
-                style={{ textShadow: '0 2px 4px rgba(0,0,0,0.7)' }}>
-                {selectedImage.title}
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Konten Gambar */}
+      <div className="bg-transparent rounded-lg">
+        <img
+          src={selectedImage.src}
+          alt={selectedImage.title}
+          className="w-full h-auto max-h-[70vh] object-contain rounded-2xl"
+        />
+        <p
+          className="mt-4 text-white text-2xl font-semibold text-center"
+          style={{ textShadow: '0 2px 4px rgba(0,0,0,0.7)' }}
+        >
+          {selectedImage.title}
+        </p>
+      </div>
+    </div>
+  </div>
+)}
+
     </div>
   );
 };
