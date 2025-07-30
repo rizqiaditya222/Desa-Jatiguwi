@@ -1,16 +1,42 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "@/components/landing_page/navbar/page";
 import { useAuth } from "@/app/auth/context/AuthContext";
 import NavButtonAll from "@/components/button/nav_button_all";
 import Footer from "@/components/landing_page/footer/page";
+import { fetchProfil } from "@/service/profile/profileService"; // Import your service
 
 const ProfilPage = () => {
   const { user } = useAuth();
   const [selectedProfil, setSelectedProfil] = useState<"pkk" | "bpd" | "desa">(
     "pkk"
   );
+  const [profilData, setProfilData] = useState<any>(null); // State to store fetched profile data
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const getProfilData = async () => {
+      try {
+        setLoading(true);
+        const data = await fetchProfil();
+        // Assuming you have only one profile entry or you want the first one
+        if (data && data.length > 0) {
+          setProfilData(data[0]);
+        } else {
+          setError("No profile data found.");
+        }
+      } catch (err) {
+        console.error("Failed to fetch profile data:", err);
+        setError("Failed to load profile data.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getProfilData();
+  }, []);
 
   const kataKata = [
     { id: 1, text: "Kreatif" },
@@ -23,10 +49,26 @@ const ProfilPage = () => {
   ];
 
   const gambarMap: Record<typeof selectedProfil, string> = {
-    pkk: "/img/pkk.png",
-    bpd: "/img/bpd.png",
-    desa: "/img/desa.png",
+    pkk: profilData?.pkkUrl || "/img/default_pkk.png", // Provide a fallback image
+    bpd: profilData?.bpdUrl || "/img/default_bpd.png", // Provide a fallback image
+    desa: profilData?.desaUrl || "/img/default_desa.png", // Provide a fallback image
   };
+
+  if (loading) {
+    return (
+      <div className="w-full h-screen flex justify-center items-center">
+        <p>Loading profile data...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="w-full h-screen flex justify-center items-center text-red-600">
+        <p>{error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full">
@@ -109,10 +151,14 @@ const ProfilPage = () => {
 
           {/* Gambar Berdasarkan Pilihan */}
           <div className="max-w-3xl mx-auto">
-            <img
-              src={gambarMap[selectedProfil]}
-              alt={`gambar ${selectedProfil}`}
-            />
+            {profilData ? (
+              <img
+                src={gambarMap[selectedProfil]}
+                alt={`gambar ${selectedProfil}`}
+              />
+            ) : (
+              <p>No image available for {selectedProfil}.</p>
+            )}
           </div>
         </div>
       </div>
