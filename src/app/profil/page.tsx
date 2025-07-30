@@ -10,8 +10,8 @@ import { fetchProfil } from "@/service/profile/profileService"; // Import your s
 
 const ProfilPage = () => {
   const { user } = useAuth();
-  const [selectedProfil, setSelectedProfil] = useState<"pkk" | "bpd" | "desa">(
-    "pkk"
+  const [selectedProfil, setSelectedProfil] = useState<"lpmd" | "bpd" | "desa">(
+    "lpmd" // Default to 'lpmd' (PKK)
   );
 
   const [profilData, setProfilData] = useState<any>(null); // State to store fetched profile data
@@ -50,16 +50,11 @@ const ProfilPage = () => {
     { id: 7, text: "Inovatif" },
   ];
 
+  // Map selectedProfil to image URLs, with fallbacks
   const gambarMap: Record<typeof selectedProfil, string> = {
-<<<<<<< HEAD:src/app/profil/pkk/page.tsx
-    pkk: profilData?.pkkUrl || "/img/default_pkk.png", // Provide a fallback image
-    bpd: profilData?.bpdUrl || "/img/default_bpd.png", // Provide a fallback image
-    desa: profilData?.desaUrl || "/img/default_desa.png", // Provide a fallback image
-=======
-    lpmd: profilData?.pkkUrl || "/img/pkk.png", // Provide a fallback image
-    bpd: profilData?.bpdUrl || "/img/bpd.png", // Provide a fallback image
-    desa: profilData?.desaUrl || "/img/desa.png", // Provide a fallback image
->>>>>>> 3d3335d6801683202593e283f72899a18ea3e81b:src/app/profil/page.tsx
+    lpmd: profilData?.pkkUrl || "/img/pkk.png", // Assuming 'lpmd' corresponds to PKK image
+    bpd: profilData?.bpdUrl || "/img/bpd.png",
+    desa: profilData?.desaUrl || "/img/desa.png",
   };
 
   if (loading) {
@@ -84,7 +79,7 @@ const ProfilPage = () => {
 
       {/* Profil Desa Jatiguwi */}
       <div className="flex flex-col px-24 justify-center items-center text-[#0E4D45] pb-24">
-        <div className=" flex justify-between w-full">
+        <div className="flex justify-between w-full">
           <p className="text-4xl font-bold">Profil Desa Jatiguwi</p>
           <p className="text-end w-2/5">
             Mengenal lebih dekat Desa Jatiguwi dengan sejarah, visi, dan misi
@@ -94,7 +89,7 @@ const ProfilPage = () => {
 
         <div className="my-5 w-full h-[1px] bg-[#0E4D45]" />
         <div className="max-w-360 grid w-full px-24 py-12 mx-auto">
-          <div className=" grid w-full grid-cols-12 gap-8">
+          <div className="grid w-full grid-cols-12 gap-8">
             <section className="flex flex-col items-end col-span-5 p-12">
               <img
                 src="/img/logo_desa.png"
@@ -102,8 +97,8 @@ const ProfilPage = () => {
                 className="selection:max-w-80 max-h-80 mx-auto"
               />
             </section>
-            <section className=" flex flex-col col-span-6 col-start-6 py-4">
-              <div className=" flex flex-col">
+            <section className="flex flex-col col-span-6 col-start-6 py-4">
+              <div className="flex flex-col">
                 <p className="pt-12 pb-8 text-3xl font-semibold">Visi & Misi</p>
                 <p className="pb-8 text-2xl">
                   Terwujudnya masyarakat Desa Jatiguwi yang:{" "}
@@ -111,7 +106,7 @@ const ProfilPage = () => {
                 </p>
               </div>
 
-              <div className=" grid grid-cols-3 gap-8">
+              <div className="grid grid-cols-3 gap-8">
                 {kataKata.map((kata) => (
                   <div key={kata.id} className="text-lg font-semibold">
                     {kata.id}. {kata.text}
@@ -122,7 +117,7 @@ const ProfilPage = () => {
           </div>
         </div>
         {/* Struktur Organisasi */}
-        <div className=" flex justify-between w-full mt-16">
+        <div className="flex justify-between w-full mt-16">
           <p className="text-4xl font-bold">Struktur Organisasi</p>
           <p className="text-end w-2/5">
             Mengenal lebih dekat struktur organisasi kelembagaan desa.
@@ -132,7 +127,7 @@ const ProfilPage = () => {
         <div className="my-5 w-full h-[1px] bg-[#0E4D45]" />
         <div className="max-w-360 grid w-full mx-auto">
           <div className="flex flex-col justify-center mx-auto space-y-8">
-            {/* Tombol Pilih */}
+            {/* Tombol Pilih - ONLY ONE BLOCK HERE */}
             <div className="flex mx-auto gap-8 border-2 border-[#0E4D45] p-4 rounded-2xl">
               <button onClick={() => setSelectedProfil("desa")}>
                 <NavButtonAll
@@ -148,53 +143,16 @@ const ProfilPage = () => {
                   isSelected={selectedProfil === "bpd"}
                 />
               </button>
+              {/* Changed text from "LPMD" to "PKK" to match gambarMap key `pkkUrl` if that's the intention */}
               <button onClick={() => setSelectedProfil("lpmd")}>
                 <NavButtonAll
-                  text="LPMD"
+                  text="PKK" 
                   href="#"
                   isSelected={selectedProfil === "lpmd"}
                 />
               </button>
             </div>
 
-<<<<<<< HEAD:src/app/profil/pkk/page.tsx
-        <div className="flex flex-col justify-center mx-auto space-y-8">
-          {/* Tombol Pilih */}
-          <div className="flex mx-auto gap-8 border-2 border-[#0E4D45] p-4 rounded-2xl">
-            <button onClick={() => setSelectedProfil("pkk")}>
-              <NavButtonAll
-                text="PKK"
-                href="#"
-                isSelected={selectedProfil === "pkk"}
-              />
-            </button>
-            <button onClick={() => setSelectedProfil("bpd")}>
-              <NavButtonAll
-                text="BPD"
-                href="#"
-                isSelected={selectedProfil === "bpd"}
-              />
-            </button>
-            <button onClick={() => setSelectedProfil("desa")}>
-              <NavButtonAll
-                text="Desa"
-                href="#"
-                isSelected={selectedProfil === "desa"}
-              />
-            </button>
-          </div>
-
-          {/* Gambar Berdasarkan Pilihan */}
-          <div className="max-w-3xl mx-auto">
-            {profilData ? (
-              <img
-                src={gambarMap[selectedProfil]}
-                alt={`gambar ${selectedProfil}`}
-              />
-            ) : (
-              <p>No image available for {selectedProfil}.</p>
-            )}
-=======
             {/* Gambar Berdasarkan Pilihan */}
             <div className="max-w-3xl mx-auto">
               {profilData ? (
@@ -206,7 +164,6 @@ const ProfilPage = () => {
                 <p>No image available for {selectedProfil}.</p>
               )}
             </div>
->>>>>>> 3d3335d6801683202593e283f72899a18ea3e81b:src/app/profil/page.tsx
           </div>
         </div>
       </div>
