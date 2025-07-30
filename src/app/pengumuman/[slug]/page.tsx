@@ -98,7 +98,7 @@ const PengumumanDetail = () => {
     <div className="bg-gray-50 min-h-screen">
       <Navbar isLoggedIn={false} />
       <PengumumanHeader title={announcement.title} />
-      <div className="max-w-7xl mx-auto px-4 py-6">
+      <div className="px-24 mx-auto px-4 py-6">
         <div className="flex flex-col lg:flex-row gap-8">
           <PengumumanContent announcement={announcement} />
           <PengumumanSidebar otherAnnouncements={otherAnnouncements} />

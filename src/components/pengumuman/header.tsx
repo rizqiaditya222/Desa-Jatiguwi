@@ -7,7 +7,7 @@ interface HeaderProps {
 const PengumumanHeader = ({ title }: HeaderProps) => {
   return (
     <div className="bg-white border-t border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 py-3">
+      <div className="px-24 mx-auto px-4 py-3">
         <nav className="text-sm text-gray-600">
           <Link href="/dashboard" className="hover:text-teal-600">Beranda</Link>
           <span className="mx-2">/</span>

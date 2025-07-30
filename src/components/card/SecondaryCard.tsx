@@ -1,18 +1,23 @@
 import React from "react";
+import Link from "next/link";
 
 interface SecondaryCardProps {
   Judul: string;
   deskripsi: string;
   date: string;
+
+  href: string;
 }
 
 const SecondaryCard: React.FC<SecondaryCardProps> = ({
   Judul,
   deskripsi,
   date,
+
+  href,
 }) => {
   return (
-    <button className="px-8 flex flex-col w-full py-4 text-start text-white border-2 rounded-lg border-[#0E4D45] bg-[#0E4D45] hover:border-[#63be86] hover:bg-[#63be86] transition duration-200 ease-in-out group">
+    <Link href={href} className="px-8 flex flex-col w-full py-4 text-start text-white border-2 rounded-lg border-[#0E4D45] bg-[#0E4D45] hover:border-[#63be86] hover:bg-[#63be86] transition duration-200 ease-in-out group">
       <div className="flex w-full">
         <h2 className="flex pb-4 text-xl font-bold uppercase md:text-2xl">
           {Judul}
@@ -20,7 +25,7 @@ const SecondaryCard: React.FC<SecondaryCardProps> = ({
       </div>
 
       <div className="mb-4">
-        <p className="text-sm ">{deskripsi}</p>
+        <p className="text-sm text-[#fafafa] line-clamp-3">{deskripsi}</p>
       </div>
 
       <div className="flex items-center gap-2">
@@ -45,7 +50,7 @@ const SecondaryCard: React.FC<SecondaryCardProps> = ({
 
         <p className="text-sm">{date}</p>
       </div>
-    </button>
+    </Link>
   );
 };
 

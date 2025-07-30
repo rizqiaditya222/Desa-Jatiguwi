@@ -75,8 +75,8 @@ const AuthComponent = () => {
   }
 
   return (
-    <div className="flex min-h-screen">
-      <div className="w-full lg:w-1/2 flex flex-col justify-start pt-16 px-8 sm:px-16 md:px-24 py-12">
+    <div className="flex min-h-screen ">
+      <div className="w-full lg:w-1/2 flex flex-col justify-center pb-16 px-8 sm:px-16 md:px-24 py-12">
         <div className="flex items-center gap-4 mb-10">
           <img
             src="/img/logo_desa.png"
@@ -161,7 +161,7 @@ const AuthComponent = () => {
       </div>
 
       <div className="hidden lg:flex w-1/2 items-center justify-center p-16">
-        <div className="w-[640px] h-full bg-gray-300 rounded-bl-3xl rounded-tr-3xl"></div>
+          <img className="w-full h-full bg-gray-300 rounded-bl-3xl rounded-tr-3xl object-cover" src="/img/login_img.JPG" alt="" />
       </div>
     </div>
   );

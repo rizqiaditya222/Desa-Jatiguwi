@@ -1,22 +1,22 @@
 'use client';
 
 import React from 'react';
-import { PengumumanArticle } from '@/types/pengumuman';
+import { NewsArticle } from '@/types/berita';
 
 interface ContentProps {
-  announcement: PengumumanArticle;
+  news: NewsArticle;
 }
 
-const PengumumanContent = ({ announcement }: ContentProps) => {
-  const formattedDate = announcement.date?.toDate().toLocaleDateString('id-ID', {
+const BeritaContent = ({ news }: ContentProps) => {
+  const formattedDate = news.date?.toDate().toLocaleDateString('id-ID', {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
   });
 
   const handleShare = () => {
     if (navigator.share) {
       navigator.share({
-        title: announcement.title,
-        text: (announcement.content ?? '').substring(0, 100) + '...',
+        title: news.title,
+        text: (news.content ?? '').substring(0, 100) + '...',
         url: window.location.href,
       });
     } else {
@@ -30,7 +30,7 @@ const PengumumanContent = ({ announcement }: ContentProps) => {
       <div className="bg-white rounded-lg shadow-sm overflow-hidden">
         <div className="p-6 pb-4">
           <h1 className="text-2xl lg:text-3xl font-bold text-[#07433C] mb-4 leading-tight">
-            {announcement.title}
+            {news.title}
           </h1>
 
           <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-4">
@@ -46,8 +46,13 @@ const PengumumanContent = ({ announcement }: ContentProps) => {
         </div>
 
         <div className="px-6 pb-6">
-<div className="mt-6 text-base leading-7 whitespace-pre-line">
-        {announcement.content}
+          <img
+            className='mb-6 h-128 w-full object-cover rounded-md'
+            src={news.imageUrl}
+            alt={news.title}
+          />
+                <div className="mt-6 text-base leading-7 whitespace-pre-line">
+        {news.content}
       </div>
           <div className="mt-8 pt-6 border-t border-gray-200">
             <p className="text-sm text-gray-500">
@@ -60,4 +65,4 @@ const PengumumanContent = ({ announcement }: ContentProps) => {
   );
 };
 
-export default PengumumanContent;
+export default BeritaContent;
