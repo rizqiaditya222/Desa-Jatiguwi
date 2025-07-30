@@ -1,5 +1,7 @@
 'use client'
 
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import app from "@/lib/firebase/clientApps";
 import React, { useState, useEffect } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import Navbar from '@/components/landing_page/navbar/page'
@@ -17,12 +19,27 @@ export default function ContentPage() {
   const [selectedTab, setSelectedTab] = useState<TabType>('berita')
   const [searchTerm, setSearchTerm] = useState('')
   const pathname = usePathname()
-  const router = useRouter()
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const router = useRouter();
+
 
   const { articles, loading } = useArticles(selectedTab)
   const filteredArticles = filterArticles(articles, searchTerm)
 
   useEffect(() => {
+
+    const auth = getAuth(app);
+
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
+      }
+    });
+
+    
+    return () => unsubscribe();
     const currentPath = pathname ?? ''
     if (currentPath.startsWith('/berita')) {
       setSelectedTab('berita')
@@ -33,7 +50,7 @@ export default function ContentPage() {
 
   const handleTabSwitch = (tab: TabType) => {
     setSelectedTab(tab)
-    setSearchTerm('') 
+    setSearchTerm('')
   }
 
   const handleSearchChange = (value: string) => {
@@ -42,7 +59,7 @@ export default function ContentPage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar isLoggedIn={false} />
+      <Navbar isLoggedIn={isLoggedIn} />
 
       <main className="flex-grow max-w-5xl mx-auto px-4 py-6">
         <Breadcrumb selectedTab={selectedTab} />

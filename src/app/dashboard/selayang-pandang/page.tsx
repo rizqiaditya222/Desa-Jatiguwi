@@ -1,10 +1,10 @@
 'use client'
 import React, { useState } from 'react';
-import TabNavigation from '@/components/selayang-pandang/TabNavigation';
-import LahanEdit from '@/components/selayang-pandang/LahanEdit';
-import DemografisEdit from '@/components/selayang-pandang/DemografisEdit';
-import AgamaEdit from '@/components/selayang-pandang/AgamaEdit';
-import ProfesiEdit from '@/components/selayang-pandang/ProfesiEdit';
+import TabNavigation from '@/components/dashboard/selayang-pandang/TabNavigation';
+import LahanEdit from '@/components/dashboard/selayang-pandang/LahanEdit';
+import DemografisEdit from '@/components/dashboard/selayang-pandang/DemografisEdit';
+import AgamaEdit from '@/components/dashboard/selayang-pandang/AgamaEdit';
+import ProfesiEdit from '@/components/dashboard/selayang-pandang/ProfesiEdit';
 
 const EditSelayangPandangSidebar: React.FC = () => {
     const [activeTab, setActiveTab] = useState('lahan');

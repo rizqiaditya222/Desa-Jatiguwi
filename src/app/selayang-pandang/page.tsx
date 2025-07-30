@@ -4,9 +4,9 @@ import Navbar from "@/components/landing_page/navbar/page";
 import { useAuth } from "@/app/auth/context/AuthContext";
 import PetaDesa from "@/components/Map/PetaDesa";
 import Footer from "@/components/landing_page/footer/page";
-import InfoCardGroup from "./infocardgroup";
-import ListStatCard from "./liststatcard";
-import WilayahLahanCard from "./wilayahlahancard";
+import InfoCardGroup from "../../components/selayang-pandang/infocardgroup";
+import ListStatCard from "../../components/selayang-pandang/liststatcard";
+import WilayahLahanCard from "../../components/selayang-pandang/wilayahlahancard";
 import {
   fetchDemografis,
   fetchAgama,
