@@ -16,11 +16,10 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase/clientApps";
-import PengumumanHeader from "@/components/pengumuman/header";
-import PengumumanContent from "@/components/pengumuman/content";
 import BeritaSidebar from "@/components/berita/sidebar";
 import { NewsArticle } from "@/types/berita"; // Assuming NewsArticle is the correct type
 import BeritaContent from "@/components/berita/content";
+import BeritaHeader from "@/components/berita/header";
 
 const BeritaDetail = () => {
   const { user } = useAuth();
@@ -123,7 +122,7 @@ const BeritaDetail = () => {
   return (
     <div className="bg-gray-50 min-h-screen">
       <Navbar isLoggedIn={!!user} />
-      <PengumumanHeader title={news.title} />
+      <BeritaHeader title={news.title} />
       <div className="px-24 py-6 mx-auto">
         <div className="lg:flex-row flex flex-col gap-8">
           <BeritaContent news={news} />
