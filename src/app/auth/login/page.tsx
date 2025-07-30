@@ -1,5 +1,7 @@
 "use client";
 
+export const prerender = false;
+
 import React, { useState, useEffect } from "react";
 import {
   getAuth,
