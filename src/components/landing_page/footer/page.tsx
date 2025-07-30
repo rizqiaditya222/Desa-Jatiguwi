@@ -6,7 +6,11 @@ const Footer = () => {
       <section className="grid grid-cols-12 pb-8 border-white border-b-1">
         <section className="flex flex-col col-span-6 space-y-4">
           <div className="flex min-w-10 md:w-20">
-            <img className="lg:w-120" src="/img/logo_desa.png" alt="Logo Desa" />
+            <img
+              className="lg:w-120"
+              src="/img/logo_desa.png"
+              alt="Logo Desa"
+            />
             <div>
               <p className="text-3xl font-semibold text-white">Desa Jatiguwi</p>
               <p className="font-light text-white text-nowrap ">
