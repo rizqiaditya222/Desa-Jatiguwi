@@ -1,6 +1,7 @@
 "use client";
 
-export const prerender = false;
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 import React, { useState, useEffect } from "react";
 import {
@@ -53,6 +54,8 @@ const AuthComponent = () => {
           ? "Password salah."
           : err.code === "auth/invalid-email"
           ? "Format email tidak valid."
+          : err.code === "auth/invalid-credential"
+          ? "Email atau password salah."
           : err.message;
 
       setError(message);
@@ -63,6 +66,7 @@ const AuthComponent = () => {
     setError(null);
     try {
       await signOut(auth);
+      router.push("/auth/login"); // Redirect ke halaman login setelah logout
     } catch (err: any) {
       setError("Gagal keluar: " + err.message);
     }
@@ -71,13 +75,25 @@ const AuthComponent = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-gray-100">
-        <p className="text-xl text-[#0E4D45]">Memuat...</p>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0E4D45]"></div>
+        <p className="text-xl text-[#0E4D45] ml-4">Memuat...</p>
+      </div>
+    );
+  }
+
+  // Jika user sudah login, redirect ke dashboard
+  if (user) {
+    router.push("/dashboard/all");
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-gray-100">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0E4D45]"></div>
+        <p className="text-xl text-[#0E4D45] ml-4">Mengalihkan...</p>
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-screen ">
+    <div className="flex min-h-screen">
       <div className="w-full lg:w-1/2 flex flex-col justify-center pb-16 px-8 sm:px-16 md:px-24 py-12">
         <div className="flex items-center gap-4 mb-10">
           <img
@@ -102,68 +118,59 @@ const AuthComponent = () => {
           </p>
         </div>
 
-        {user ? (
-          <div className="text-center">
-            <p className="text-lg text-gray-700 mb-4">
-              Selamat datang, <span className="font-semibold">{user.email}</span>!
-            </p>
-            <button
-              onClick={handleSignOut}
-              className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg transition duration-300 ease-in-out transform hover:scale-105"
-            >
-              Keluar
-            </button>
+        <form onSubmit={handleSignIn} className="flex flex-col space-y-4 mt-8">
+          {error && (
+            <div className="text-red-600 text-sm bg-red-100 p-3 rounded-md border border-red-200">
+              {error}
+            </div>
+          )}
+          <div>
+            <label className="block text-lg font-medium text-[#0E4D45] mb-1">
+              Email
+            </label>
+            <input
+              type="email"
+              placeholder="Masukkan email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0E4D45] focus:border-transparent"
+              required
+            />
           </div>
-        ) : (
-          <form onSubmit={handleSignIn} className="flex flex-col space-y-4 mt-8">
-            {error && (
-              <p className="text-red-600 text-sm bg-red-100 p-3 rounded-md border border-red-200">
-                {error}
-              </p>
-            )}
-            <div>
-              <label className="block text-lg font-medium text-[#0E4D45] mb-1">
-                Email
-              </label>
-              <input
-                type="email"
-                placeholder="Masukkan email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0E4D45]"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-lg font-medium text-[#0E4D45] mb-1">
-                Password
-              </label>
-              <input
-                type="password"
-                placeholder="Masukkan password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0E4D45]"
-                required
-              />
-            </div>
-            <div className="flex justify-end">
-              <a href="#" className="text-sm text-[#0E4D45] hover:underline">
-                Lupa Password?
-              </a>
-            </div>
-            <button
-              type="submit"
-              className="w-full bg-[#0E4D45] text-white font-semibold py-3 rounded-lg hover:bg-[#0A3B35] transition-colors"
-            >
-              Masuk
-            </button>
-          </form>
-        )}
+          <div>
+            <label className="block text-lg font-medium text-[#0E4D45] mb-1">
+              Password
+            </label>
+            <input
+              type="password"
+              placeholder="Masukkan password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0E4D45] focus:border-transparent"
+              required
+            />
+          </div>
+          <div className="flex justify-end">
+            <a href="#" className="text-sm text-[#0E4D45] hover:underline">
+              Lupa Password?
+            </a>
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-[#0E4D45] text-white font-semibold py-3 rounded-lg hover:bg-[#0A3B35] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={loading}
+          >
+            {loading ? "Memproses..." : "Masuk"}
+          </button>
+        </form>
       </div>
 
       <div className="hidden lg:flex w-1/2 items-center justify-center p-16">
-          <img className="w-full h-full bg-gray-300 rounded-bl-3xl rounded-tr-3xl object-cover" src="/img/login_img.JPG" alt="" />
+        <img 
+          className="w-full h-full bg-gray-300 rounded-bl-3xl rounded-tr-3xl object-cover" 
+          src="/img/login_img.JPG" 
+          alt="Login illustration" 
+        />
       </div>
     </div>
   );
