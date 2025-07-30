@@ -44,7 +44,6 @@ export default function PendudukLayout({ children }: { children: React.ReactNode
   };
 
   return (
-    // Changed min-h-screen to h-screen for the main flex container
     <div className="flex h-screen bg-gray-100">
       <aside className="w-64 bg-[#FAFAFA] text-white flex flex-col h-screen fixed top-0 left-0"> {/* Added h-screen, fixed, top-0, left-0 */}
         <Link href="/" className="flex p-4 items-center hover:bg-gray-200">

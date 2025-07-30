@@ -31,7 +31,6 @@ const PengumumanDetail = () => {
         setError('No announcement slug provided.');
         return;
       }
-
       try {
         setLoading(true);
         setError(null);

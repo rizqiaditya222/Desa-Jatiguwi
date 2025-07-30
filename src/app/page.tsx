@@ -4,7 +4,6 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-// Assuming '@/lib/firebase/clientApps' correctly initializes and exports the Firebase app instance
 import app from "@/lib/firebase/clientApps";
 
 
@@ -14,7 +13,7 @@ import PerangkatDesa from "@/components/landing_page/perangkat_desa/page";
 import SelayangPandang from "@/components/landing_page/selayang_pandang/page";
 import VideoSection from "@/components/landing_page/video/page";
 import VisiMisi from "@/components/landing_page/visi_misi/page";
-import Sejarah from "@/components/landing_page/sejarah/page";
+import Sejarah from "@/components/sejarah/page";
 import Galeri from "@/components/landing_page/galeri/page";
 
 import Footer from "@/components/landing_page/footer/page";        
