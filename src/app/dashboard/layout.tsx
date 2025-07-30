@@ -8,6 +8,7 @@ import app from '@/lib/firebase/clientApps'; // Import your Firebase app instanc
 
 const sidebarItems = [
   { name: 'Semua Penduduk', href: '/dashboard/all' },
+  { name: 'Profile', href: '/dashboard/profile' },
   { name: 'Berita', href: '/dashboard/berita' },
   { name: 'Pengumuman', href: '/dashboard/pengumuman' },
   { name: 'Galeri', href: '/dashboard/galeri' },
