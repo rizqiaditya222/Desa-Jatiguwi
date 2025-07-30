@@ -11,8 +11,8 @@ import {
   fetchDemografis,
   fetchAgama,
   fetchProfesi,
-  fetchLahan
-} from "@/service/selayang-pandang/selayangPandandService"
+  fetchLahan,
+} from "@/service/selayang-pandang/selayangPandandService";
 
 // Types
 interface DukuhStats {
@@ -39,12 +39,14 @@ interface WilayahLahanItem {
 
 const SelayangPandangPage = () => {
   const { user } = useAuth();
-  
+
   // State untuk data dari Firebase
   const [dukuhData, setDukuhData] = useState<DukuhData[]>([]);
   const [agamaData, setAgamaData] = useState<StatItem[]>([]);
   const [profesiData, setProfesiData] = useState<StatItem[]>([]);
-  const [wilayahLahanData, setWilayahLahanData] = useState<WilayahLahanItem[]>([]);
+  const [wilayahLahanData, setWilayahLahanData] = useState<WilayahLahanItem[]>(
+    []
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -52,51 +54,55 @@ const SelayangPandangPage = () => {
     const fetchAllData = async () => {
       try {
         setLoading(true);
-        
+
         // Fetch semua data secara paralel
-        const [demografisData, agamaFetch, profesiFetch, lahanFetch] = await Promise.all([
-          fetchDemografis(),
-          fetchAgama(),
-          fetchProfesi(),
-          fetchLahan()
-        ]);
+        const [demografisData, agamaFetch, profesiFetch, lahanFetch] =
+          await Promise.all([
+            fetchDemografis(),
+            fetchAgama(),
+            fetchProfesi(),
+            fetchLahan(),
+          ]);
 
         // Transform demografis data ke format dukuhData
-        const transformedDukuhData: DukuhData[] = demografisData.map(item => ({
-          name: item.nama,
-          stats: [
-            { title: "RW", value: item.rw, bg: true },
-            { title: "RT", value: item.rt },
-            { title: "KK", value: item.kk },
-            { title: "JIWA", value: item.jiwa, bg: true },
-          ]
-        }));
+        const transformedDukuhData: DukuhData[] = demografisData.map(
+          (item) => ({
+            name: item.nama,
+            stats: [
+              { title: "RW", value: item.rw, bg: true },
+              { title: "RT", value: item.rt },
+              { title: "KK", value: item.kk },
+              { title: "JIWA", value: item.jiwa, bg: true },
+            ],
+          })
+        );
 
         // Transform agama data
-        const transformedAgamaData: StatItem[] = agamaFetch.map(item => ({
+        const transformedAgamaData: StatItem[] = agamaFetch.map((item) => ({
           label: item.agama,
-          value: item.jumlah
+          value: item.jumlah,
         }));
 
         // Transform profesi data
-        const transformedProfesiData: StatItem[] = profesiFetch.map(item => ({
+        const transformedProfesiData: StatItem[] = profesiFetch.map((item) => ({
           label: item.nama,
-          value: item.jumlah
+          value: item.jumlah,
         }));
 
         // Transform lahan data
-        const transformedLahanData: WilayahLahanItem[] = lahanFetch.map(item => ({
-          label: item.nama,
-          value: item.luas,
-          satuan: "Ha" // Asumsi satuan selalu Ha, bisa disesuaikan jika ada field satuan di database
-        }));
+        const transformedLahanData: WilayahLahanItem[] = lahanFetch.map(
+          (item) => ({
+            label: item.nama,
+            value: item.luas,
+            satuan: "Ha", // Asumsi satuan selalu Ha, bisa disesuaikan jika ada field satuan di database
+          })
+        );
 
         // Update state
         setDukuhData(transformedDukuhData);
         setAgamaData(transformedAgamaData);
         setProfesiData(transformedProfesiData);
         setWilayahLahanData(transformedLahanData);
-        
       } catch (err) {
         console.error("Error fetching data:", err);
         setError("Gagal memuat data. Silakan coba lagi.");
@@ -107,32 +113,6 @@ const SelayangPandangPage = () => {
 
     fetchAllData();
   }, []);
-
-  // Loading state
-  if (loading) {
-    return (
-      <div>
-        <Navbar isLoggedIn={!!user} />
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="text-xl text-[#0E4D45]">Memuat data...</div>
-        </div>
-        <Footer />
-      </div>
-    );
-  }
-
-  // Error state
-  if (error) {
-    return (
-      <div>
-        <Navbar isLoggedIn={!!user} />
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="text-xl text-red-600">{error}</div>
-        </div>
-        <Footer />
-      </div>
-    );
-  }
 
   return (
     <div>
@@ -197,9 +177,9 @@ const SelayangPandangPage = () => {
           <p className="w-full text-xl">
             Desa Jatiguwi dengan ketinggian tanah rata- rata 295 M diatas
             permukaan laut, merupakan daerah dataran rendah, dengan curah hujan
-            rata – rata 22 mm/th. Bentuk permukaan tanah di Desa Jatiguwi 
-            secara umum adalah datar dengan produktifitas tanah adalah baik /
-            sedang dan keadaan wilayah bukan pantai.
+            rata – rata 22 mm/th. Bentuk permukaan tanah di Desa Jatiguwi secara
+            umum adalah datar dengan produktifitas tanah adalah baik / sedang
+            dan keadaan wilayah bukan pantai.
           </p>
         </div>
         <div className="rounded-xl flex flex-col items-center w-full p-6 mx-auto my-6 space-y-6 bg-gray-200">

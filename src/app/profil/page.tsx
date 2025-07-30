@@ -1,17 +1,21 @@
 "use client";
 
+
 import React, { useState, useEffect } from "react";
 import Navbar from "@/components/landing_page/navbar/page";
 import { useAuth } from "@/app/auth/context/AuthContext";
 import NavButtonAll from "@/components/button/nav_button_all";
 import Footer from "@/components/landing_page/footer/page";
+
 import { fetchProfil } from "@/service/profile/profileService"; // Import your service
+
 
 const ProfilPage = () => {
   const { user } = useAuth();
   const [selectedProfil, setSelectedProfil] = useState<"desa" | "bpd" | "lpmd">(
     "desa"
   );
+
   const [profilData, setProfilData] = useState<any>(null); // State to store fetched profile data
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -38,6 +42,7 @@ const ProfilPage = () => {
     getProfilData();
   }, []);
 
+
   const kataKata = [
     { id: 1, text: "Kreatif" },
     { id: 2, text: "Agamis" },
@@ -49,6 +54,7 @@ const ProfilPage = () => {
   ];
 
   const gambarMap: Record<typeof selectedProfil, string> = {
+
     lpmd: profilData?.pkkUrl || "/img/default_pkk.png", // Provide a fallback image
     bpd: profilData?.bpdUrl || "/img/default_bpd.png", // Provide a fallback image
     desa: profilData?.desaUrl || "/img/default_desa.png", // Provide a fallback image
@@ -69,6 +75,7 @@ const ProfilPage = () => {
       </div>
     );
   }
+
 
   return (
     <div className="w-full">
@@ -151,6 +158,7 @@ const ProfilPage = () => {
 
           {/* Gambar Berdasarkan Pilihan */}
           <div className="max-w-3xl mx-auto">
+
             {profilData ? (
               <img
                 src={gambarMap[selectedProfil]}
@@ -159,6 +167,7 @@ const ProfilPage = () => {
             ) : (
               <p>No image available for {selectedProfil}.</p>
             )}
+
           </div>
         </div>
       </div>
@@ -169,3 +178,4 @@ const ProfilPage = () => {
 };
 
 export default ProfilPage;
+
