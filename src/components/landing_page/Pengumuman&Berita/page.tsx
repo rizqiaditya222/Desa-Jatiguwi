@@ -88,7 +88,7 @@ const PengumumanBerita = () => {
   if (loading) {
     return (
       <div className="grid w-full grid-cols-12 px-24 py-12 mx-auto bg-white">
-        <div className="col-span-12 text-center text-lg text-gray-600">
+        <div className="col-span-12 text-lg text-center text-gray-600">
           Loading data...
         </div>
       </div>
@@ -98,7 +98,7 @@ const PengumumanBerita = () => {
   if (error) {
     return (
       <div className="grid w-full grid-cols-12 px-24 py-12 mx-auto bg-white">
-        <div className="col-span-12 text-center text-lg text-red-600">
+        <div className="col-span-12 text-lg text-center text-red-600">
           {error}
         </div>
       </div>
@@ -106,7 +106,7 @@ const PengumumanBerita = () => {
   }
 
   return (
-    <div className="grid w-full grid-cols-12 px-24 py-12 mx-auto  ">
+    <div className=" max-w-360 grid w-full grid-cols-12 px-24 py-12 mx-auto">
       <section className="w-full col-span-5 pr-12">
         <h1 className="text-4xl font-bold text-[#0E4D45] inline-block border-b-2 border-[#0E4D45] pb-4">
           Pengumuman
@@ -129,7 +129,7 @@ const PengumumanBerita = () => {
         <PrimaryLinkButton
           href="/pengumuman"
           text="Lihat Semua Pengumuman"
-          className="mt-6 "
+          className=" mt-6"
         />
       </section>
       <section className="w-full col-span-7 pl-12">
@@ -155,7 +155,7 @@ const PengumumanBerita = () => {
         <PrimaryLinkButton
           href="/berita"
           text="Lihat Semua Berita"
-          className="mt-6 "
+          className=" mt-6"
         />
       </section>
     </div>

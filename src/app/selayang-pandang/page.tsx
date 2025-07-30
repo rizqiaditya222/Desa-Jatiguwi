@@ -127,75 +127,77 @@ const SelayangPandangPage = () => {
           </p>
         </div>
         <div className="my-5 w-full h-[1px] bg-[#0E4D45]"></div>
-        <div className="flex flex-col w-full py-8">
-          <PetaDesa />
-        </div>
-        <div className="bg-rounded rounded-xl flex flex-col p-6 py-8 space-y-6 bg-gray-200">
-          <p className="w-full text-4xl font-semibold">Kondisi Geografis</p>
-          <p className="w-full text-xl">
-            Desa Jatiguwi terletak sekitar ± 30 km di sebelah selatan Kabupaten
-            Malang. Desa Jatiguwi memiliki luas wilayah seluruhnya 459,763 ha.
-            Dengan luas sawah 260,502 ha, luas Tanah Tegalan 49.293 ha, Luas
-            Tanah Pemukiman 20,966 ha, Luas Tanah Setengah Teknis 16,195 ha dan
-            lain-Lain 112,807 ha.
-          </p>
-          <ul className="pl-6 space-y-1 text-lg list-disc list-inside">
-            <li>
-              <span className="w-44 inline-block font-semibold">
-                Sebelah Utara
-              </span>
-              : Desa Ngadirejo, Kec. Kromengan
-            </li>
-            <li>
-              <span className="w-44 inline-block font-semibold">
-                Sebelah Timur
-              </span>
-              : Desa Sambigede, Kec. Sumberpucung
-            </li>
-            <li>
-              <span className="w-44 inline-block font-semibold">
-                Sebelah Selatan
-              </span>
-              : Desa Kalipare, Kec. Kalipare
-            </li>
-            <li>
-              <span className="w-44 inline-block font-semibold">
-                Sebelah Barat
-              </span>
-              : Desa Sumberpucung, Kec. Sumberpucung
-            </li>
-          </ul>
-        </div>
-        <div className="mt-8">
-          <WilayahLahanCard
-            title="Wilayah Pertanian & Pemukiman"
-            data={wilayahLahanData}
-          />
-        </div>
-        <div className="bg-rounded rounded-xl flex flex-col p-6 my-6 space-y-6 bg-gray-200">
-          <p className="w-full text-4xl font-semibold">Kondisi Topografis</p>
-          <p className="w-full text-xl">
-            Desa Jatiguwi dengan ketinggian tanah rata- rata 295 M diatas
-            permukaan laut, merupakan daerah dataran rendah, dengan curah hujan
-            rata – rata 22 mm/th. Bentuk permukaan tanah di Desa Jatiguwi secara
-            umum adalah datar dengan produktifitas tanah adalah baik / sedang
-            dan keadaan wilayah bukan pantai.
-          </p>
-        </div>
-        <div className="rounded-xl flex flex-col items-center w-full p-6 mx-auto my-6 space-y-6 bg-gray-200">
-          <p className="w-full text-4xl font-semibold">Kondisi Demografis</p>
+        <div className="max-w-360 mx-auto">
+          <div className="flex flex-col w-full py-8">
+            <PetaDesa />
+          </div>
+          <div className="bg-rounded rounded-xl flex flex-col p-6 py-8 space-y-6 bg-gray-200">
+            <p className="w-full text-4xl font-semibold">Kondisi Geografis</p>
+            <p className="w-full text-xl">
+              Desa Jatiguwi terletak sekitar ± 30 km di sebelah selatan
+              Kabupaten Malang. Desa Jatiguwi memiliki luas wilayah seluruhnya
+              459,763 ha. Dengan luas sawah 260,502 ha, luas Tanah Tegalan
+              49.293 ha, Luas Tanah Pemukiman 20,966 ha, Luas Tanah Setengah
+              Teknis 16,195 ha dan lain-Lain 112,807 ha.
+            </p>
+            <ul className="pl-6 space-y-1 text-lg list-disc list-inside">
+              <li>
+                <span className="w-44 inline-block font-semibold">
+                  Sebelah Utara
+                </span>
+                : Desa Ngadirejo, Kec. Kromengan
+              </li>
+              <li>
+                <span className="w-44 inline-block font-semibold">
+                  Sebelah Timur
+                </span>
+                : Desa Sambigede, Kec. Sumberpucung
+              </li>
+              <li>
+                <span className="w-44 inline-block font-semibold">
+                  Sebelah Selatan
+                </span>
+                : Desa Kalipare, Kec. Kalipare
+              </li>
+              <li>
+                <span className="w-44 inline-block font-semibold">
+                  Sebelah Barat
+                </span>
+                : Desa Sumberpucung, Kec. Sumberpucung
+              </li>
+            </ul>
+          </div>
+          <div className="mt-8">
+            <WilayahLahanCard
+              title="Wilayah Pertanian & Pemukiman"
+              data={wilayahLahanData}
+            />
+          </div>
+          <div className="bg-rounded rounded-xl flex flex-col p-6 my-6 space-y-6 bg-gray-200">
+            <p className="w-full text-4xl font-semibold">Kondisi Topografis</p>
+            <p className="w-full text-xl">
+              Desa Jatiguwi dengan ketinggian tanah rata- rata 295 M diatas
+              permukaan laut, merupakan daerah dataran rendah, dengan curah
+              hujan rata – rata 22 mm/th. Bentuk permukaan tanah di Desa
+              Jatiguwi secara umum adalah datar dengan produktifitas tanah
+              adalah baik / sedang dan keadaan wilayah bukan pantai.
+            </p>
+          </div>
+          <div className="rounded-xl flex flex-col items-center w-full p-6 mx-auto my-6 space-y-6 bg-gray-200">
+            <p className="w-full text-4xl font-semibold">Kondisi Demografis</p>
 
-          {/* Container Dukuh */}
-          <section className="md:grid-cols-3 grid w-full max-w-6xl grid-cols-1 gap-6 my-8">
-            {dukuhData.map((dukuh, i) => (
-              <InfoCardGroup key={i} name={dukuh.name} stats={dukuh.stats} />
-            ))}
-          </section>
-        </div>
-        {/* Section Persebaran */}
-        <div className="grid w-full grid-cols-2 gap-8 mt-8">
-          <ListStatCard title="Persebaran Agama" items={agamaData} />
-          <ListStatCard title="Persebaran Profesi" items={profesiData} />
+            {/* Container Dukuh */}
+            <section className="md:grid-cols-3 grid w-full max-w-6xl grid-cols-1 gap-6 my-8">
+              {dukuhData.map((dukuh, i) => (
+                <InfoCardGroup key={i} name={dukuh.name} stats={dukuh.stats} />
+              ))}
+            </section>
+          </div>
+          {/* Section Persebaran */}
+          <div className="grid w-full grid-cols-2 gap-8 mt-8">
+            <ListStatCard title="Persebaran Agama" items={agamaData} />
+            <ListStatCard title="Persebaran Profesi" items={profesiData} />
+          </div>
         </div>
       </div>
       <Footer />
