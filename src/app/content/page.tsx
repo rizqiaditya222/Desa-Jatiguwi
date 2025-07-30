@@ -1,33 +1,31 @@
-'use client'
+"use client";
 
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import app from "@/lib/firebase/clientApps";
-import React, { useState, useEffect } from 'react'
-import { usePathname, useRouter } from 'next/navigation'
-import Navbar from '@/components/landing_page/navbar/page'
-import Footer from '@/components/landing_page/footer/page'
-import Breadcrumb from '@/components/content_list/Breadcrumb'
-import TabSwitch from '@/components/content_list/TabSwitch'
-import SearchBar from '@/components/content_list/SearchBar'
-import LoadingSpinner from '@/components/content_list/LoadingSpinner'
-import ArticleList from '@/components/content_list/ArticleList'
-import { useArticles } from '@/components/content_list/useArticles'
-import { filterArticles } from '@/components/content_list/filterArticles'
-import { TabType } from '@/types/articles'
+import React, { useState, useEffect } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import Navbar from "@/components/landing_page/navbar/page";
+import Footer from "@/components/landing_page/footer/page";
+import Breadcrumb from "@/components/content_list/Breadcrumb";
+import TabSwitch from "@/components/content_list/TabSwitch";
+import SearchBar from "@/components/content_list/SearchBar";
+import LoadingSpinner from "@/components/content_list/LoadingSpinner";
+import ArticleList from "@/components/content_list/ArticleList";
+import { useArticles } from "@/components/content_list/useArticles";
+import { filterArticles } from "@/components/content_list/filterArticles";
+import { TabType } from "@/types/articles";
 
 export default function ContentPage() {
-  const [selectedTab, setSelectedTab] = useState<TabType>('berita')
-  const [searchTerm, setSearchTerm] = useState('')
-  const pathname = usePathname()
+  const [selectedTab, setSelectedTab] = useState<TabType>("berita");
+  const [searchTerm, setSearchTerm] = useState("");
+  const pathname = usePathname();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const router = useRouter();
 
-
-  const { articles, loading } = useArticles(selectedTab)
-  const filteredArticles = filterArticles(articles, searchTerm)
+  const { articles, loading } = useArticles(selectedTab);
+  const filteredArticles = filterArticles(articles, searchTerm);
 
   useEffect(() => {
-
     const auth = getAuth(app);
 
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -38,33 +36,37 @@ export default function ContentPage() {
       }
     });
 
-    
     return () => unsubscribe();
-    const currentPath = pathname ?? ''
-    if (currentPath.startsWith('/berita')) {
-      setSelectedTab('berita')
-    } else if (currentPath.startsWith('/pengumuman')) {
-      setSelectedTab('pengumuman')
+    const currentPath = pathname ?? "";
+    if (currentPath.startsWith("/berita")) {
+      setSelectedTab("berita");
+    } else if (currentPath.startsWith("/pengumuman")) {
+      setSelectedTab("pengumuman");
     }
-  }, [pathname])
+  }, [pathname]);
 
   const handleTabSwitch = (tab: TabType) => {
-    setSelectedTab(tab)
-    setSearchTerm('')
-  }
+    setSelectedTab(tab);
+    setSearchTerm("");
+  };
 
   const handleSearchChange = (value: string) => {
-    setSearchTerm(value)
-  }
+    setSearchTerm(value);
+  };
 
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar isLoggedIn={isLoggedIn} />
 
       <main className="flex-grow max-w-5xl mx-auto px-4 py-6">
-        <Breadcrumb selectedTab={selectedTab} />
+        <div className="mb-6">
+          <Breadcrumb selectedTab={selectedTab} />
+        </div>
         <TabSwitch selectedTab={selectedTab} onTabSwitch={handleTabSwitch} />
-        <SearchBar searchTerm={searchTerm} onSearchChange={handleSearchChange} />
+        <SearchBar
+          searchTerm={searchTerm}
+          onSearchChange={handleSearchChange}
+        />
 
         {loading && <LoadingSpinner />}
 
@@ -78,5 +80,5 @@ export default function ContentPage() {
 
       <Footer />
     </div>
-  )
+  );
 }

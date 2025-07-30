@@ -4,7 +4,7 @@ interface HeaderProps {
   title: string;
 }
 
-const PengumumanHeader = ({ title }: HeaderProps) => {
+const BeritaHeader = ({ title }: HeaderProps) => {
   return (
     <div className="bg-gray-200 border-t border-gray-200">
       <div className="px-24 mx-auto px- py-3">
@@ -13,8 +13,8 @@ const PengumumanHeader = ({ title }: HeaderProps) => {
             Beranda
           </Link>
           <span className="mx-2">/</span>
-          <Link href="/dashboard/pengumuman" className="hover:text-teal-600">
-            Pengumuman
+          <Link href="/dashboard/berita" className="hover:text-teal-600">
+            Berita
           </Link>
           <span className="mx-2">/</span>
           <span className="text-gray-800">{title}</span>
@@ -24,4 +24,4 @@ const PengumumanHeader = ({ title }: HeaderProps) => {
   );
 };
 
-export default PengumumanHeader;
+export default BeritaHeader;

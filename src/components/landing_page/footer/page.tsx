@@ -45,7 +45,7 @@ const Footer = () => {
             <li>
               <a
                 className="hover:ease-in-out hover:scale-105 hover:font-bold items-center gap-2 font-light text-white duration-200"
-                href=""
+                href="/selayang-pandang"
               >
                 Selayang Pandang
               </a>
@@ -53,7 +53,7 @@ const Footer = () => {
             <li>
               <a
                 className="hover:ease-in-out hover:scale-105 hover:font-bold items-center gap-2 font-light text-white duration-200"
-                href=""
+                href="/sejarah"
               >
                 Sejarah
               </a>
@@ -61,7 +61,7 @@ const Footer = () => {
             <li>
               <a
                 className="hover:ease-in-out hover:scale-105 hover:font-bold items-center gap-2 font-light text-white duration-200"
-                href=""
+                href="/content"
               >
                 Berita
               </a>
