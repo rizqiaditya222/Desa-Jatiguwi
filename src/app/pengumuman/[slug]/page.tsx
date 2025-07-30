@@ -4,6 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Head from 'next/head'; // Import Head
 import Navbar from '@/components/landing_page/navbar/page';
 import Footer from '@/components/landing_page/footer/page';
 import { collection, query, limit, orderBy, getDocs, where } from 'firebase/firestore';
@@ -31,7 +32,6 @@ const PengumumanDetail = () => {
         setError('No announcement slug provided.');
         return;
       }
-
       try {
         setLoading(true);
         setError(null);
@@ -69,6 +69,8 @@ const PengumumanDetail = () => {
     fetchAnnouncement();
   }, [currentSlug]);
 
+  // Handle loading, error, and not found states as before
+
   if (loading) {
     return <div className="bg-gray-50 min-h-screen flex items-center justify-center"><p className="text-gray-700">Loading pengumuman...</p></div>;
   }
@@ -94,8 +96,34 @@ const PengumumanDetail = () => {
     );
   }
 
+  // Generate the canonical URL for the current announcement
+  const canonicalUrl = `https://yourdomain.com/pengumuman/${announcement.slug}`; // **IMPORTANT: Replace with your actual domain**
+
   return (
     <div className="bg-gray-50 min-h-screen">
+      {/* Add Head for SEO and Open Graph tags */}
+      <Head>
+        <title>{announcement.title} | Pengumuman</title>
+        <meta name="description" content={announcement.content?.substring(0, 160) || 'Baca pengumuman terbaru dari kami.'} />
+        <link rel="canonical" href={canonicalUrl} />
+
+        {/* Open Graph Tags for Social Media Sharing */}
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content={announcement.title} />
+        <meta property="og:description" content={announcement.content?.substring(0, 160) || 'Baca pengumuman terbaru dari kami.'} />
+        {/* You can add an og:image tag here if your announcements have images */}
+        {/* <meta property="og:image" content={announcement.imageUrl || 'default_image_url.jpg'} /> */}
+        <meta property="og:site_name" content="Your Website Name" />
+
+        {/* Twitter Card Tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@yourtwitterhandle" /> {/* Optional: Your Twitter handle */}
+        <meta name="twitter:title" content={announcement.title} />
+        <meta name="twitter:description" content={announcement.content?.substring(0, 160) || 'Baca pengumuman terbaru dari kami.'} />
+        {/* <meta name="twitter:image" content={announcement.imageUrl || 'default_image_url.jpg'} /> */}
+      </Head>
+
       <Navbar isLoggedIn={false} />
       <PengumumanHeader title={announcement.title} />
       <div className="px-24 mx-auto px-4 py-6">

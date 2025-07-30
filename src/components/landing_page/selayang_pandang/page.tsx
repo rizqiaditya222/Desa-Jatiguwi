@@ -29,7 +29,7 @@ const SelayangPandang = () => {
         <div className="w-full max-w-6xl mx-auto">
           <PrimaryLinkButton
             text="Lihat Detail Selayang Pandang"
-            href="/SelayangPandang"
+            href="/selayang-pandang"
             key={"Button Profil Desa"}
             className="w-full border-2 border-[#fafafa] hover:bg-[#fafafa] hover:text-[#0E4D45] hover:ease-in-out hover:duration-300"
           />

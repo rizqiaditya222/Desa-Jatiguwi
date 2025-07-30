@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-// Assuming '@/lib/firebase/clientApps' correctly initializes and exports the Firebase app instance
 import app from "@/lib/firebase/clientApps";
 
 import Hero from "@/components/landing_page/hero/page";
