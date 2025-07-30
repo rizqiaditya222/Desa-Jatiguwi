@@ -14,7 +14,7 @@ import { filterArticles } from '@/components/content_list/filterArticles'
 import { TabType } from '@/types/articles'
 
 export default function ContentPage() {
-  const [selectedTab, setSelectedTab] = useState<TabType>('pengumuman')
+  const [selectedTab, setSelectedTab] = useState<TabType>('berita')
   const [searchTerm, setSearchTerm] = useState('')
   const pathname = usePathname()
   const router = useRouter()
@@ -22,7 +22,6 @@ export default function ContentPage() {
   const { articles, loading } = useArticles(selectedTab)
   const filteredArticles = filterArticles(articles, searchTerm)
 
-  // Set initial tab based on current path
   useEffect(() => {
     const currentPath = pathname ?? ''
     if (currentPath.startsWith('/berita')) {

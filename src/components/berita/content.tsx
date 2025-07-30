@@ -2,6 +2,18 @@
 
 import React from 'react';
 import { NewsArticle } from '@/types/berita';
+import {
+  FacebookShareButton,
+  WhatsappShareButton,
+  TwitterShareButton,
+  EmailShareButton,
+  LinkedinShareButton,
+  FacebookIcon,
+  WhatsappIcon,
+  TwitterIcon,
+  EmailIcon,
+  LinkedinIcon,
+} from 'react-share';
 
 interface ContentProps {
   news: NewsArticle;
@@ -12,18 +24,10 @@ const BeritaContent = ({ news }: ContentProps) => {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
   });
 
-  const handleShare = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: news.title,
-        text: (news.content ?? '').substring(0, 100) + '...',
-        url: window.location.href,
-      });
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      alert('Link disalin ke clipboard!');
-    }
-  };
+  // URL yang akan dibagikan, ambil dari window.location.href saat ini
+  const shareUrl = typeof window !== 'undefined' ? window.location.href : '';
+  const shareTitle = news.title;
+  const shareText = (news.content ?? '').substring(0, 150) + '...'; // Potongan konten untuk berbagi
 
   return (
     <div className="lg:w-2/3">
@@ -38,10 +42,27 @@ const BeritaContent = ({ news }: ContentProps) => {
               <span className="text-base">📅</span>
               <span>{formattedDate}</span>
             </div>
-            <button onClick={handleShare} className="flex items-center gap-2 text-teal-600 hover:text-teal-700 transition-colors">
+            {/* Tombol Bagikan dengan ikon dari react-share */}
+            <div className="flex items-center gap-2">
               <span className="text-base">📤</span>
-              <span>Share</span>
-            </button>
+              <span className="font-semibold text-gray-700">Bagikan:</span>
+              <div className="flex gap-2 ml-2">
+                <FacebookShareButton url={shareUrl} hashtag="#berita #infoterkini">
+                  {/* Removed the 'quote' prop from FacebookShareButton */}
+                  <FacebookIcon size={32} round />
+                </FacebookShareButton>
+                <WhatsappShareButton url={shareUrl} title={shareTitle}>
+                  <WhatsappIcon size={32} round />
+                </WhatsappShareButton>
+                <TwitterShareButton url={shareUrl} title={shareTitle} hashtags={['berita', 'infoterkini']}>
+                  <TwitterIcon size={32} round />
+                </TwitterShareButton>
+                <EmailShareButton url={shareUrl} subject={shareTitle} body={shareText + '\n\nBaca selengkapnya di: ' + shareUrl}>
+                  <EmailIcon size={32} round />
+                </EmailShareButton>
+                {/* Anda bisa menambahkan tombol lain di sini sesuai kebutuhan */}
+              </div>
+            </div>
           </div>
         </div>
 
@@ -51,9 +72,9 @@ const BeritaContent = ({ news }: ContentProps) => {
             src={news.imageUrl}
             alt={news.title}
           />
-                <div className="mt-6 text-base leading-7 whitespace-pre-line">
-        {news.content}
-      </div>
+          <div className="mt-6 text-base leading-7 whitespace-pre-line">
+            {news.content}
+          </div>
           <div className="mt-8 pt-6 border-t border-gray-200">
             <p className="text-sm text-gray-500">
               Dibuat pada {formattedDate} | Diperbaharui pada {formattedDate}.

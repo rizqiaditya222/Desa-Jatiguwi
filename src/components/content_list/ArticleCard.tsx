@@ -23,7 +23,7 @@ export default function ArticleCard({ article, selectedTab }: ArticleCardProps) 
   return (
     <Link
       href={`/${selectedTab}/${article.slug}`}
-      className="block border border-[#07433C] rounded-xl shadow-sm p-4 hover:shadow-md transition-shadow duration-200"
+      className="block border border-gray-100 rounded-xl shadow-md p-4 hover:shadow-md transition-shadow duration-200"
     >
       {article.category && selectedTab === 'pengumuman' && (
         <div className="flex items-center justify-between mb-2">
