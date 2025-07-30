@@ -6,7 +6,11 @@ const Footer = () => {
       <section className="grid grid-cols-12 pb-8 border-white border-b-1">
         <section className="flex flex-col col-span-6 space-y-4">
           <div className="flex min-w-10 md:w-20">
-            <img className="lg:w-120" src="img/logo_desa.png" alt="Logo Desa" />
+            <img
+              className="lg:w-120"
+              src="/img/logo_desa.png"
+              alt="Logo Desa"
+            />
             <div>
               <p className="text-3xl font-semibold text-white">Desa Jatiguwi</p>
               <p className="font-light text-white text-nowrap ">
@@ -70,7 +74,7 @@ const Footer = () => {
             <button>
               <img
                 className="w-6 h-6 duration-200 invert hover:ease-in-out hover:scale-120"
-                src="./svg/email.svg"
+                src="/svg/email.svg"
                 alt="email icon"
                 color="#FFFFFF"
               />
@@ -78,7 +82,7 @@ const Footer = () => {
             <button>
               <img
                 className="w-8 h-8 duration-200 invert hover:ease-in-out hover:scale-120"
-                src="./svg/tiktok.svg"
+                src="/svg/tiktok.svg"
                 alt="tiktok icon"
                 color="#FFFFFF"
               />
@@ -86,7 +90,7 @@ const Footer = () => {
             <button>
               <img
                 className="w-6 h-6 duration-200 invert hover:ease-in-out hover:scale-120 "
-                src="./svg/youtube.svg"
+                src="/svg/youtube.svg"
                 alt="yt icon"
                 color="#FFFFFF"
               />
@@ -95,7 +99,7 @@ const Footer = () => {
           <button className="flex items-center gap-2 font-light duration-200 hover:ease-in-out hover:scale-120 hover:font-bold">
             <img
               className="w-6 h-6 invert"
-              src="./svg/instagram.svg"
+              src="/svg/instagram.svg"
               alt="whatsapp icon"
               color="#FFFFFF"
             />

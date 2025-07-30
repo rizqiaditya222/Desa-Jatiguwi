@@ -19,14 +19,14 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
       {/* Logo image */}
       <img
         className="w-auto max-w-80"
-        src="img/logo_full.png"
+        src="/img/logo_full.png"
         alt="Logo Desa"
       />
 
       {/* Navigation buttons */}
       <div className="flex items-center gap-8 mx-auto space-x-8">
         <NavButton text="Beranda" href="/" />
-        <NavButton text="Profil" href="/profil" />
+        <NavButton text="Profil" href="/profil/pkk" />
         <NavButton text="Selayang Pandang" href="/selayang-pandang" />
         <NavButton text="Sejarah" href="/sejarah" />
         <NavButton text="Galeri" href="/galeri" />
