@@ -5,7 +5,7 @@ import YoutubeVideo from "../video/youtube/page";
 
 const Hero = () => {
   return (
-    <div className="relative w-full">
+    <div className="relative w-full ">
       <img
         src="/img/Brutalist 76.png"
         alt="Dekorasi Kiri"
