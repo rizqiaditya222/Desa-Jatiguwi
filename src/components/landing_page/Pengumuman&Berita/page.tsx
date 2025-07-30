@@ -1,15 +1,22 @@
 // app/components/PengumumanBerita.tsx (Tidak Ada Perubahan yang diperlukan di sini untuk masalah gambar)
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import PrimaryCard from '@/components/card/PrimaryCard';
-import PrimaryLinkButton from '@/components/button/primary_button';
-import SecondaryCard from '@/components/card/SecondaryCard';
+import React, { useEffect, useState } from "react";
+import PrimaryCard from "@/components/card/PrimaryCard";
+import PrimaryLinkButton from "@/components/button/primary_button";
+import SecondaryCard from "@/components/card/SecondaryCard";
 
-import { collection, query, orderBy, limit, getDocs, Timestamp } from 'firebase/firestore';
-import { db } from '@/lib/firebase/clientApps';
-import { NewsArticle } from '@/types/berita';
-import { PengumumanArticle } from '@/types/pengumuman';
+import {
+  collection,
+  query,
+  orderBy,
+  limit,
+  getDocs,
+  Timestamp,
+} from "firebase/firestore";
+import { db } from "@/lib/firebase/clientApps";
+import { NewsArticle } from "@/types/berita";
+import { PengumumanArticle } from "@/types/pengumuman";
 
 const PengumumanBerita = () => {
   const [announcements, setAnnouncements] = useState<PengumumanArticle[]>([]);
@@ -23,26 +30,30 @@ const PengumumanBerita = () => {
         setLoading(true);
 
         // Fetch Announcements (Pengumuman)
-        const pengumumanRef = collection(db, 'pengumuman');
-        const qPengumuman = query(pengumumanRef, orderBy('date', 'desc'), limit(2)); // Get latest 2
+        const pengumumanRef = collection(db, "pengumuman");
+        const qPengumuman = query(
+          pengumumanRef,
+          orderBy("date", "desc"),
+          limit(2)
+        ); // Get latest 2
         const pengumumanSnapshot = await getDocs(qPengumuman);
-        const fetchedAnnouncements: PengumumanArticle[] = pengumumanSnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data() as Omit<PengumumanArticle, 'id'>
-        }));
+        const fetchedAnnouncements: PengumumanArticle[] =
+          pengumumanSnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...(doc.data() as Omit<PengumumanArticle, "id">),
+          }));
         setAnnouncements(fetchedAnnouncements);
 
         // Fetch News (Berita)
-        const beritaRef = collection(db, 'berita');
-        const qBerita = query(beritaRef, orderBy('date', 'desc'), limit(2)); // Get latest 2
+        const beritaRef = collection(db, "berita");
+        const qBerita = query(beritaRef, orderBy("date", "desc"), limit(2)); // Get latest 2
         const beritaSnapshot = await getDocs(qBerita);
-        const fetchedNews: NewsArticle[] = beritaSnapshot.docs.map(doc => ({
+        const fetchedNews: NewsArticle[] = beritaSnapshot.docs.map((doc) => ({
           id: doc.id,
           // imageUrl tetap diambil, tetapi SecondaryCard tidak akan merendernya
-          ...doc.data() as Omit<NewsArticle, 'id'>
+          ...(doc.data() as Omit<NewsArticle, "id">),
         }));
         setNews(fetchedNews);
-
       } catch (err: any) {
         console.error("Error fetching data:", err);
         setError("Failed to load data. Please try again later.");
@@ -57,23 +68,29 @@ const PengumumanBerita = () => {
   // Helper function to format Firestore Timestamp to readable date
   const formatDate = (timestamp: Timestamp | Date) => {
     if (timestamp instanceof Timestamp) {
-      return new Date(timestamp.seconds * 1000).toLocaleDateString('id-ID', {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric',
-      }).replace(/\./g, '');
+      return new Date(timestamp.seconds * 1000)
+        .toLocaleDateString("id-ID", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        })
+        .replace(/\./g, "");
     }
-    return new Date(timestamp).toLocaleDateString('id-ID', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric',
-    }).replace(/\./g, '');
+    return new Date(timestamp)
+      .toLocaleDateString("id-ID", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      })
+      .replace(/\./g, "");
   };
 
   if (loading) {
     return (
       <div className="grid w-full grid-cols-12 px-24 py-12 mx-auto bg-white">
-        <div className="col-span-12 text-center text-lg text-gray-600">Loading data...</div>
+        <div className="col-span-12 text-center text-lg text-gray-600">
+          Loading data...
+        </div>
       </div>
     );
   }
@@ -81,13 +98,15 @@ const PengumumanBerita = () => {
   if (error) {
     return (
       <div className="grid w-full grid-cols-12 px-24 py-12 mx-auto bg-white">
-        <div className="col-span-12 text-center text-lg text-red-600">{error}</div>
+        <div className="col-span-12 text-center text-lg text-red-600">
+          {error}
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="grid w-full grid-cols-12 px-24 py-12 mx-auto bg-white ">
+    <div className="grid w-full grid-cols-12 px-24 py-12 mx-auto  ">
       <section className="w-full col-span-5 pr-12">
         <h1 className="text-4xl font-bold text-[#0E4D45] inline-block border-b-2 border-[#0E4D45] pb-4">
           Pengumuman

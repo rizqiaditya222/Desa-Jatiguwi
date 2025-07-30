@@ -125,7 +125,7 @@ const Galeri = () => {
   }
 
   return (
-    <section className="md:px-24 px-6 py-16 bg-white" id="gallery-section">
+    <section className="md:px-24 px-6 py-16 " id="gallery-section">
       {/* Header */}
       <div className="md:flex-row flex flex-col items-start justify-between mb-6">
         <p className="text-3xl font-bold text-[#0E4D45] mb-4 md:mb-0">

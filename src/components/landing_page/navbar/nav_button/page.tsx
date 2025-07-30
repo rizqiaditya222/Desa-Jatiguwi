@@ -38,7 +38,7 @@ const NavButton: React.FC<NavButtonProps> = ({ text, href }) => {
   return (
     <Link href={href} scroll={false} onClick={handleClick}>
       <button
-        className={`w-24 font-semibold size-24 hover:text-[#0E4D45] hover:scale-110 transition-all ${
+        className={`font-semibold size-24 hover:text-[#0E4D45] hover:scale-110 transition-all ${
           isActive ? "border-b-2 border-[#0E4D45] text-[#0E4D45]" : ""
         }`}
       >
