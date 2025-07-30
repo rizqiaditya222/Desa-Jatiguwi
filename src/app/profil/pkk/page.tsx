@@ -9,8 +9,8 @@ import { fetchProfil } from "@/service/profile/profileService"; // Import your s
 
 const ProfilPage = () => {
   const { user } = useAuth();
-  const [selectedProfil, setSelectedProfil] = useState<"pkk" | "bpd" | "desa">(
-    "pkk"
+  const [selectedProfil, setSelectedProfil] = useState<"desa" | "bpd" | "lpmd">(
+    "desa"
   );
   const [profilData, setProfilData] = useState<any>(null); // State to store fetched profile data
   const [loading, setLoading] = useState(true);
@@ -49,7 +49,7 @@ const ProfilPage = () => {
   ];
 
   const gambarMap: Record<typeof selectedProfil, string> = {
-    pkk: profilData?.pkkUrl || "/img/default_pkk.png", // Provide a fallback image
+    lpmd: profilData?.pkkUrl || "/img/default_pkk.png", // Provide a fallback image
     bpd: profilData?.bpdUrl || "/img/default_bpd.png", // Provide a fallback image
     desa: profilData?.desaUrl || "/img/default_desa.png", // Provide a fallback image
   };
@@ -126,11 +126,11 @@ const ProfilPage = () => {
         <div className="flex flex-col justify-center mx-auto space-y-8">
           {/* Tombol Pilih */}
           <div className="flex mx-auto gap-8 border-2 border-[#0E4D45] p-4 rounded-2xl">
-            <button onClick={() => setSelectedProfil("pkk")}>
+            <button onClick={() => setSelectedProfil("desa")}>
               <NavButtonAll
-                text="PKK"
+                text="Desa"
                 href="#"
-                isSelected={selectedProfil === "pkk"}
+                isSelected={selectedProfil === "desa"}
               />
             </button>
             <button onClick={() => setSelectedProfil("bpd")}>
@@ -140,11 +140,11 @@ const ProfilPage = () => {
                 isSelected={selectedProfil === "bpd"}
               />
             </button>
-            <button onClick={() => setSelectedProfil("desa")}>
+            <button onClick={() => setSelectedProfil("lpmd")}>
               <NavButtonAll
-                text="Desa"
+                text="LPMD"
                 href="#"
-                isSelected={selectedProfil === "desa"}
+                isSelected={selectedProfil === "lpmd"}
               />
             </button>
           </div>

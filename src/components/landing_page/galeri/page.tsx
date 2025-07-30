@@ -1,23 +1,43 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import dynamic from 'next/dynamic';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
-import { listGallery } from '@/service/gallery/galleryService';
-import { Gallery } from '@/types/gallery'; // Assuming you have this type defined
+import React, { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import { listGallery } from "@/service/gallery/galleryService";
+import { Gallery } from "@/types/gallery";
 
-const Slider = dynamic(() => import('react-slick'), { ssr: false });
+const Slider = dynamic(() => import("react-slick"), { ssr: false });
 
+const CustomArrow = ({
+  onClick,
+  direction,
+}: {
+  onClick?: () => void;
+  direction: "left" | "right";
+}) => (
+  <button
+    onClick={onClick}
+    className="hover:scale-110 z-20 transition-transform"
+  >
+    <img
+      src={`/img/arrow-${direction}.png`}
+      alt={direction === "left" ? "Sebelumnya" : "Berikutnya"}
+      className="h-15 w-15"
+    />
+  </button>
+);
 const Galeri = () => {
   const [activeSlide, setActiveSlide] = useState(0);
-  const [sliderRef, setSliderRef] = useState<any>(null);
   const [hoveredSlide, setHoveredSlide] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedImage, setSelectedImage] = useState<{ src: string; title: string } | null>(null);
-  const [images, setImages] = useState<Gallery[]>([]); // State to store fetched images
-  const [loading, setLoading] = useState(true); // State to manage loading status
-  const [error, setError] = useState<string | null>(null); // State to manage errors
+  const [selectedImage, setSelectedImage] = useState<{
+    src: string;
+    title: string;
+  } | null>(null);
+  const [images, setImages] = useState<Gallery[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchImages() {
@@ -26,26 +46,31 @@ const Galeri = () => {
         const fetchedImages = await listGallery();
         setImages(fetchedImages);
       } catch (err) {
-        console.error('Failed to fetch gallery images:', err);
-        setError('Failed to load gallery images. Please try again later.');
+        console.error("Failed to fetch gallery images:", err);
+        setError("Failed to load gallery images. Please try again later.");
       } finally {
         setLoading(false);
       }
     }
 
     fetchImages();
-  }, []); // Empty dependency array means this effect runs once on mount
+  }, []);
 
   const settings = {
     centerMode: true,
-    centerPadding: '0px',
+    centerPadding: "0px",
     dots: false,
     infinite: true,
     speed: 500,
     slidesToShow: 3,
     slidesToScroll: 1,
     arrows: false,
+    prevArrow: <CustomArrow direction="left" />,
+    nextArrow: <CustomArrow direction="right" />,
     beforeChange: (_: number, next: number) => setActiveSlide(next),
+    autoplay: true,
+    autoplaySpeed: 5000,
+    pauseOnHover: true,
     responsive: [
       {
         breakpoint: 1024,
@@ -57,6 +82,7 @@ const Galeri = () => {
         breakpoint: 768,
         settings: {
           slidesToShow: 1,
+          arrows: false,
         },
       },
     ],
@@ -74,7 +100,7 @@ const Galeri = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-64">
+      <div className="flex items-center justify-center h-64">
         <p className="text-[#0E4D45] text-xl">Loading gallery...</p>
       </div>
     );
@@ -82,37 +108,42 @@ const Galeri = () => {
 
   if (error) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <p className="text-red-600 text-xl">{error}</p>
+      <div className="flex items-center justify-center h-64">
+        <p className="text-xl text-red-600">{error}</p>
       </div>
     );
   }
 
   if (images.length === 0) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <p className="text-[#0E4D45] text-xl">No gallery images available yet.</p>
+      <div className="flex items-center justify-center h-64">
+        <p className="text-[#0E4D45] text-xl">
+          No gallery images available yet.
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white px-6 md:px-24 py-16">
+    <section className="md:px-24 px-6 py-16 bg-white" id="gallery-section">
       {/* Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start mb-6">
-        <p className="text-3xl font-bold text-[#0E4D45] mb-4 md:mb-0">Galeri Jatiguwi</p>
+      <div className="md:flex-row flex flex-col items-start justify-between mb-6">
+        <p className="text-3xl font-bold text-[#0E4D45] mb-4 md:mb-0">
+          Galeri Jatiguwi
+        </p>
         <p className="text-base text-end text-[#0E4D45] md:w-4/12">
-          Intip Cerita Desa Jatiguwi di Galeri! Kumpulan momen dan potret kehidupan desa yang penuh makna, semua tersaji di sini.
+          Intip Cerita Desa Jatiguwi di Galeri! Kumpulan momen dan potret
+          kehidupan desa yang penuh makna, semua tersaji di sini.
         </p>
       </div>
       <hr className="border-[#0E4D45] border-t-2 mb-6" />
 
       <div className="relative">
-        <Slider ref={setSliderRef} {...settings}>
+        <Slider {...settings}>
           {images.map((image, index) => (
             <div key={image.id} className="px-2">
               <div
-                className="relative group cursor-pointer"
+                className="group relative cursor-pointer"
                 onMouseEnter={() => setHoveredSlide(index)}
                 onMouseLeave={() => setHoveredSlide(null)}
                 onClick={() => handleImageClick(image)}
@@ -121,16 +152,22 @@ const Galeri = () => {
                   src={image.imageUrl}
                   alt={image.title}
                   className={`rounded-lg shadow-lg object-cover h-[250px] w-full transition-all duration-300 ${
-                    index === activeSlide ? 'scale-110 z-10' : 'scale-90 opacity-60'
-                  } ${hoveredSlide === index && index === activeSlide ? 'blur-sm brightness-70' : ''}`}
+                    index === activeSlide
+                      ? "scale-110 z-10"
+                      : "scale-90 opacity-60"
+                  } ${
+                    hoveredSlide === index && index === activeSlide
+                      ? "blur-sm brightness-70"
+                      : ""
+                  }`}
                 />
 
                 {hoveredSlide === index && index === activeSlide && (
-                  <div className="absolute inset-0 flex items-center justify-center z-20 transition-opacity duration-300 rounded-lg">
+                  <div className="absolute inset-0 z-20 flex items-center justify-center transition-opacity duration-300 rounded-lg">
                     <div className="flex flex-col items-center justify-center">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        className="w-12 h-12 text-white mb-2"
+                        className="w-12 h-12 mb-2 text-white"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -148,7 +185,7 @@ const Galeri = () => {
                         />
                       </svg>
                       {/* Changed from static "Preview" to dynamic image.title */}
-                      <span className="text-white text-xl font-semibold text-center px-2">
+                      <span className="px-2 text-xl font-semibold text-center text-white">
                         {image.title}
                       </span>
                     </div>
@@ -158,65 +195,56 @@ const Galeri = () => {
             </div>
           ))}
         </Slider>
-
-        {/* Navigasi Panah */}
-        <div className="flex justify-center items-center gap-12 mt-8">
-          <button onClick={() => sliderRef?.slickPrev()}>
-            <img
-              src="/img/arrow-left.png"
-              alt="Sebelumnya"
-              className="h-15 w-15 hover:scale-110 transition-transform"
-            />
-          </button>
-          <button onClick={() => sliderRef?.slickNext()}>
-            <img
-              src="/img/arrow-right.png"
-              alt="Berikutnya"
-              className="h-15 w-15 hover:scale-110 transition-transform"
-            />
-          </button>
-        </div>
       </div>
 
       {/* Modal */}
       {isModalOpen && selectedImage && (
-  <div
-    className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-    onClick={closeModal}
-  >
-    <div
-      className="relative max-w-4xl max-h-[90vh] w-full"
-      onClick={(e) => e.stopPropagation()}
-    >
-      {/* Tombol Tutup */}
-      <button
-        className="absolute -top-12 right-0 text-gray-400 hover:text-gray-500 transition-colors"
-        onClick={closeModal}
-      >
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
-
-      {/* Konten Gambar */}
-      <div className="bg-transparent rounded-lg">
-        <img
-          src={selectedImage.src}
-          alt={selectedImage.title}
-          className="w-full h-auto max-h-[70vh] object-contain rounded-2xl"
-        />
-        <p
-          className="mt-4 text-white text-2xl font-semibold text-center"
-          style={{ textShadow: '0 2px 4px rgba(0,0,0,0.7)' }}
+        <div
+          className="bg-black/60 backdrop-blur-sm fixed inset-0 z-50 flex items-center justify-center p-4"
+          onClick={closeModal}
         >
-          {selectedImage.title}
-        </p>
-      </div>
-    </div>
-  </div>
-)}
+          <div
+            className="relative max-w-4xl max-h-[90vh] w-full"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Tombol Tutup */}
+            <button
+              className="-top-12 hover:text-gray-500 absolute right-0 text-gray-400 transition-colors"
+              onClick={closeModal}
+            >
+              <svg
+                className="w-8 h-8"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
 
-    </div>
+            {/* Konten Gambar */}
+            <div className="bg-transparent rounded-lg">
+              <img
+                src={selectedImage.src}
+                alt={selectedImage.title}
+                className="w-full h-auto max-h-[70vh] object-contain rounded-2xl"
+              />
+              <p
+                className="mt-4 text-2xl font-semibold text-center text-white"
+                style={{ textShadow: "0 2px 4px rgba(0,0,0,0.7)" }}
+              >
+                {selectedImage.title}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+    </section>
   );
 };
 
