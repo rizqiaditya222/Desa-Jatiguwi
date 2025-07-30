@@ -18,7 +18,7 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
     <div className="flex items-center justify-between w-full px-24 py-12">
       {/* Logo image */}
       <img
-        className="w-auto max-w-80"
+        className="max-w-80 w-auto"
         src="/img/logo_full.png"
         alt="Logo Desa"
       />
@@ -29,8 +29,7 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
         <NavButton text="Profil" href="/profil/pkk" />
         <NavButton text="Selayang Pandang" href="/selayang-pandang" />
         <NavButton text="Sejarah" href="/sejarah" />
-        <NavButton text="Galeri" href="/galeri" />
-        <NavButton text="Berita" href="/berita" />
+        <NavButton text="Berita" href="/content" />
       </div>
 
       {/* PrimaryLinkButton will change based on login status */}

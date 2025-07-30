@@ -8,8 +8,8 @@ import Footer from "@/components/landing_page/footer/page";
 
 const ProfilPage = () => {
   const { user } = useAuth();
-  const [selectedProfil, setSelectedProfil] = useState<"pkk" | "bpd" | "desa">(
-    "pkk"
+  const [selectedProfil, setSelectedProfil] = useState<"desa" | "bpd" | "lpmd">(
+    "desa"
   );
 
   const kataKata = [
@@ -23,9 +23,9 @@ const ProfilPage = () => {
   ];
 
   const gambarMap: Record<typeof selectedProfil, string> = {
-    pkk: "/img/pkk.png",
-    bpd: "/img/bpd.png",
     desa: "/img/desa.png",
+    bpd: "/img/bpd.png",
+    lpmd: "/img/lpmd.png",
   };
 
   return (
@@ -84,11 +84,11 @@ const ProfilPage = () => {
         <div className="flex flex-col justify-center mx-auto space-y-8">
           {/* Tombol Pilih */}
           <div className="flex mx-auto gap-8 border-2 border-[#0E4D45] p-4 rounded-2xl">
-            <button onClick={() => setSelectedProfil("pkk")}>
+            <button onClick={() => setSelectedProfil("desa")}>
               <NavButtonAll
-                text="PKK"
+                text="Desa"
                 href="#"
-                isSelected={selectedProfil === "pkk"}
+                isSelected={selectedProfil === "desa"}
               />
             </button>
             <button onClick={() => setSelectedProfil("bpd")}>
@@ -98,11 +98,11 @@ const ProfilPage = () => {
                 isSelected={selectedProfil === "bpd"}
               />
             </button>
-            <button onClick={() => setSelectedProfil("desa")}>
+            <button onClick={() => setSelectedProfil("lpmd")}>
               <NavButtonAll
-                text="Desa"
+                text="LPMD"
                 href="#"
-                isSelected={selectedProfil === "desa"}
+                isSelected={selectedProfil === "lpmd"}
               />
             </button>
           </div>
