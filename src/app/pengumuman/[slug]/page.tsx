@@ -1,4 +1,3 @@
-// PengumumanDetail.tsx
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -93,8 +92,6 @@ const PengumumanDetail = () => {
     fetchAnnouncement();
   }, [currentSlug]);
 
-  // Handle loading, error, and not found states as before
-
   if (loading) {
     return (
       <div className="bg-gray-50 flex items-center justify-center min-h-screen">
@@ -126,8 +123,16 @@ const PengumumanDetail = () => {
     );
   }
 
-  // Generate the canonical URL for the current announcement
-  const canonicalUrl = `https://yourdomain.com/pengumuman/${announcement.slug}`; // **IMPORTANT: Replace with your actual domain**
+  // Determine the category to pass to PengumumanHeader
+  let categoryToPass: string | undefined = undefined;
+  if (announcement.category) {
+    categoryToPass = announcement.category as string;
+  } else if ((announcement as any).kategori) {
+    // Fallback if the field in Firestore is named 'kategori'
+    categoryToPass = (announcement as any).kategori as string;
+  }
+  
+  const canonicalUrl = `https://yourdomain.com/pengumuman/${announcement.slug}`;
 
   return (
     <div className="bg-gray-50 min-h-screen">
@@ -172,7 +177,8 @@ const PengumumanDetail = () => {
       </Head>
 
       <Navbar isLoggedIn={false} />
-      <PengumumanHeader title={announcement.title} />
+      {/* Pass the categoryToPass to PengumumanHeader */}
+      <PengumumanHeader title={announcement.title} category={categoryToPass} />
       <div className="px-24 py-6 mx-auto">
         <div className="lg:flex-row flex flex-col gap-8">
           <PengumumanContent announcement={announcement} />
