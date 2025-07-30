@@ -17,7 +17,7 @@ const Sejarah = () => {
       <div className="my-5 w-full h-[1px] bg-[#0E4D45] "></div>
 
       {/* Konten utama */}
-      <div className="text-[#333] text-xl leading-relaxed text-justify">
+      <div className="text-[#333] text-xl max-w-360 mx-auto leading-relaxed text-justify">
         {/* Gambar dengan float */}
         <img
           src="/img/sejarah-jatiguwi.jpg"

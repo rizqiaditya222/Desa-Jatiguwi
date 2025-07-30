@@ -13,8 +13,8 @@ const VisiMisi = () => {
   ];
 
   return (
-    <div className="flex flex-col px-24 bg-[#0E4D45] justify-center items-center pb-24">
-      <div className="flex justify-between w-full ">
+    <div className="flex flex-col px-24 bg-[#0E4D45] justify-center items-center py-12">
+      <div className=" flex justify-between w-full">
         <p className="font-bold text-[#fafafa] text-4xl">
           Profil Desa Jatiguwi
         </p>
@@ -24,12 +24,12 @@ const VisiMisi = () => {
         </p>
       </div>
       <div className="my-5 w-full h-[1px] bg-[#fafafa] "></div>
-      <div className="grid w-full grid-cols-12 gap-8">
+      <div className="max-w-360 grid w-full grid-cols-12 gap-8">
         <section className="flex flex-col col-span-5 px-12 space-y-8">
           <img
             src="/img/logo_desa.png"
             alt="Logo Desa Jatiguwi"
-            className="mx-auto size-auto selection:max-w-80 max-h-80"
+            className="size-auto selection:max-w-80 max-h-80 mx-auto"
           />
           <PrimaryLinkButton
             text="Lihat Profil Desa"

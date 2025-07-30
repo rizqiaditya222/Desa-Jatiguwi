@@ -52,7 +52,9 @@ const PengumumanHeader = ({ title, category }: HeaderProps) => {
         <nav className="text-sm text-gray-600 flex flex-wrap items-center gap-2">
           <Link href="/dashboard" className="hover:text-teal-600">Beranda</Link>
           <span className="mx-2">/</span>
-          <Link href="/dashboard/pengumuman" className="hover:text-teal-600">Pengumuman</Link>
+          <Link href="/dashboard/pengumuman" className="hover:text-teal-600">
+            Pengumuman
+          </Link>
           <span className="mx-2">/</span>
 
           <span className="text-gray-800">{title}</span>

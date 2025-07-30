@@ -15,25 +15,29 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
   const buttonHref = isLoggedIn ? "/dashboard/all" : "/auth/login";
 
   return (
-    <div className="flex items-center justify-between w-full px-24 py-12">
-      {/* Logo image */}
-      <img
-        className="max-w-80 w-auto"
-        src="/img/logo_full.png"
-        alt="Logo Desa"
-      />
+    <div className="md:px-8 md:py-12 flex items-center justify-between gap-4 px-4 py-6 space-x-2 overflow-auto">
+      <div className="flex-1/4 xl:justify-center flex items-center justify-start">
+        {/* Logo image */}
+        <img
+          className="max-w-80 md:max-w-60 object-contain"
+          src="/img/logo_full.png"
+          alt="Logo Desa"
+        />
+      </div>
 
       {/* Navigation buttons */}
-      <div className="flex items-center gap-8 mx-auto space-x-8">
+      <div className="flex-1/2 flex items-center justify-center gap-8">
         <NavButton text="Beranda" href="/" />
-        <NavButton text="Profil" href="/profil/pkk" />
+        <NavButton text="Profil" href="/profil" />
         <NavButton text="Selayang Pandang" href="/selayang-pandang" />
         <NavButton text="Sejarah" href="/sejarah" />
         <NavButton text="Berita" href="/content" />
       </div>
+      <div className="flex-1/4 xl:justify-center flex items-center justify-end">
+        {/* PrimaryLinkButton will change based on login status */}
 
-      {/* PrimaryLinkButton will change based on login status */}
-      <PrimaryLinkButton text={buttonText} href={buttonHref} />
+        <PrimaryLinkButton text={buttonText} href={buttonHref} />
+      </div>
     </div>
   );
 };

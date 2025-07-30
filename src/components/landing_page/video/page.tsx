@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import YoutubeVideo from './youtube/page';
-import { fetchProfil } from '@/service/profile/profileService';
+import React, { useState, useEffect } from "react";
+import YoutubeVideo from "./youtube/page";
+import { fetchProfil } from "@/service/profile/profileService";
 
 const VideoSection = () => {
   const [ytVideoId, setYtVideoId] = useState<string | null>(null);
@@ -12,31 +12,24 @@ const VideoSection = () => {
   useEffect(() => {
     const getVideoId = async () => {
       try {
-        setLoading(true);
         const data = await fetchProfil();
         if (data && data.length > 0 && data[0].ytUrl) {
           const youtubeUrl = data[0].ytUrl;
-          let videoId = null;
-
-          // Regex to extract video ID from various YouTube URL formats
-          const regExp = /(?:https?:\/\/)?(?:www\.)?(?:m\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=|embed\/|v\/|)([\w-]{11})(?:\S+)?/;
+          const regExp =
+            /(?:https?:\/\/)?(?:www\.)?(?:m\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=|embed\/|v\/|)([\w-]{11})(?:\S+)?/;
           const match = youtubeUrl.match(regExp);
 
           if (match && match[1]) {
-            videoId = match[1];
-          }
-
-          if (videoId) {
-            setYtVideoId(videoId);
+            setYtVideoId(match[1]);
           } else {
-            setError("Invalid YouTube URL format found in database.");
+            setError("Invalid YouTube URL format");
           }
         } else {
-          setError("YouTube URL not found in profile data.");
+          setError("No YouTube URL found");
         }
       } catch (err) {
         console.error("Failed to fetch YouTube URL:", err);
-        setError("Failed to load YouTube video. Please try again later.");
+        setError("Failed to load video");
       } finally {
         setLoading(false);
       }
@@ -45,38 +38,36 @@ const VideoSection = () => {
     getVideoId();
   }, []);
 
-  if (loading) {
-    return (
-      <div className='relative h-[100vh] w-full overflow-hidden flex justify-center items-center'>
-        <p>Loading video...</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className='relative h-[100vh] w-full overflow-hidden flex justify-center items-center text-red-600'>
-        <p>{error}</p>
-      </div>
-    );
-  }
-
-  if (!ytVideoId) {
-    return (
-      <div className='relative h-[100vh] w-full overflow-hidden flex justify-center items-center'>
-        <p>No YouTube video available.</p>
-      </div>
-    );
-  }
-
   return (
-    <div className='relative h-[100vh] w-full overflow-hidden'>
-      <div className='h-1/2 w-full'></div>
+    <div className="w-full bg-gradient-to-b border-[#0E4D45]  to-[#0E4D45] py-16 px-4 flex justify-center items-center">
+      <div className="w-full max-w-4xl">
+        {/* Loading */}
+        {loading && (
+          <div className="aspect-video rounded-xl flex items-center justify-center w-full bg-gray-500 shadow-lg">
+            <span className="text-white">Memuat video...</span>
+          </div>
+        )}
 
-      <div className='bg-[#0E4D45] h-1/2 w-full'></div>
+        {/* Error */}
+        {error && !loading && (
+          <div className="aspect-video rounded-xl flex items-center justify-center w-full text-red-600 bg-gray-100">
+            <p>{error}</p>
+          </div>
+        )}
 
-      <div className='w-full h-full absolute top-3/5 left-1/2 -translate-x-1/2 -translate-y-1/2'>
-        <YoutubeVideo videoId={ytVideoId} />
+        {/* Video */}
+        {ytVideoId && !loading && (
+          <div className="aspect-video rounded-xl flex items-center justify-center w-full shadow-lg">
+            <YoutubeVideo videoId={ytVideoId} />
+          </div>
+        )}
+
+        {/* No video */}
+        {!ytVideoId && !loading && !error && (
+          <div className="aspect-video rounded-xl flex items-center justify-center w-full bg-gray-100">
+            <p>No video available</p>
+          </div>
+        )}
       </div>
     </div>
   );
