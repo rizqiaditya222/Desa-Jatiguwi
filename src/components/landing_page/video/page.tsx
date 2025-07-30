@@ -39,33 +39,32 @@ const VideoSection = () => {
   }, []);
 
   return (
-    <div className="relative h-[100vh] w-full overflow-hidden">
-      {/* Background yang langsung muncul */}
-      <div className="h-1/2 w-full"></div>
-      <div className="bg-[#0E4D45] h-1/2 w-full"></div>
-
-      {/* Kontainer video */}
-      <div className="w-full h-full absolute top-3/5 left-1/2 -translate-x-1/2 -translate-y-1/2">
-        {/* Placeholder kotak loading */}
+    <div className="w-full bg-gradient-to-b border-[#0E4D45]  to-[#0E4D45] py-16 px-4 flex justify-center items-center">
+      <div className="w-full max-w-4xl">
+        {/* Loading */}
         {loading && (
-          <div className="w-3/4 h-3/4 mx-auto rounded-4xl aspect-video flex items-center justify-center bg-gray-500 shadow-lg">
+          <div className="aspect-video rounded-xl flex items-center justify-center w-full bg-gray-500 shadow-lg">
             <span className="text-white">Memuat video...</span>
           </div>
         )}
 
-        {/* Tampilkan error jika ada */}
+        {/* Error */}
         {error && !loading && (
-          <div className="flex justify-center items-center h-full text-red-600">
+          <div className="aspect-video rounded-xl flex items-center justify-center w-full text-red-600 bg-gray-100">
             <p>{error}</p>
           </div>
         )}
 
-        {/* Tampilkan video jika tersedia */}
-        {ytVideoId && !loading && <YoutubeVideo videoId={ytVideoId} />}
+        {/* Video */}
+        {ytVideoId && !loading && (
+          <div className="aspect-video rounded-xl flex items-center justify-center w-full shadow-lg">
+            <YoutubeVideo videoId={ytVideoId} />
+          </div>
+        )}
 
-        {/* Tampilkan pesan jika tidak ada video */}
+        {/* No video */}
         {!ytVideoId && !loading && !error && (
-          <div className="flex justify-center items-center h-full">
+          <div className="aspect-video rounded-xl flex items-center justify-center w-full bg-gray-100">
             <p>No video available</p>
           </div>
         )}

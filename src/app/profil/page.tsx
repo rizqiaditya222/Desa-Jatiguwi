@@ -58,7 +58,7 @@ const ProfilPage = () => {
 
   if (loading) {
     return (
-      <div className="w-full h-screen flex justify-center items-center">
+      <div className="flex items-center justify-center w-full h-screen">
         <p>Loading profile data...</p>
       </div>
     );
@@ -66,7 +66,7 @@ const ProfilPage = () => {
 
   if (error) {
     return (
-      <div className="w-full h-screen flex justify-center items-center text-red-600">
+      <div className="flex items-center justify-center w-full h-screen text-red-600">
         <p>{error}</p>
       </div>
     );
@@ -87,34 +87,34 @@ const ProfilPage = () => {
         </div>
 
         <div className="my-5 w-full h-[1px] bg-[#0E4D45]" />
+        <div className="max-w-360 grid w-full px-24 py-12 mx-auto">
+          <div className=" grid w-full grid-cols-12 gap-8">
+            <section className="flex flex-col items-end col-span-5 p-12">
+              <img
+                src="/img/logo_desa.png"
+                alt="Logo Desa Jatiguwi"
+                className="selection:max-w-80 max-h-80 mx-auto"
+              />
+            </section>
+            <section className=" flex flex-col col-span-6 col-start-6 py-4">
+              <div className=" flex flex-col">
+                <p className="pt-12 pb-8 text-3xl font-semibold">Visi & Misi</p>
+                <p className="pb-8 text-2xl">
+                  Terwujudnya masyarakat Desa Jatiguwi yang:{" "}
+                  <span className="font-bold">KARTINI</span>
+                </p>
+              </div>
 
-        <div className=" grid w-full grid-cols-12 gap-8">
-          <section className="flex flex-col items-end col-span-5 p-12">
-            <img
-              src="/img/logo_desa.png"
-              alt="Logo Desa Jatiguwi"
-              className="selection:max-w-80 max-h-80 mx-auto"
-            />
-          </section>
-          <section className=" flex flex-col col-span-6 col-start-6 py-4">
-            <div className=" flex flex-col">
-              <p className="pt-12 pb-8 text-3xl font-semibold">Visi & Misi</p>
-              <p className="pb-8 text-2xl">
-                Terwujudnya masyarakat Desa Jatiguwi yang:{" "}
-                <span className="font-bold">KARTINI</span>
-              </p>
-            </div>
-
-            <div className=" grid grid-cols-3 gap-8">
-              {kataKata.map((kata) => (
-                <div key={kata.id} className="text-lg font-semibold">
-                  {kata.id}. {kata.text}
-                </div>
-              ))}
-            </div>
-          </section>
+              <div className=" grid grid-cols-3 gap-8">
+                {kataKata.map((kata) => (
+                  <div key={kata.id} className="text-lg font-semibold">
+                    {kata.id}. {kata.text}
+                  </div>
+                ))}
+              </div>
+            </section>
+          </div>
         </div>
-
         {/* Struktur Organisasi */}
         <div className=" flex justify-between w-full mt-16">
           <p className="text-4xl font-bold">Struktur Organisasi</p>
@@ -124,43 +124,44 @@ const ProfilPage = () => {
         </div>
 
         <div className="my-5 w-full h-[1px] bg-[#0E4D45]" />
+        <div className="max-w-360 grid w-full mx-auto">
+          <div className="flex flex-col justify-center mx-auto space-y-8">
+            {/* Tombol Pilih */}
+            <div className="flex mx-auto gap-8 border-2 border-[#0E4D45] p-4 rounded-2xl">
+              <button onClick={() => setSelectedProfil("desa")}>
+                <NavButtonAll
+                  text="Desa"
+                  href="#"
+                  isSelected={selectedProfil === "desa"}
+                />
+              </button>
+              <button onClick={() => setSelectedProfil("bpd")}>
+                <NavButtonAll
+                  text="BPD"
+                  href="#"
+                  isSelected={selectedProfil === "bpd"}
+                />
+              </button>
+              <button onClick={() => setSelectedProfil("lpmd")}>
+                <NavButtonAll
+                  text="LPMD"
+                  href="#"
+                  isSelected={selectedProfil === "lpmd"}
+                />
+              </button>
+            </div>
 
-        <div className="flex flex-col justify-center mx-auto space-y-8">
-          {/* Tombol Pilih */}
-          <div className="flex mx-auto gap-8 border-2 border-[#0E4D45] p-4 rounded-2xl">
-            <button onClick={() => setSelectedProfil("desa")}>
-              <NavButtonAll
-                text="Desa"
-                href="#"
-                isSelected={selectedProfil === "desa"}
-              />
-            </button>
-            <button onClick={() => setSelectedProfil("bpd")}>
-              <NavButtonAll
-                text="BPD"
-                href="#"
-                isSelected={selectedProfil === "bpd"}
-              />
-            </button>
-            <button onClick={() => setSelectedProfil("lpmd")}>
-              <NavButtonAll
-                text="LPMD"
-                href="#"
-                isSelected={selectedProfil === "lpmd"}
-              />
-            </button>
-          </div>
-
-          {/* Gambar Berdasarkan Pilihan */}
-          <div className="max-w-3xl mx-auto">
-            {profilData ? (
-              <img
-                src={gambarMap[selectedProfil]}
-                alt={`gambar ${selectedProfil}`}
-              />
-            ) : (
-              <p>No image available for {selectedProfil}.</p>
-            )}
+            {/* Gambar Berdasarkan Pilihan */}
+            <div className="max-w-3xl mx-auto">
+              {profilData ? (
+                <img
+                  src={gambarMap[selectedProfil]}
+                  alt={`gambar ${selectedProfil}`}
+                />
+              ) : (
+                <p>No image available for {selectedProfil}.</p>
+              )}
+            </div>
           </div>
         </div>
       </div>
