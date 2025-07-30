@@ -26,7 +26,7 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
       {/* Navigation buttons */}
       <div className="flex items-center gap-8 mx-auto space-x-8">
         <NavButton text="Beranda" href="/" />
-        <NavButton text="Profil" href="/Profil" />
+        <NavButton text="Profil" href="/profil/pkk" />
         <NavButton text="Selayang Pandang" href="/selayang-pandang" />
         <NavButton text="Sejarah" href="/sejarah" />
         <NavButton text="Galeri" href="/galeri" />
