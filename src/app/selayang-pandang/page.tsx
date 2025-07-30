@@ -4,9 +4,65 @@ import Navbar from "@/components/landing_page/navbar/page";
 import { useAuth } from "@/app/auth/context/AuthContext";
 import PetaDesa from "@/components/Map/PetaDesa";
 import Footer from "@/components/landing_page/footer/page";
-import PrimaryLinkButton from "@/components/button/primary_button";
+import InfoCardGroup from "./infocardgroup";
+import ListStatCard from "./liststatcard";
+import WilayahLahanCard from "./wilayahlahancard";
 const SelayangPandangPage = () => {
   const { user } = useAuth();
+  const dukuhData = [
+    {
+      name: "Dukuh Jatimulyo",
+      stats: [
+        { title: "RW", value: 1, bg: true },
+        { title: "RT", value: 5 },
+        { title: "KK", value: 306 },
+        { title: "JIWA", value: 1150, bg: true },
+      ],
+    },
+    {
+      name: "Dukuh Mentaraman",
+      stats: [
+        { title: "RW", value: 6, bg: true },
+        { title: "RT", value: 25 },
+        { title: "KK", value: 1365 },
+        { title: "JIWA", value: 6303, bg: true },
+      ],
+    },
+    {
+      name: "Dukuh Krajan",
+      stats: [
+        { title: "RW", value: 2, bg: true },
+        { title: "RT", value: 10 },
+        { title: "KK", value: 455 },
+        { title: "JIWA", value: 1256, bg: true },
+      ],
+    },
+  ];
+
+  const agamaData = [
+    { label: "Islam", value: 6000 },
+    { label: "Kristen", value: 300 },
+    { label: "Katolik", value: 150 },
+    { label: "Hindu", value: 120 },
+    { label: "Buddha", value: 80 },
+  ];
+
+  const profesiData = [
+    { label: "Petani", value: 6000 },
+    { label: "Buruh Tani", value: 300 },
+    { label: "Wiraswasta/dagang", value: 150 },
+    { label: "Pegawai Negeri Sipil", value: 120 },
+    { label: "ABRI/TNI/POLRI", value: 80 },
+    { label: "Lainnya", value: 80 },
+  ];
+
+  const wilayahLahanData = [
+    { label: "Sawah", value: 144, satuan: "Ha" },
+    { label: "Tegalan", value: 43, satuan: "Ha" },
+    { label: "Kebun", value: 12, satuan: "Ha" },
+    { label: "Pemukiman", value: 27, satuan: "Ha" },
+    { label: "Fasilitas umum", value: 8, satuan: "Ha" },
+  ];
   return (
     <div>
       <Navbar isLoggedIn={!!user} />
@@ -59,28 +115,11 @@ const SelayangPandangPage = () => {
             </li>
           </ul>
         </div>
-        <div className="py-8 space-y-6">
-          <h1 className="font-bold text-[#0E4D45] text-2xl justify-center text-center">
-            Penggunaan Lahan
-          </h1>
-          <div className="grid grid-cols-4 gap-4 content-evenly mx-auto  max-w-6xl text-[#0E4D45]">
-            <div className="flex flex-col items-center text-center w-full p-4 space-y-4 bg-[#1f4a0525] border-2 rounded-2xl">
-              <h1 className="text-2xl font-semibold">sawah</h1>
-              <p className="text-3xl font-bold">260,502 ha</p>
-            </div>
-            <div className="flex flex-col items-center text-center w-full p-4 space-y-4 bg-[#1f4a0525] border-2 rounded-2xl">
-              <h1 className="text-2xl font-semibold">Tegalan</h1>
-              <p className="text-3xl font-bold">49,293 ha</p>
-            </div>
-            <div className="flex flex-col items-center text-center w-full p-4 space-y-4 bg-[#1f4a0525] border-2 rounded-2xl">
-              <h1 className="text-2xl font-semibold">Setengah Teknik</h1>
-              <p className="text-3xl font-bold">16,195 ha</p>
-            </div>
-            <div className="flex flex-col items-center text-center w-full p-4 space-y-4 bg-[#1f4a0525] border-2 rounded-2xl">
-              <h1 className="text-2xl font-semibold">Lain-lain</h1>
-              <p className="text-3xl font-bold">49.293 ha</p>
-            </div>
-          </div>
+        <div className="mt-8">
+          <WilayahLahanCard
+            title="Wilayah Pertanian & Pemukiman"
+            data={wilayahLahanData}
+          />
         </div>
         <div className="bg-rounded rounded-xl flex flex-col p-6 my-6 space-y-6 bg-gray-200">
           <p className=" w-full text-4xl font-semibold">Kondisi Topografis</p>
@@ -97,152 +136,15 @@ const SelayangPandangPage = () => {
 
           {/* Container Dukuh */}
           <section className="md:grid-cols-3 grid w-full max-w-6xl grid-cols-1 gap-6 my-8">
-            {/* Dukuh 1 */}
-            <div className="rounded-xl flex flex-col w-full p-8  text-center bg-white text-[#0E4D45] shadow-md mx-auto">
-              <h1 className="mb-4 text-2xl font-semibold">Dukuh Jatimulyo</h1>
-              <div className=" grid w-full grid-cols-2 gap-2">
-                <div className="p-2 text-lg font-semibold border-2 rounded-lg border-[#0E4D45] bg-[#D2E0C6]">
-                  <h1 className="text-2xl font-bold">1</h1>
-                  <p className="text-lg font-semibold">RW</p>
-                </div>
-                <div className="p-2 text-lg font-semibold border-2 rounded-lg border-[#0E4D45]">
-                  <h1 className="text-2xl font-bold">5</h1>
-                  <p className="text-lg font-semibold">RT</p>
-                </div>
-                <div className="p-2 text-lg font-semibold border-2 rounded-lg border-[#0E4D45]">
-                  <h1 className="text-2xl font-bold">306</h1>
-                  <p className="text-lg font-semibold">KK</p>
-                </div>
-                <div className="p-2 text-lg font-semibold border-2 rounded-lg border-[#0E4D45] bg-[#D2E0C6]">
-                  <h1 className="text-2xl font-bold">1150</h1>
-                  <p className="text-lg font-semibold">JIWA</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Dukuh 2 */}
-            <div className="rounded-xl flex flex-col w-full p-8  text-center bg-white text-[#0E4D45] shadow-md mx-auto">
-              <h1 className="mb-4 text-2xl font-semibold">Dukuh Mentaraman</h1>
-              <div className=" grid w-full grid-cols-2 gap-2">
-                <div className="p-2 text-lg font-semibold border-2 rounded-lg border-[#0E4D45] bg-[#D2E0C6]">
-                  <h1 className="text-2xl font-bold">6</h1>
-                  <p className="text-lg font-semibold">RW</p>
-                </div>
-                <div className="p-2 text-lg font-semibold border-2 rounded-lg border-[#0E4D45]">
-                  <h1 className="text-2xl font-bold">25</h1>
-                  <p className="text-lg font-semibold">RT</p>
-                </div>
-                <div className="p-2 text-lg font-semibold border-2 rounded-lg border-[#0E4D45]">
-                  <h1 className="text-2xl font-bold">1365</h1>
-                  <p className="text-lg font-semibold">KK</p>
-                </div>
-                <div className="p-2 text-lg font-semibold border-2 rounded-lg border-[#0E4D45] bg-[#D2E0C6]">
-                  <h1 className="text-2xl font-bold">6303</h1>
-                  <p className="text-lg font-semibold">JIWA</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Dukuh 3 */}
-            <div className="rounded-xl flex flex-col w-full p-8  text-center bg-white text-[#0E4D45] shadow-md mx-auto">
-              <h1 className="mb-4 text-2xl font-semibold">Dukuh Krajan</h1>
-              <div className=" grid w-full grid-cols-2 gap-2">
-                <div className="p-2 text-lg font-semibold border-2 rounded-lg border-[#0E4D45] bg-[#D2E0C6]">
-                  <h1 className="text-2xl font-bold">2</h1>
-                  <p className="text-lg font-semibold">RW</p>
-                </div>
-                <div className="p-2 text-lg font-semibold border-2 rounded-lg border-[#0E4D45]">
-                  <h1 className="text-2xl font-bold">10</h1>
-                  <p className="text-lg font-semibold">RT</p>
-                </div>
-                <div className="p-2 text-lg font-semibold border-2 rounded-lg border-[#0E4D45]">
-                  <h1 className="text-2xl font-bold">455</h1>
-                  <p className="text-lg font-semibold">KK</p>
-                </div>
-                <div className="p-2 text-lg font-semibold border-2 rounded-lg border-[#0E4D45] bg-[#D2E0C6]">
-                  <h1 className="text-2xl font-bold">1256</h1>
-                  <p className="text-lg font-semibold">JIWA</p>
-                </div>
-              </div>
-            </div>
+            {dukuhData.map((dukuh, i) => (
+              <InfoCardGroup key={i} name={dukuh.name} stats={dukuh.stats} />
+            ))}
           </section>
         </div>
-        <div className="grid w-full grid-cols-2 gap-8">
-          <div className="w-full flex flex-col items-center p-8 border border-[#0E4D45] bg-gray-200 rounded-xl text-[#0E4D45] shadow-md">
-            <h1 className="mb-6 text-3xl font-semibold">Persebaran Agama</h1>
-
-            <div className="w-full max-w-2xl space-y-4">
-              {/* Islam */}
-              <div className="bg-white flex justify-between items-center w-full pb-4 border rounded-xl p-4 border-[#0E4D45]/30">
-                <p className="text-xl font-medium">Islam</p>
-                <p className="text-xl font-semibold">6.000</p>
-              </div>
-
-              {/* Kristen */}
-              <div className="bg-white flex justify-between items-center w-full pb-4 border rounded-xl p-4 border-[#0E4D45]/30">
-                <p className="text-xl font-medium">Kristen</p>
-                <p className="text-xl font-semibold">300</p>
-              </div>
-
-              {/* Katolik */}
-              <div className="bg-white flex justify-between items-center w-full pb-4 border rounded-xl p-4 border-[#0E4D45]/30">
-                <p className="text-xl font-medium">Katolik</p>
-                <p className="text-xl font-semibold">150</p>
-              </div>
-
-              {/* Hindu */}
-              <div className="bg-white flex justify-between items-center w-full pb-4 border rounded-xl p-4 border-[#0E4D45]/30">
-                <p className="text-xl font-medium">Hindu</p>
-                <p className="text-xl font-semibold">120</p>
-              </div>
-
-              {/* Buddha */}
-              <div className="bg-white flex justify-between items-center w-full pb-4 border rounded-xl p-4 border-[#0E4D45]/30">
-                <p className="text-xl font-medium">Buddha</p>
-                <p className="text-xl font-semibold">80</p>
-              </div>
-            </div>
-          </div>
-          <div className="w-full flex flex-col items-center p-8 border border-[#0E4D45] bg-gray-200 rounded-xl text-[#0E4D45]  shadow-md">
-            <h1 className="mb-6 text-3xl font-semibold">Persebaran Profesi</h1>
-
-            <div className=" w-full max-w-2xl space-y-4">
-              {/* Islam */}
-              <div className="bg-white flex justify-between items-center w-full pb-4 border rounded-xl p-4 border-[#0E4D45]/30">
-                <p className="text-xl font-medium">Petani</p>
-                <p className="text-xl font-semibold">6.000</p>
-              </div>
-
-              {/* Kristen */}
-              <div className="bg-white flex justify-between items-center w-full pb-4 border rounded-xl p-4 border-[#0E4D45]/30">
-                <p className="text-xl font-medium">Buruh Tani</p>
-                <p className="text-xl font-semibold">300</p>
-              </div>
-
-              {/* Katolik */}
-              <div className="bg-white flex justify-between items-center w-full pb-4 border rounded-xl p-4 border-[#0E4D45]/30">
-                <p className="text-xl font-medium">Wiraswasta/dagang</p>
-                <p className="text-xl font-semibold">150</p>
-              </div>
-
-              {/* Hindu */}
-              <div className="bg-white flex justify-between items-center w-full pb-4 border rounded-xl p-4 border-[#0E4D45]/30">
-                <p className="text-xl font-medium">Pegawai Negeri Sipil</p>
-                <p className="text-xl font-semibold">120</p>
-              </div>
-
-              {/* Buddha */}
-              <div className="bg-white flex justify-between items-center w-full pb-4 border rounded-xl p-4 border-[#0E4D45]/30">
-                <p className="text-xl font-medium">ABRI/TNI/POLRI</p>
-                <p className="text-xl font-semibold">80</p>
-              </div>
-
-              <div className="bg-white flex justify-between items-center w-full pb-4 border rounded-xl p-4 border-[#0E4D45]/30">
-                <p className="text-xl font-medium">Lainnya</p>
-                <p className="text-xl font-semibold">80</p>
-              </div>
-            </div>
-          </div>
+        {/* Section Persebaran */}
+        <div className="grid w-full grid-cols-2 gap-8 mt-8">
+          <ListStatCard title="Persebaran Agama" items={agamaData} />
+          <ListStatCard title="Persebaran Profesi" items={profesiData} />
         </div>
       </div>
       <Footer />
