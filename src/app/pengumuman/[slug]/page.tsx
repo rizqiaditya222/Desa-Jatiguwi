@@ -5,6 +5,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Head from "next/head"; // Import Head
+import { useAuth } from "@/app/auth/context/AuthContext";
 import Navbar from "@/components/landing_page/navbar/page";
 import Footer from "@/components/landing_page/footer/page";
 import {
@@ -22,6 +23,7 @@ import PengumumanContent from "@/components/pengumuman/content";
 import PengumumanSidebar from "@/components/pengumuman/sidebar";
 
 const PengumumanDetail = () => {
+  const { user } = useAuth();
   const params = useParams() as Readonly<
     Record<string, string | string[]>
   > | null;
@@ -171,7 +173,7 @@ const PengumumanDetail = () => {
         {/* <meta name="twitter:image" content={announcement.imageUrl || 'default_image_url.jpg'} /> */}
       </Head>
 
-      <Navbar isLoggedIn={false} />
+      <Navbar isLoggedIn={!!user} />
       <PengumumanHeader title={announcement.title} />
       <div className="px-24 py-6 mx-auto">
         <div className="lg:flex-row flex flex-col gap-8">
