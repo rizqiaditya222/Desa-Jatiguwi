@@ -1,4 +1,4 @@
 export interface Agama {
-  nama: string;
+  agama: string;
   jumlah: number;
 }

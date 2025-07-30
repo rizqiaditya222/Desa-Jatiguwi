@@ -28,6 +28,52 @@ function generateSlug(text: string): string {
 }
 
 /**
+ * Helper function untuk menghapus file dari Supabase storage
+ * @param imageUrl - URL gambar yang akan dihapus
+ */
+async function deleteImageFromSupabase(imageUrl: string): Promise<void> {
+  if (!imageUrl) {
+    console.warn('URL gambar kosong, tidak ada yang dihapus');
+    return;
+  }
+
+  try {
+    // Parse URL untuk mendapatkan file path
+    const url = new URL(imageUrl);
+    const pathSegments = url.pathname.split('/');
+    
+    // Cari index 'public' dalam path
+    const publicIndex = pathSegments.findIndex(segment => segment === 'public');
+    
+    if (publicIndex === -1 || publicIndex + 2 >= pathSegments.length) {
+      console.warn(`URL gambar tidak sesuai format yang diharapkan: ${imageUrl}`);
+      return;
+    }
+
+    // Bucket name adalah segment setelah 'public'
+    const bucketName = pathSegments[publicIndex + 1];
+    // File path adalah semua segment setelah bucket name
+    const filePath = pathSegments.slice(publicIndex + 2).join('/');
+
+    console.log(`Menghapus file: ${filePath} dari bucket: ${bucketName}`);
+
+    const { error: deleteError } = await supabase.storage
+      .from(bucketName)
+      .remove([filePath]);
+
+    if (deleteError) {
+      console.error('Error deleting image from Supabase:', deleteError);
+      throw new Error(`Gagal menghapus gambar: ${deleteError.message}`);
+    }
+
+    console.log(`Gambar berhasil dihapus: ${filePath}`);
+  } catch (error: any) {
+    console.error('Error parsing URL atau menghapus gambar:', error);
+    throw error;
+  }
+}
+
+/**
  * Menambahkan berita baru ke Firebase dan mengunggah gambar ke Supabase.
  * @param {AddNewsData} newsData - Objek yang berisi judul, konten, dan file gambar.
  * @returns {Promise<string>} Mengembalikan ID dokumen berita yang baru dibuat.
@@ -105,23 +151,7 @@ export async function updateNews(
 
     // Ganti gambar jika imageFile diberikan
     if (updateData.imageFile) {
-      // Hapus gambar lama dari Supabase (jika ada)
-      if (oldImageUrl) {
-        const urlParts = oldImageUrl.split('/public/desajatiguwi/');
-        if (urlParts.length >= 2) {
-          const oldFileNameInStorage = urlParts[1]; 
-          const { error: deleteOldError } = await supabase.storage
-            .from('desajatiguwi')
-            .remove([oldFileNameInStorage]);
-          if (deleteOldError) {
-            console.warn('Peringatan: Gagal menghapus gambar lama dari Supabase:', deleteOldError.message);
-          }
-        } else {
-          console.warn('Peringatan: URL gambar lama tidak sesuai pola public/desajatiguwi/. Lewati penghapusan.');
-        }
-      }
-
-      // Upload gambar baru
+      // Upload gambar baru terlebih dahulu
       const folderName = 'berita-images';
       const fileName = `${folderName}/${Date.now()}-${updateData.imageFile.name}`;
       const { data: uploadData, error: uploadError } = await supabase.storage
@@ -132,14 +162,32 @@ export async function updateNews(
         console.error('Error uploading new image to Supabase:', uploadError);
         throw new Error(`Gagal mengunggah gambar baru: ${uploadError.message}`);
       }
-      updatedFields.imageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/desajatiguwi/${fileName}`;
+
+      const newImageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/desajatiguwi/${fileName}`;
+      updatedFields.imageUrl = newImageUrl;
+
+      // Update dokumen Firebase terlebih dahulu
+      await updateDoc(newsRef, updatedFields);
+
+      // Hapus gambar lama setelah berhasil update (untuk menghindari kehilangan data jika update gagal)
+      if (oldImageUrl) {
+        try {
+          await deleteImageFromSupabase(oldImageUrl);
+        } catch (deleteError) {
+          console.warn('Peringatan: Gagal menghapus gambar lama, tapi update data berhasil:', deleteError);
+        }
+      }
     }
     // Atau jika langsung diberikan imageUrl baru (tanpa upload)
     else if (updateData.imageUrl) {
       updatedFields.imageUrl = updateData.imageUrl;
+      await updateDoc(newsRef, updatedFields);
+    }
+    // Jika hanya update title/content tanpa gambar
+    else if (Object.keys(updatedFields).length > 0) {
+      await updateDoc(newsRef, updatedFields);
     }
 
-    await updateDoc(newsRef, updatedFields);
     console.log(`Berita dengan ID ${newsId} berhasil diperbarui!`);
   } catch (error: any) {
     console.error(`Error updating news with ID ${newsId}:`, error);
@@ -150,30 +198,39 @@ export async function updateNews(
 /**
  * Menghapus berita dari Firebase dan gambar terkait dari Supabase.
  * @param {string} newsId
- * @param {string} imageUrl
+ * @param {string} imageUrl - Opsional, jika tidak diberikan akan diambil dari document
  */
-export async function deleteNews(newsId: string, imageUrl: string): Promise<void> {
+export async function deleteNews(newsId: string, imageUrl?: string): Promise<void> {
   try {
-    // Hapus dokumen berita
     const newsRef = doc(db, 'berita', newsId);
-    await deleteDoc(newsRef);
-
-    // Hapus file gambar di Supabase (berdasarkan pola URL public)
-    const urlParts = imageUrl.split('/public/desajatiguwi/'); 
-    if (urlParts.length < 2) {
-      console.warn(`Peringatan: URL gambar tidak valid untuk dihapus dari Supabase: ${imageUrl}`);
-    } else {
-      const fileNameInStorage = urlParts[1]; 
-      const { error: deleteError } = await supabase.storage
-        .from('desajatiguwi')
-        .remove([fileNameInStorage]); 
-
-      if (deleteError) {
-        console.error('Error deleting image from Supabase:', deleteError);
+    
+    // Jika imageUrl tidak diberikan, ambil dari document
+    let imageUrlToDelete = imageUrl;
+    if (!imageUrlToDelete) {
+      const docSnap = await getDoc(newsRef);
+      if (docSnap.exists()) {
+        const newsData = docSnap.data() as NewsArticle;
+        imageUrlToDelete = newsData.imageUrl;
       }
     }
 
-    console.log(`Berita dengan ID ${newsId} dan gambarnya berhasil dihapus!`);
+    // Hapus dokumen berita terlebih dahulu
+    await deleteDoc(newsRef);
+    console.log(`Dokumen berita dengan ID ${newsId} berhasil dihapus dari Firebase`);
+
+    // Hapus gambar dari Supabase jika ada
+    if (imageUrlToDelete) {
+      try {
+        await deleteImageFromSupabase(imageUrlToDelete);
+        console.log(`Gambar berita berhasil dihapus dari Supabase`);
+      } catch (deleteError) {
+        console.warn('Peringatan: Dokumen sudah terhapus, tapi gagal menghapus gambar dari Supabase:', deleteError);
+      }
+    } else {
+      console.warn('Tidak ada URL gambar untuk dihapus');
+    }
+
+    console.log(`Berita dengan ID ${newsId} berhasil dihapus sepenuhnya!`);
   } catch (error: any) {
     console.error(`Error deleting news with ID ${newsId}:`, error);
     throw error;

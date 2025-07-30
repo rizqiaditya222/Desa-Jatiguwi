@@ -11,6 +11,7 @@ const sidebarItems = [
   { name: 'Berita', href: '/dashboard/berita' },
   { name: 'Pengumuman', href: '/dashboard/pengumuman' },
   { name: 'Galeri', href: '/dashboard/galeri' },
+  { name: 'Selayang Pandang', href: '/dashboard/selayang-pandang' },
 ];
 
 export default function PendudukLayout({ children }: { children: React.ReactNode }) {
