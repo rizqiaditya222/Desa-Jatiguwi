@@ -1,4 +1,3 @@
-// app/components/PengumumanBerita.tsx (Tidak Ada Perubahan yang diperlukan di sini untuk masalah gambar)
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -87,8 +86,8 @@ const PengumumanBerita = () => {
 
   if (loading) {
     return (
-      <div className="grid w-full grid-cols-12 px-24 py-12 mx-auto bg-white">
-        <div className="col-span-12 text-lg text-center text-gray-600">
+      <div className="w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-24 py-8 sm:py-12 mx-auto bg-white">
+        <div className="text-lg text-center text-gray-600">
           Loading data...
         </div>
       </div>
@@ -97,8 +96,8 @@ const PengumumanBerita = () => {
 
   if (error) {
     return (
-      <div className="grid w-full grid-cols-12 px-24 py-12 mx-auto bg-white">
-        <div className="col-span-12 text-lg text-center text-red-600">
+      <div className="w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-24 py-8 sm:py-12 mx-auto bg-white">
+        <div className="text-lg text-center text-red-600">
           {error}
         </div>
       </div>
@@ -106,58 +105,127 @@ const PengumumanBerita = () => {
   }
 
   return (
-    <div className=" max-w-360 grid w-full grid-cols-12 px-24 py-12 mx-auto">
-      <section className="w-full col-span-5 pr-12">
-        <h1 className="text-4xl font-bold text-[#0E4D45] inline-block border-b-2 border-[#0E4D45] pb-4">
-          Pengumuman
-        </h1>
-        <div className="max-w-xl pt-12 space-y-6">
-          {announcements.length > 0 ? (
-            announcements.map((pengumuman) => (
-              <PrimaryCard
-                key={pengumuman.id}
-                Judul={pengumuman.title}
-                deskripsi={pengumuman.content}
-                date={formatDate(pengumuman.date)}
-                href={`/pengumuman/${pengumuman.slug || pengumuman.id}`}
-              />
-            ))
-          ) : (
-            <p className="text-gray-500">Tidak ada pengumuman terbaru.</p>
-          )}
-        </div>
-        <PrimaryLinkButton
-          href="/pengumuman"
-          text="Lihat Semua Pengumuman"
-          className=" mt-6"
-        />
-      </section>
-      <section className="w-full col-span-7 pl-12">
-        <h1 className="text-4xl font-bold text-[#0E4D45] inline-block border-b-2 border-[#0E4D45] pb-4">
-          Berita
-        </h1>
-        <div className="max-w-4xl pt-12 space-y-6">
-          {news.length > 0 ? (
-            news.map((berita) => (
-              <SecondaryCard
-                key={berita.id}
-                Judul={berita.title}
-                date={formatDate(berita.date)}
-                deskripsi={berita.content}
-                // imageUrl={berita.imageUrl} // imageUrl tetap diambil dari Firestore, tapi SecondaryCard tidak merendernya
-                href={`/berita/${berita.slug || berita.id}`}
-              />
-            ))
-          ) : (
-            <p className="text-gray-500">Tidak ada berita terbaru.</p>
-          )}
-        </div>
-        <PrimaryLinkButton
-          href="/berita"
-          text="Lihat Semua Berita"
-          className=" mt-6"
-        />
-      </section>
+    <div className="w-full max-w-7xl px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-24 py-8 sm:py-12 md:py-16 mx-auto">
+      
+      {/* Mobile Layout - Stacked */}
+      <div className="block lg:hidden space-y-8 md:space-y-12">
+        
+        {/* Pengumuman Section - Mobile */}
+        <section className="w-full">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#0E4D45] inline-block border-b-2 border-[#0E4D45] pb-2 sm:pb-4 mb-6 sm:mb-8 md:mb-12">
+            Pengumuman
+          </h1>
+          <div className="space-y-4 sm:space-y-6">
+            {announcements.length > 0 ? (
+              announcements.map((pengumuman) => (
+                <PrimaryCard
+                  key={pengumuman.id}
+                  Judul={pengumuman.title}
+                  deskripsi={pengumuman.content}
+                  date={formatDate(pengumuman.date)}
+                  href={`/pengumuman/${pengumuman.slug || pengumuman.id}`}
+                />
+              ))
+            ) : (
+              <p className="text-gray-500 text-center py-8">Tidak ada pengumuman terbaru.</p>
+            )}
+          </div>
+          <div className="mt-6 sm:mt-8 flex justify-center">
+            <PrimaryLinkButton
+              href="/pengumuman"
+              text="Lihat Semua Pengumuman"
+              className="w-full sm:w-auto"
+            />
+          </div>
+        </section>
+
+        {/* Berita Section - Mobile */}
+        <section className="w-full">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#0E4D45] inline-block border-b-2 border-[#0E4D45] pb-2 sm:pb-4 mb-6 sm:mb-8 md:mb-12">
+            Berita
+          </h1>
+          <div className="space-y-4 sm:space-y-6">
+            {news.length > 0 ? (
+              news.map((berita) => (
+                <SecondaryCard
+                  key={berita.id}
+                  Judul={berita.title}
+                  date={formatDate(berita.date)}
+                  deskripsi={berita.content}
+                  href={`/berita/${berita.slug || berita.id}`}
+                />
+              ))
+            ) : (
+              <p className="text-gray-500 text-center py-8">Tidak ada berita terbaru.</p>
+            )}
+          </div>
+          <div className="mt-6 sm:mt-8 flex justify-center">
+            <PrimaryLinkButton
+              href="/berita"
+              text="Lihat Semua Berita"
+              className="w-full sm:w-auto"
+            />
+          </div>
+        </section>
+      </div>
+
+      {/* Desktop Layout - Side by Side */}
+      <div className="hidden lg:grid lg:grid-cols-12 lg:gap-8 xl:gap-12">
+        
+        {/* Pengumuman Section - Desktop */}
+        <section className="w-full col-span-5">
+          <h1 className="text-3xl xl:text-4xl font-bold text-[#0E4D45] inline-block border-b-2 border-[#0E4D45] pb-4 mb-12">
+            Pengumuman
+          </h1>
+          <div className="space-y-6">
+            {announcements.length > 0 ? (
+              announcements.map((pengumuman) => (
+                <PrimaryCard
+                  key={pengumuman.id}
+                  Judul={pengumuman.title}
+                  deskripsi={pengumuman.content}
+                  date={formatDate(pengumuman.date)}
+                  href={`/pengumuman/${pengumuman.slug || pengumuman.id}`}
+                />
+              ))
+            ) : (
+              <p className="text-gray-500">Tidak ada pengumuman terbaru.</p>
+            )}
+          </div>
+          <PrimaryLinkButton
+            href="/pengumuman"
+            text="Lihat Semua Pengumuman"
+            className="mt-6"
+          />
+        </section>
+
+        {/* Berita Section - Desktop */}
+        <section className="w-full col-span-7">
+          <h1 className="text-3xl xl:text-4xl font-bold text-[#0E4D45] inline-block border-b-2 border-[#0E4D45] pb-4 mb-12">
+            Berita
+          </h1>
+          <div className="space-y-6">
+            {news.length > 0 ? (
+              news.map((berita) => (
+                <SecondaryCard
+                  key={berita.id}
+                  Judul={berita.title}
+                  date={formatDate(berita.date)}
+                  deskripsi={berita.content}
+                  href={`/berita/${berita.slug || berita.id}`}
+                />
+              ))
+            ) : (
+              <p className="text-gray-500">Tidak ada berita terbaru.</p>
+            )}
+          </div>
+          <PrimaryLinkButton
+            href="/berita"
+            text="Lihat Semua Berita"
+            className="mt-6"
+          />
+        </section>
+      </div>
     </div>
   );
 };

@@ -13,43 +13,46 @@ const VisiMisi = () => {
   ];
 
   return (
-    <div className="flex flex-col px-24 bg-[#0E4D45] justify-center items-center py-12">
-      <div className=" flex justify-between w-full">
-        <p className="font-bold text-[#fafafa] text-4xl">
+    <div className="flex flex-col px-4 sm:px-8 md:px-12 lg:px-16 xl:px-24 bg-[#0E4D45] justify-center items-center py-12">
+      <div className="flex flex-col md:flex-row md:justify-between w-full items-center md:items-start text-center md:text-start">
+        <p className="font-bold text-[#fafafa] text-2xl sm:text-3xl md:text-4xl mb-4 md:mb-0">
           Profil Desa Jatiguwi
         </p>
-        <p className="w-2/5 text-end text-[#fafafa]">
+        <p className="w-full md:w-2/5 text-sm sm:text-base md:text-end text-[#fafafa]">
           Mengenal lebih dekat Desa Jatiguwi dengan sejarah, visi, dan misi
           dalam berkomitmen untuk melayani masyarakat dengan baik.
         </p>
       </div>
       <div className="my-5 w-full h-[1px] bg-[#fafafa] "></div>
-      <div className="max-w-360 grid w-full grid-cols-12 gap-8">
-        <section className="flex flex-col col-span-5 px-12 space-y-8">
+      <div className="max-w-screen-xl grid w-full grid-cols-1 md:grid-cols-12 gap-8 md:gap-12">
+        <section className="flex flex-col col-span-1 md:col-span-5 px-0 sm:px-4 md:px-12 space-y-8 items-center">
           <img
             src="/img/logo_desa.png"
             alt="Logo Desa Jatiguwi"
-            className="size-auto selection:max-w-80 max-h-80 mx-auto"
+            className="size-auto max-w-[200px] sm:max-w-[250px] md:max-w-[320px] max-h-80 mx-auto"
           />
           <PrimaryLinkButton
             text="Lihat Profil Desa"
             href="/profil_desa"
             key={"Button Profil Desa"}
-            className="w-full border-2 border-[#fafafa] hover:bg-[#fafafa] hover:text-[#0E4D45] hover:ease-in-out hover:duration-300"
+            className="w-full max-w-[300px] md:max-w-none border-2 border-[#fafafa] hover:bg-[#fafafa] hover:text-[#0E4D45] hover:ease-in-out hover:duration-300"
           />
         </section>
-        <section className="flex flex-col col-span-6 col-start-6">
+        <section className="flex flex-col col-span-1 md:col-span-6 md:col-start-6 text-center md:text-start">
           <div className="flex flex-col text-[#fafafa] ">
-            <p className="pt-12 pb-8 text-3xl font-semibold">Visi & Misi</p>
-            <p className="pb-8 text-2xl">
+            <p className="pt-8 pb-4 text-2xl sm:text-3xl md:text-3xl font-semibold">
+              Visi & Misi
+            </p>
+            <p className="pb-8 text-md sm:text-xl md:text-2xl">
               Terwujudnya masyarakat Desa Jatiguwi yang:{" "}
               <span className="font-bold">KARTINI</span>
             </p>
           </div>
 
-          <div className=" grid grid-cols-3 gap-8 bg-[#0E4D45] text-[#fafafa]">
+          {/* Perubahan ada di baris ini */}
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8 bg-[#0E4D45] text-[#fafafa]">
             {kataKata.map((kata) => (
-              <div key={kata.id} className="text-lg">
+              <div key={kata.id} className="text-sm sm:text-lg">
                 {kata.id}. {kata.text}
               </div>
             ))}

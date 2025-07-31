@@ -5,7 +5,6 @@ interface SecondaryCardProps {
   Judul: string;
   deskripsi: string;
   date: string;
-
   href: string;
 }
 
@@ -13,26 +12,31 @@ const SecondaryCard: React.FC<SecondaryCardProps> = ({
   Judul,
   deskripsi,
   date,
-
   href,
 }) => {
   return (
-    <Link href={href} className="px-8 flex flex-col w-full py-4 text-start text-white border-2 rounded-lg border-[#0E4D45] bg-[#0E4D45] hover:border-[#63be86] hover:bg-[#63be86] transition duration-200 ease-in-out group">
-      <div className="flex w-full">
-        <h2 className="flex pb-4 text-xl font-bold uppercase md:text-2xl">
+    <Link href={href} className="flex flex-col w-full px-4 sm:px-6 md:px-8 py-3 sm:py-4 text-start text-white border-2 rounded-lg border-[#0E4D45] bg-[#0E4D45] hover:border-[#63be86] hover:bg-[#63be86] transition duration-200 ease-in-out group">
+      
+      {/* Title */}
+      <div className="flex w-full mb-3 sm:mb-4">
+        <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold uppercase leading-tight">
           {Judul}
         </h2>
       </div>
 
-      <div className="mb-4">
-        <p className="text-sm text-[#fafafa] line-clamp-3">{deskripsi}</p>
+      {/* Description */}
+      <div className="mb-3 sm:mb-4">
+        <p className="text-xs sm:text-sm md:text-base text-[#fafafa] line-clamp-2 sm:line-clamp-3 leading-relaxed">
+          {deskripsi}
+        </p>
       </div>
 
+      {/* Date with Calendar Icon */}
       <div className="flex items-center gap-2">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
-          className="w-6 h-6 md:w-8 md:h-8 fill-[#0E4D45]"
+          className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 fill-white flex-shrink-0"
         >
           <g fill="none">
             <path
@@ -47,8 +51,9 @@ const SecondaryCard: React.FC<SecondaryCardProps> = ({
             />
           </g>
         </svg>
-
-        <p className="text-sm">{date}</p>
+        <p className="text-xs sm:text-sm md:text-base">
+          {date}
+        </p>
       </div>
     </Link>
   );

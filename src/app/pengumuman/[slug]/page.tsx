@@ -1,11 +1,9 @@
-// PengumumanDetail.tsx
 "use client";
 
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Head from "next/head"; // Import Head
-import { useAuth } from "@/app/auth/context/AuthContext";
 import Navbar from "@/components/landing_page/navbar/page";
 import Footer from "@/components/landing_page/footer/page";
 import {
@@ -23,7 +21,6 @@ import PengumumanContent from "@/components/pengumuman/content";
 import PengumumanSidebar from "@/components/pengumuman/sidebar";
 
 const PengumumanDetail = () => {
-  const { user } = useAuth();
   const params = useParams() as Readonly<
     Record<string, string | string[]>
   > | null;
@@ -95,8 +92,6 @@ const PengumumanDetail = () => {
     fetchAnnouncement();
   }, [currentSlug]);
 
-  // Handle loading, error, and not found states as before
-
   if (loading) {
     return (
       <div className="bg-gray-50 flex items-center justify-center min-h-screen">
@@ -128,8 +123,16 @@ const PengumumanDetail = () => {
     );
   }
 
-  // Generate the canonical URL for the current announcement
-  const canonicalUrl = `https://yourdomain.com/pengumuman/${announcement.slug}`; // **IMPORTANT: Replace with your actual domain**
+  // Determine the category to pass to PengumumanHeader
+  let categoryToPass: string | undefined = undefined;
+  if (announcement.category) {
+    categoryToPass = announcement.category as string;
+  } else if ((announcement as any).kategori) {
+    // Fallback if the field in Firestore is named 'kategori'
+    categoryToPass = (announcement as any).kategori as string;
+  }
+  
+  const canonicalUrl = `https://yourdomain.com/pengumuman/${announcement.slug}`;
 
   return (
     <div className="bg-gray-50 min-h-screen">
@@ -144,7 +147,6 @@ const PengumumanDetail = () => {
           }
         />
         <link rel="canonical" href={canonicalUrl} />
-        {/* Open Graph Tags for Social Media Sharing */}
         <meta property="og:url" content={canonicalUrl} />
         <meta property="og:type" content="article" />
         <meta property="og:title" content={announcement.title} />
@@ -173,9 +175,10 @@ const PengumumanDetail = () => {
         {/* <meta name="twitter:image" content={announcement.imageUrl || 'default_image_url.jpg'} /> */}
       </Head>
 
-      <Navbar isLoggedIn={!!user} />
-      <PengumumanHeader title={announcement.title} />
-      <div className="px-24 py-6 mx-auto">
+      <Navbar isLoggedIn={false} />
+      {/* Pass the categoryToPass to PengumumanHeader */}
+      <PengumumanHeader title={announcement.title} category={categoryToPass} />
+      <div className="px-4 lg:px-24 py-6 mx-auto">
         <div className="lg:flex-row flex flex-col gap-8">
           <PengumumanContent announcement={announcement} />
           <PengumumanSidebar otherAnnouncements={otherAnnouncements} />

@@ -15,10 +15,10 @@ const NavButton: React.FC<NavButtonProps> = ({ text, href }) => {
   const cleanHref = href.split("#")[0]; // hapus hash untuk pencocokan
   const isActive = cleanHref
     ? pathname === cleanHref ||
-      pathname.startsWith(`${cleanHref}/`) ||
+      pathname?.startsWith(`${cleanHref}/`) ||
       (cleanHref === "/content" &&
-        (pathname.startsWith("/berita/") ||
-          pathname.startsWith("/pengumuman/")))
+        (pathname?.startsWith("/berita/") ||
+          pathname?.startsWith("/pengumuman/")))
     : false;
 
   const handleClick = (e: React.MouseEvent) => {

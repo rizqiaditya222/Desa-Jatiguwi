@@ -39,7 +39,7 @@ const VideoSection = () => {
   }, []);
 
   return (
-    <div className="w-full bg-gradient-to-b border-[#0E4D45]  to-[#0E4D45] py-16 px-4 flex justify-center items-center">
+    <div className="w-full bg-gradient-to-b border-[#0E4D45]  to-[#0E4D45] pb-16 pt-8 px-4 flex justify-center items-center">
       <div className="w-full max-w-4xl">
         {/* Loading */}
         {loading && (

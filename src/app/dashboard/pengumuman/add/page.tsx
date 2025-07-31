@@ -9,7 +9,7 @@ const BASE_PATH = '/dashboard/pengumuman';
 
 export default function AddPengumumanPage() {
   const [title, setTitle] = React.useState('');
-  const [category, setCategory] = React.useState('');
+  const [category, setCategory] = React.useState('Umum'); // Default category
   const [content, setContent] = React.useState('');
   const [statusMessage, setStatusMessage] = React.useState('');
   const [isSuccess, setIsSuccess] = React.useState(false);
@@ -53,8 +53,9 @@ export default function AddPengumumanPage() {
 
       <form onSubmit={handleSubmit} className="space-y-5 rounded-2xl border border-gray-200 bg-white shadow-sm p-5 sm:p-7">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Judul</label>
+          <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">Judul</label>
           <input
+            id="title"
             className="w-full rounded-xl border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0E4D45]"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -64,18 +65,25 @@ export default function AddPengumumanPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
-          <input
+          <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
+          <select
+            id="category"
             className="w-full rounded-xl border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0E4D45]"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            placeholder="Contoh: Umum, Akademik, dll."
-          />
+            required
+          >
+            <option value="Penting">Penting</option>
+            <option value="Sedang">Sedang</option>
+            <option value="Ringan">Ringan</option>
+            <option value="Umum">Umum</option>
+          </select>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Isi Konten</label>
+          <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-1">Isi Konten</label>
           <textarea
+            id="content"
             className="w-full rounded-xl border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0E4D45]"
             rows={8}
             value={content}

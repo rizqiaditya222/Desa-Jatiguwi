@@ -7,13 +7,13 @@ interface HeaderProps {
 const BeritaHeader = ({ title }: HeaderProps) => {
   return (
     <div className="bg-gray-200 border-t border-gray-200">
-      <div className="px-24 mx-auto px- py-3">
+      <div className="px-4 lg:px-24 mx-auto px- py-3">
         <nav className="text-sm text-gray-600">
-          <Link href="/dashboard" className="hover:text-teal-600">
+          <Link href="/" className="hover:text-teal-600">
             Beranda
           </Link>
           <span className="mx-2">/</span>
-          <Link href="/dashboard/berita" className="hover:text-teal-600">
+          <Link href="/content" className="hover:text-teal-600">
             Berita
           </Link>
           <span className="mx-2">/</span>
