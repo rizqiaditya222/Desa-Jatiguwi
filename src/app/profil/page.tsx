@@ -52,7 +52,7 @@ const ProfilPage = () => {
 
   // Map selectedProfil to image URLs, with fallbacks
   const gambarMap: Record<typeof selectedProfil, string> = {
-    lpmd: profilData?.lpmdUrl || "/img/lpmd.png", // Assuming 'lpmd' corresponds to PKK image
+    lpmd: profilData?.lpmdUrl || "/img/lpmd.png",
     bpd: profilData?.bpdUrl || "/img/bpd.png",
     desa: profilData?.desaUrl || "/img/desa.png",
   };
@@ -78,57 +78,55 @@ const ProfilPage = () => {
       <Navbar isLoggedIn={!!user} />
 
       {/* Profil Desa Jatiguwi */}
-      <div className="flex flex-col pt-8 px-8 md:px-24 justify-center items-center text-[#0E4D45] pb-12 md:pb-24">
-        <div className="flex flex-col md:flex-row justify-between w-full items-center md:items-start text-center md:text-left">
-          <p className="text-2xl md:text-4xl font-bold mb-4 md:mb-0">
+      <div className="flex flex-col px-4 sm:px-8 md:px-12 lg:px-16 xl:px-24 justify-center items-center py-12">
+        <div className="md:flex-row md:items-start md:text-left flex flex-col items-center justify-between w-full text-center">
+          <p className="md:text-4xl md:mb-0 mb-4 text-2xl font-bold">
             Profil Desa Jatiguwi
           </p>
-          <p className="text-base md:text-lg w-full md:w-2/5 text-center md:text-end">
+          <p className="md:text-lg md:w-2/5 md:text-end w-full text-base text-center">
             Mengenal lebih dekat Desa Jatiguwi dengan sejarah, visi, dan misi
             dalam berkomitmen untuk melayani masyarakat dengan baik.
           </p>
         </div>
 
         <div className="my-5 w-full h-[1px] bg-[#0E4D45]" />
-        <div className="grid w-full px-4 md:px-24 py-8 md:py-12 mx-auto">
-          <div className="grid w-full grid-cols-1 md:grid-cols-12 gap-8 items-center">
-            <section className="flex flex-col items-center md:items-end col-span-1 md:col-span-5 p-4 md:p-12">
-              <img
-                src="/img/logo_desa.png"
-                alt="Logo Desa Jatiguwi"
-                className="max-w-xs md:max-w-80 max-h-xs md:max-h-80 mx-auto"
-              />
-            </section>
-            <section className="flex flex-col col-span-1 md:col-span-6 md:col-start-6 py-4 text-center md:text-left">
-              <div className="flex flex-col">
-                <p className="pt-4 md:pt-12 pb-4 md:pb-8 text-2xl md:text-3xl font-semibold">
-                  Visi & Misi
-                </p>
-                <p className="pb-4 md:pb-8 text-lg md:text-2xl">
-                  Terwujudnya masyarakat Desa Jatiguwi yang:{" "}
-                  <span className="font-bold">KARTINI</span>
-                </p>
-              </div>
 
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
-                {kataKata.map((kata) => (
-                  <div
-                    key={kata.id}
-                    className="text-base md:text-lg font-semibold"
-                  >
-                    {kata.id}. {kata.text}
-                  </div>
-                ))}
-              </div>
-            </section>
-          </div>
+        <div className="md:gap-12 sm:flex-row flex flex-col w-full max-w-screen-xl gap-8">
+          <section className="md:col-span-5 sm:px-4 md:px-12 flex flex-col justify-center items-center col-span-1 px-0 space-y-8  text-[#0E4D45]">
+            <img
+              src="/img/logo_desa.png"
+              alt="Logo Desa Jatiguwi"
+              className="size-auto max-w-[200px] sm:flex-1/2max-h-80 mx-auto"
+            />
+          </section>
+          <section className="md:text-start flex flex-col col-span-1 text-center">
+            <div className="flex flex-col  ">
+              <p className="sm:text-3xl md:text-3xl pt-8 pb-4 text-2xl font-semibold">
+                Visi & Misi
+              </p>
+              <p className="text-md sm:text-xl md:text-2xl pb-8">
+                Terwujudnya masyarakat Desa Jatiguwi yang:{" "}
+                <span className="font-bold">KARTINI</span>
+              </p>
+            </div>
+
+            {/* Perubahan ada di baris ini */}
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8 ">
+              {kataKata.map((kata) => (
+                <div key={kata.id} className="sm:text-lg text-sm">
+                  {kata.id}. {kata.text}
+                </div>
+              ))}
+            </div>
+          </section>
         </div>
+
         {/* Struktur Organisasi */}
-        <div className="flex flex-col md:flex-row justify-between w-full mt-8 md:mt-16 items-center md:items-start text-center md:text-left">
-          <p className="text-2xl md:text-4xl font-bold mb-4 md:mb-0">
+        <div className="md:flex-row md:mt-16 md:items-start md:text-left flex flex-col items-center justify-between w-full mt-8 text-center">
+          <p className="md:text-4xl md:mb-0 mb-4 text-2xl font-bold">
             Struktur Organisasi
           </p>
-          <p className="text-base md:text-lg w-full md:w-2/5 text-center md:text-end">
+          <p className="md:text-lg md:w-2/5 md:text-end w-full text-base text-center">
             Mengenal lebih dekat struktur organisasi kelembagaan desa.
           </p>
         </div>
@@ -162,7 +160,7 @@ const ProfilPage = () => {
             </div>
 
             {/* Gambar Berdasarkan Pilihan */}
-            <div className="max-w-full md:max-w-3xl mx-auto px-4">
+            <div className="md:max-w-3xl max-w-full px-4 mx-auto">
               {profilData ? (
                 <img
                   src={gambarMap[selectedProfil]}
