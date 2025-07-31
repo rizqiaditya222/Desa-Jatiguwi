@@ -52,7 +52,7 @@ const ProfilPage = () => {
 
   // Map selectedProfil to image URLs, with fallbacks
   const gambarMap: Record<typeof selectedProfil, string> = {
-    lpmd: profilData?.pkkUrl || "/img/pkk.png", // Assuming 'lpmd' corresponds to PKK image
+    lpmd: profilData?.lpmdUrl || "/img/lpmd.png", // Assuming 'lpmd' corresponds to PKK image
     bpd: profilData?.bpdUrl || "/img/bpd.png",
     desa: profilData?.desaUrl || "/img/desa.png",
   };
@@ -80,7 +80,9 @@ const ProfilPage = () => {
       {/* Profil Desa Jatiguwi */}
       <div className="flex flex-col pt-8 px-8 md:px-24 justify-center items-center text-[#0E4D45] pb-12 md:pb-24">
         <div className="flex flex-col md:flex-row justify-between w-full items-center md:items-start text-center md:text-left">
-          <p className="text-2xl md:text-4xl font-bold mb-4 md:mb-0">Profil Desa Jatiguwi</p>
+          <p className="text-2xl md:text-4xl font-bold mb-4 md:mb-0">
+            Profil Desa Jatiguwi
+          </p>
           <p className="text-base md:text-lg w-full md:w-2/5 text-center md:text-end">
             Mengenal lebih dekat Desa Jatiguwi dengan sejarah, visi, dan misi
             dalam berkomitmen untuk melayani masyarakat dengan baik.
@@ -110,7 +112,10 @@ const ProfilPage = () => {
 
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
                 {kataKata.map((kata) => (
-                  <div key={kata.id} className="text-base md:text-lg font-semibold">
+                  <div
+                    key={kata.id}
+                    className="text-base md:text-lg font-semibold"
+                  >
                     {kata.id}. {kata.text}
                   </div>
                 ))}
@@ -120,7 +125,9 @@ const ProfilPage = () => {
         </div>
         {/* Struktur Organisasi */}
         <div className="flex flex-col md:flex-row justify-between w-full mt-8 md:mt-16 items-center md:items-start text-center md:text-left">
-          <p className="text-2xl md:text-4xl font-bold mb-4 md:mb-0">Struktur Organisasi</p>
+          <p className="text-2xl md:text-4xl font-bold mb-4 md:mb-0">
+            Struktur Organisasi
+          </p>
           <p className="text-base md:text-lg w-full md:w-2/5 text-center md:text-end">
             Mengenal lebih dekat struktur organisasi kelembagaan desa.
           </p>
@@ -147,7 +154,7 @@ const ProfilPage = () => {
               </button>
               <button onClick={() => setSelectedProfil("lpmd")}>
                 <NavButtonAll
-                  text="PKK"
+                  text="LPMD"
                   href="#"
                   isSelected={selectedProfil === "lpmd"}
                 />
@@ -163,7 +170,9 @@ const ProfilPage = () => {
                   className="w-full h-auto"
                 />
               ) : (
-                <p className="text-center">No image available for {selectedProfil}.</p>
+                <p className="text-center">
+                  No image available for {selectedProfil}.
+                </p>
               )}
             </div>
           </div>
