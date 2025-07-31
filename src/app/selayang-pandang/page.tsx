@@ -114,53 +114,76 @@ const SelayangPandangPage = () => {
     fetchAllData();
   }, []);
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center w-full h-screen">
+        <p>Loading data...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center w-full h-screen text-red-600">
+        <p>{error}</p>
+      </div>
+    );
+  }
+
   return (
     <div>
       <Navbar isLoggedIn={!!user} />
-      <div className="flex flex-col w-full px-24 py-6 text-[#0E4D45]">
-        <div className="flex justify-between">
-          <p className="text-4xl font-bold">Selayang Pandang</p>
-          <p className="text-end w-2/5">
+      <div className="flex flex-col w-full px-4 md:px-8 lg:px-24 py-6 text-[#0E4D45]">
+        <div className="flex flex-col md:flex-row justify-between items-center md:items-start text-center md:text-left">
+          <p className="text-3xl md:text-4xl font-bold mb-4 md:mb-0">
+            Selayang Pandang
+          </p>
+          {/* Changed text size to md:text-base for consistency with main body text */}
+          <p className="text-base md:text-lg w-full md:w-2/5 text-center md:text-end">
             Kenali Desa Jatiguwi di Sela yang Pandang! Temukan sekilas info
             menarik tentang sejarah dan potensi desa kami. Yuk, kenali lebih
             dekat!{" "}
           </p>
         </div>
         <div className="my-5 w-full h-[1px] bg-[#0E4D45]"></div>
-        <div className="max-w-360 mx-auto">
+        <div className="max-w-full mx-auto">
           <div className="flex flex-col w-full py-8">
             <PetaDesa />
           </div>
-          <div className="bg-rounded rounded-xl flex flex-col p-6 py-8 space-y-6 bg-gray-200">
-            <p className="w-full text-4xl font-semibold">Kondisi Geografis</p>
-            <p className="w-full text-xl">
-              Desa Jatiguwi terletak sekitar ± 30 km di sebelah selatan
+          <div className="bg-rounded rounded-xl flex flex-col p-4 md:p-6 py-8 space-y-4 md:space-y-6 bg-gray-200">
+            <p className="w-full text-2xl md:text-4xl font-semibold">
+              Kondisi Geografis
+            </p>
+            {/* Changed text size to md:text-base for consistency */}
+            <p className="w-full text-base md:text-lg">
+              Desa Jatiguwi terletak sekitar &plusmn; 30 km di sebelah selatan
               Kabupaten Malang. Desa Jatiguwi memiliki luas wilayah seluruhnya
               459,763 ha. Dengan luas sawah 260,502 ha, luas Tanah Tegalan
               49.293 ha, Luas Tanah Pemukiman 20,966 ha, Luas Tanah Setengah
               Teknis 16,195 ha dan lain-Lain 112,807 ha.
             </p>
-            <ul className="pl-6 space-y-1 text-lg list-disc list-inside">
+            {/* Changed text size to md:text-base for consistency */}
+            <ul className="pl-6 space-y-1 text-base md:text-lg list-disc list-inside">
               <li>
-                <span className="w-44 inline-block font-semibold">
+                <span className="w-32 md:w-44 inline-block font-semibold">
                   Sebelah Utara
                 </span>
                 : Desa Ngadirejo, Kec. Kromengan
               </li>
               <li>
-                <span className="w-44 inline-block font-semibold">
+                <span className="w-32 md:w-44 inline-block font-semibold">
                   Sebelah Timur
                 </span>
                 : Desa Sambigede, Kec. Sumberpucung
               </li>
               <li>
-                <span className="w-44 inline-block font-semibold">
+                <span className="w-32 md:w-44 inline-block font-semibold">
                   Sebelah Selatan
                 </span>
                 : Desa Kalipare, Kec. Kalipare
               </li>
               <li>
-                <span className="w-44 inline-block font-semibold">
+                <span className="w-32 md:w-44 inline-block font-semibold">
                   Sebelah Barat
                 </span>
                 : Desa Sumberpucung, Kec. Sumberpucung
@@ -173,9 +196,12 @@ const SelayangPandangPage = () => {
               data={wilayahLahanData}
             />
           </div>
-          <div className="bg-rounded rounded-xl flex flex-col p-6 my-6 space-y-6 bg-gray-200">
-            <p className="w-full text-4xl font-semibold">Kondisi Topografis</p>
-            <p className="w-full text-xl">
+          <div className="bg-rounded rounded-xl flex flex-col p-4 md:p-6 my-6 space-y-4 md:space-y-6 bg-gray-200">
+            <p className="w-full text-2xl md:text-4xl font-semibold">
+              Kondisi Topografis
+            </p>
+            {/* Changed text size to md:text-base for consistency */}
+            <p className="w-full text-base md:text-lg">
               Desa Jatiguwi dengan ketinggian tanah rata- rata 295 M diatas
               permukaan laut, merupakan daerah dataran rendah, dengan curah
               hujan rata – rata 22 mm/th. Bentuk permukaan tanah di Desa
@@ -183,18 +209,20 @@ const SelayangPandangPage = () => {
               adalah baik / sedang dan keadaan wilayah bukan pantai.
             </p>
           </div>
-          <div className="rounded-xl flex flex-col items-center w-full p-6 mx-auto my-6 space-y-6 bg-gray-200">
-            <p className="w-full text-4xl font-semibold">Kondisi Demografis</p>
+          <div className="rounded-xl flex flex-col items-center w-full p-4 md:p-6 mx-auto my-6 space-y-4 md:space-y-6 bg-gray-200">
+            <p className="w-full text-2xl md:text-4xl font-semibold text-center md:text-left">
+              Kondisi Demografis
+            </p>
 
             {/* Container Dukuh */}
-            <section className="md:grid-cols-3 grid w-full max-w-6xl grid-cols-1 gap-6 my-8">
+            <section className="grid w-full grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 my-4 md:my-8">
               {dukuhData.map((dukuh, i) => (
                 <InfoCardGroup key={i} name={dukuh.name} stats={dukuh.stats} />
               ))}
             </section>
           </div>
           {/* Section Persebaran */}
-          <div className="grid w-full grid-cols-2 gap-8 mt-8">
+          <div className="grid w-full grid-cols-1 md:grid-cols-2 gap-8 mt-8">
             <ListStatCard title="Persebaran Agama" items={agamaData} />
             <ListStatCard title="Persebaran Profesi" items={profesiData} />
           </div>

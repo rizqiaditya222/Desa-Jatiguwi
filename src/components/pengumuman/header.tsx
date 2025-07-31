@@ -48,7 +48,7 @@ function getCategoryLabel(category?: string) {
 const PengumumanHeader = ({ title, category }: HeaderProps) => {
   return (
     <div className="bg-white border-t border-gray-200">
-      <div className="px-24 mx-auto px-4 py-3">
+      <div className="px-4 lg:px-24 mx-auto px-4 py-3">
         <nav className="text-sm text-gray-600 flex flex-wrap items-center gap-2">
           <Link href="/" className="hover:text-teal-600">Beranda</Link>
           <span className="mx-2">/</span>

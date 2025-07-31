@@ -27,6 +27,7 @@ const CustomArrow = ({
     />
   </button>
 );
+
 const Galeri = () => {
   const [activeSlide, setActiveSlide] = useState(0);
   const [hoveredSlide, setHoveredSlide] = useState<number | null>(null);
@@ -127,11 +128,12 @@ const Galeri = () => {
   return (
     <section className="md:px-24 px-6 py-16 " id="gallery-section">
       {/* Header */}
-      <div className="md:flex-row flex flex-col items-start justify-between mb-6">
+      <div className="flex flex-col justify-center items-center md:flex-row md:justify-between md:items-start mb-6"> {/* Perubahan ada di sini */}
         <p className="text-3xl font-bold text-[#0E4D45] mb-4 md:mb-0">
           Galeri Jatiguwi
         </p>
-        <p className="text-base text-end text-[#0E4D45] md:w-4/12">
+        {/* Perubahan text-end menjadi text-center md:text-end */}
+        <p className="text-base text-center md:text-end text-[#0E4D45] md:w-4/12">
           Intip Cerita Desa Jatiguwi di Galeri! Kumpulan momen dan potret
           kehidupan desa yang penuh makna, semua tersaji di sini.
         </p>
@@ -184,7 +186,6 @@ const Galeri = () => {
                           d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
                         />
                       </svg>
-                      {/* Changed from static "Preview" to dynamic image.title */}
                       <span className="px-2 text-xl font-semibold text-center text-white">
                         {image.title}
                       </span>

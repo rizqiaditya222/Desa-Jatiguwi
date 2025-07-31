@@ -147,7 +147,6 @@ const PengumumanDetail = () => {
           }
         />
         <link rel="canonical" href={canonicalUrl} />
-        {/* Open Graph Tags for Social Media Sharing */}
         <meta property="og:url" content={canonicalUrl} />
         <meta property="og:type" content="article" />
         <meta property="og:title" content={announcement.title} />
@@ -179,7 +178,7 @@ const PengumumanDetail = () => {
       <Navbar isLoggedIn={false} />
       {/* Pass the categoryToPass to PengumumanHeader */}
       <PengumumanHeader title={announcement.title} category={categoryToPass} />
-      <div className="px-24 py-6 mx-auto">
+      <div className="px-4 lg:px-24 py-6 mx-auto">
         <div className="lg:flex-row flex flex-col gap-8">
           <PengumumanContent announcement={announcement} />
           <PengumumanSidebar otherAnnouncements={otherAnnouncements} />

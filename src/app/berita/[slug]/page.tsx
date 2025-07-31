@@ -123,7 +123,7 @@ const BeritaDetail = () => {
     <div className="bg-gray-50 min-h-screen">
       <Navbar isLoggedIn={!!user} />
       <BeritaHeader title={news.title} />
-      <div className="px-24 py-6 mx-auto">
+      <div className="lg:px-24 py-6 mx-auto">
         <div className="lg:flex-row flex flex-col gap-8">
           <BeritaContent news={news} />
           <BeritaSidebar otherAnnouncements={otherNews} />
