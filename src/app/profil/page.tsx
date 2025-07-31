@@ -153,7 +153,6 @@ const ProfilPage = () => {
               <button onClick={() => setSelectedProfil("lpmd")}>
                 <NavButtonAll
                   text="LPMD"
-                  text="LPMD"
                   href="#"
                   isSelected={selectedProfil === "lpmd"}
                 />
@@ -172,9 +171,6 @@ const ProfilPage = () => {
                 <p className="text-center">
                   No image available for {selectedProfil}.
                 </p>
-                <p className="text-center">
-                  No image available for {selectedProfil}.
-                </p>
               )}
             </div>
           </div>
@@ -187,4 +183,3 @@ const ProfilPage = () => {
 };
 
 export default ProfilPage;
-
