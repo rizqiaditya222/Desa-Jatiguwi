@@ -52,7 +52,7 @@ const ProfilPage = () => {
 
   // Map selectedProfil to image URLs, with fallbacks
   const gambarMap: Record<typeof selectedProfil, string> = {
-    lpmd: profilData?.lpmdUrl || "/img/lpmd.png", // Assuming 'lpmd' corresponds to PKK image
+    lpmd: profilData?.lpmdUrl || "/img/lpmd.png",
     bpd: profilData?.bpdUrl || "/img/bpd.png",
     desa: profilData?.desaUrl || "/img/desa.png",
   };
@@ -78,7 +78,7 @@ const ProfilPage = () => {
       <Navbar isLoggedIn={!!user} />
 
       {/* Profil Desa Jatiguwi */}
-      <div className="flex flex-col pt-8 px-8 md:px-24 justify-center items-center text-[#0E4D45] pb-12 md:pb-24">
+      <div className="flex flex-col px-4 sm:px-8 md:px-12 lg:px-16 xl:px-24 justify-center items-center py-12">
         <div className="md:flex-row md:items-start md:text-left flex flex-col items-center justify-between w-full text-center">
           <p className="md:text-4xl md:mb-0 mb-4 text-2xl font-bold">
             Profil Desa Jatiguwi
@@ -90,39 +90,37 @@ const ProfilPage = () => {
         </div>
 
         <div className="my-5 w-full h-[1px] bg-[#0E4D45]" />
-        <div className="md:px-24 md:py-12 grid w-full px-4 py-8 mx-auto">
-          <div className="md:grid-cols-12 grid items-center w-full grid-cols-1 gap-8">
-            <section className="md:items-end md:col-span-5 md:p-12 flex flex-col items-center col-span-1 p-4">
-              <img
-                src="/img/logo_desa.png"
-                alt="Logo Desa Jatiguwi"
-                className="md:max-w-80 max-h-xs md:max-h-80 max-w-xs mx-auto"
-              />
-            </section>
-            <section className="md:col-span-6 md:col-start-6 md:text-left flex flex-col col-span-1 py-4 text-center">
-              <div className="flex flex-col">
-                <p className="md:pt-12 md:pb-8 md:text-3xl pt-4 pb-4 text-2xl font-semibold">
-                  Visi & Misi
-                </p>
-                <p className="md:pb-8 md:text-2xl pb-4 text-lg">
-                  Terwujudnya masyarakat Desa Jatiguwi yang:{" "}
-                  <span className="font-bold">KARTINI</span>
-                </p>
-              </div>
 
-              <div className="md:grid-cols-3 md:gap-8 grid grid-cols-2 gap-4">
-                {kataKata.map((kata) => (
-                  <div
-                    key={kata.id}
-                    className="md:text-lg text-base font-semibold"
-                  >
-                    {kata.id}. {kata.text}
-                  </div>
-                ))}
-              </div>
-            </section>
-          </div>
+        <div className="md:gap-12 sm:flex-row flex flex-col w-full max-w-screen-xl gap-8">
+          <section className="md:col-span-5 sm:px-4 md:px-12 flex flex-col justify-center items-center col-span-1 px-0 space-y-8  text-[#0E4D45]">
+            <img
+              src="/img/logo_desa.png"
+              alt="Logo Desa Jatiguwi"
+              className="size-auto max-w-[200px] sm:flex-1/2max-h-80 mx-auto"
+            />
+          </section>
+          <section className="md:text-start flex flex-col col-span-1 text-center">
+            <div className="flex flex-col  ">
+              <p className="sm:text-3xl md:text-3xl pt-8 pb-4 text-2xl font-semibold">
+                Visi & Misi
+              </p>
+              <p className="text-md sm:text-xl md:text-2xl pb-8">
+                Terwujudnya masyarakat Desa Jatiguwi yang:{" "}
+                <span className="font-bold">KARTINI</span>
+              </p>
+            </div>
+
+            {/* Perubahan ada di baris ini */}
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8 ">
+              {kataKata.map((kata) => (
+                <div key={kata.id} className="sm:text-lg text-sm">
+                  {kata.id}. {kata.text}
+                </div>
+              ))}
+            </div>
+          </section>
         </div>
+
         {/* Struktur Organisasi */}
         <div className="md:flex-row md:mt-16 md:items-start md:text-left flex flex-col items-center justify-between w-full mt-8 text-center">
           <p className="md:text-4xl md:mb-0 mb-4 text-2xl font-bold">

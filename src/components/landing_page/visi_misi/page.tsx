@@ -25,11 +25,11 @@ const VisiMisi = () => {
       </div>
       <div className="my-5 w-full h-[1px] bg-[#fafafa] "></div>
       <div className="md:gap-12 sm:flex-row flex flex-col w-full max-w-screen-xl gap-8">
-        <section className="md:col-span-5 sm:px-4 md:px-12 flex flex-col items-center col-span-1 px-0 space-y-8">
+        <section className="md:col-span-5 sm:px-4 md:px-12 flex flex-col justify-center items-center col-span-1 px-0 space-y-8">
           <img
             src="/img/logo_desa.png"
             alt="Logo Desa Jatiguwi"
-            className="size-auto max-w-[200px] sm:max-w-[250px] md:max-w-[320px] max-h-80 mx-auto"
+            className="size-auto max-w-[200px] sm:flex-1/2max-h-80 mx-auto"
           />
           <PrimaryLinkButton
             text="Lihat Profil Desa"
@@ -38,7 +38,7 @@ const VisiMisi = () => {
             className="w-full max-w-[300px] md:max-w-none border-2 border-[#fafafa] hover:bg-[#fafafa] hover:text-[#0E4D45] hover:ease-in-out hover:duration-300"
           />
         </section>
-        <section className="md:col-span-6 md:col-start-6 md:text-start flex flex-col col-span-1 text-center">
+        <section className="md:text-start flex flex-col col-span-1 text-center">
           <div className="flex flex-col text-[#fafafa] ">
             <p className="sm:text-3xl md:text-3xl pt-8 pb-4 text-2xl font-semibold">
               Visi & Misi
