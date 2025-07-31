@@ -29,7 +29,7 @@ const EditSelayangPandangSidebar: React.FC = () => {
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-[#0E4D45] pb-4 sm:pb-6"> {/* Adjusted text size and padding */}
                 Edit Selayang Pandang
             </h1>
-            <div className="rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden px-4 pt-4 pb-8 sm:px-8 sm:pt-6 sm:pb-12 lg:px-12"> {/* Adjusted internal padding */}
+            <div className="rounded-2xl border border-gray-200 bg-white shadow-sm overflow-auto px-4 pt-4 pb-8 sm:px-8 sm:pt-6 sm:pb-12 lg:px-12"> {/* Adjusted internal padding */}
                 <TabNavigation activeTab={activeTab} onTabChange={setActiveTab} />
                 <div className="mt-6">
                     {renderContent()}
