@@ -1,9 +1,36 @@
 import PrimaryLinkButton from "@/components/button/primary_button";
 import SecondaryLinkButton from "@/components/button/secondary_button";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import YoutubeVideo from "../video/youtube/page";
+import { fetchProfilById } from "@/service/profile/profileService";
+import { Profil } from "@/types/profil";
 
 const Hero = () => {
+  const [profileData, setProfileData] = useState<Profil | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadProfileData = async () => {
+      try {
+        setLoading(true);
+        const data = await fetchProfilById("1");
+        if (data) {
+          setProfileData(data);
+        } else {
+          setError("Profile tidak ditemukan");
+        }
+      } catch (err) {
+        setError("Gagal memuat data profile");
+        console.error("Error fetching profile:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProfileData();
+  }, []);
+
   return (
     <div className="relative w-full flex items-center justify-center overflow-hidden">
       {/* Decorative Images */}
@@ -34,20 +61,27 @@ const Hero = () => {
               Desa Jatiguwi
             </span>
           </h1>
-<h2 className="font-bold text-[#0E4D45] text-md sm:text-lg md:text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl leading-tight">
-  Kecamatan Sumberpucung,<br className="md:hidden" />
-  Kabupaten Malang
-</h2>
-
+          <h2 className="font-bold text-[#0E4D45] text-md sm:text-lg md:text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl leading-tight">
+            Kecamatan Sumberpucung,<br className="md:hidden" />
+            Kabupaten Malang
+          </h2>
         </div>
         
-        {/* Description Text */}
-        <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl  md:mb-12">
-          <p className="text-balance text-sm sm:text-base md:text-md lg:text-lg xl:text-xl text-gray-600 leading-relaxed">
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text ever
-            since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-          </p>
+        {/* Description Text - Now Dynamic */}
+        <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl md:mb-12">
+          {loading ? (
+            <div className="flex justify-center items-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#0E4D45]"></div>
+            </div>
+          ) : error ? (
+            <p className="text-balance text-sm sm:text-base md:text-md lg:text-lg xl:text-xl text-red-500 leading-relaxed">
+              {error}
+            </p>
+          ) : (
+            <p className="text-balance text-sm sm:text-base md:text-md lg:text-lg xl:text-xl text-gray-600 leading-relaxed">
+              {profileData?.deskripsi || "Deskripsi tidak tersedia"}
+            </p>
+          )}
         </div>
 
         {/* Action Buttons (Optional - uncomment if needed) */}

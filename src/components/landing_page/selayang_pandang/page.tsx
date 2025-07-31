@@ -18,7 +18,7 @@ const SelayangPandang = () => {
 
   return (
     <div className="bg-[#0E4D45] py-8 sm:py-12 md:py-16 lg:py-20 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-24 w-full flex flex-col">
-      
+
       {/* Header Section */}
       <div className="flex flex-col md:flex-row justify-center items-center md:justify-between md:items-start gap-4 md:gap-8 mb-6 sm:mb-8 md:mb-12">
         <h1 className="text-2xl text-center sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white text-center md:text-left">
@@ -35,7 +35,7 @@ const SelayangPandang = () => {
 
       {/* Main Content Container */}
       <div className="max-w-7xl flex flex-col gap-6 sm:gap-8 md:gap-12 mx-auto w-full">
-        
+
         {/* Map and Button Section */}
         <div className="flex flex-col w-full space-y-6 sm:space-y-8">
           <div className="w-full">
@@ -52,55 +52,55 @@ const SelayangPandang = () => {
 
         {/* Kondisi Geografis Section */}
         <div className="flex flex-col space-y-4 sm:space-y-6">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-white text-center md:text-left">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-white text-center md:text-left">
             Kondisi Geografis
           </h2>
-          <p className="text-base sm:text-lg md:text-xl text-white leading-relaxed text-justify">
-            Desa Jatiguwi terletak sekitar ± 30 km di sebelah selatan Kabupaten
+          <p className="text-sm sm:text-base md:text-lg text-white leading-relaxed text-justify">
+            Desa Jatiguwi terletak sekitar &plusmn; 30 km di sebelah selatan Kabupaten
             Malang. Desa Jatiguwi memiliki luas wilayah seluruhnya 459,763 ha.
             Dengan luas sawah 260,502 ha, luas Tanah Tegalan 49.293 ha, Luas
             Tanah Pemukiman 20,966 ha, Luas Tanah Setengah Teknis 16,195 ha dan
             lain-Lain 112,807 ha.
           </p>
-          
+
           {/* Boundaries List */}
           <div className="space-y-2 sm:space-y-3">
-            <div className="flex flex-col sm:flex-row text-sm sm:text-base md:text-lg text-white">
+            <div className="flex flex-col sm:flex-row text-sm text-white">
               <span className="text-center md:text-start font-semibold mb-1 sm:mb-0 sm:w-36 md:w-44 flex-shrink-0">
-                Sebelah Utara
+                Sebelah Utara:
               </span>
-              <span className="sm:ml-2 text-center md:text-start">: Desa Ngadirejo, Kec. Kromengan</span>
+              <span className="sm:ml-2 text-center md:text-start text-sm sm:text-base">Desa Ngadirejo, Kec. Kromengan</span>
             </div>
-            <div className="flex flex-col sm:flex-row text-sm sm:text-base md:text-lg text-white">
+            <div className="flex flex-col sm:flex-row text-sm text-white">
               <span className="text-center md:text-start font-semibold mb-1 sm:mb-0 sm:w-36 md:w-44 flex-shrink-0">
-                Sebelah Timur
+                Sebelah Timur:
               </span>
-              <span className="sm:ml-2 text-center md:text-start">: Desa Sambigede, Kec. Sumberpucung</span>
+              <span className="sm:ml-2 text-center md:text-start text-sm sm:text-base">Desa Sambigede, Kec. Sumberpucung</span>
             </div>
-            <div className=" flex flex-col sm:flex-row text-sm sm:text-base md:text-lg text-white">
+            <div className=" flex flex-col sm:flex-row text-sm text-white">
               <span className="text-center md:text-start font-semibold mb-1 sm:mb-0 sm:w-36 md:w-44 flex-shrink-0">
-                Sebelah Selatan
+                Sebelah Selatan:
               </span>
-              <span className="sm:ml-2 text-center md:text-start">: Desa Kalipare, Kec. Kalipare</span>
+              <span className="sm:ml-2 text-center md:text-start text-sm sm:text-base">Desa Kalipare, Kec. Kalipare</span>
             </div>
-            <div className="flex flex-col sm:flex-row text-sm sm:text-base md:text-lg text-white">
+            <div className="flex flex-col sm:flex-row text-sm text-white">
               <span className="text-center md:text-start font-semibold mb-1 sm:mb-0 sm:w-36 md:w-44 flex-shrink-0">
-                Sebelah Barat
+                Sebelah Barat:
               </span>
-              <span className="sm:ml-2 text-center md:text-start">: Desa Sumberpucung, Kec. Sumberpucung</span>
+              <span className="sm:ml-2 text-center md:text-start text-sm sm:text-base">Desa Sumberpucung, Kec. Sumberpucung</span>
             </div>
           </div>
         </div>
 
         {/* Kondisi Topografis Section */}
         <div className="flex flex-col space-y-4 sm:space-y-6">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-white text-center md:text-left">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-white text-center md:text-left">
             Kondisi Topografis
           </h2>
-          <p className="text-base sm:text-lg md:text-xl text-white leading-relaxed text-justify">
+          <p className="text-sm sm:text-base md:text-lg text-white leading-relaxed text-justify">
             Desa Jatiguwi dengan ketinggian tanah rata-rata 295 M diatas
             permukaan laut, merupakan daerah dataran rendah, dengan curah hujan
-            rata – rata 22 mm/th. Bentuk permukaan tanah di Desa Jatiguwi
+            rata &ndash; rata 22 mm/th. Bentuk permukaan tanah di Desa Jatiguwi
             secara umum adalah datar dengan produktifitas tanah adalah baik /
             sedang dan keadaan wilayah bukan pantai.
           </p>
@@ -108,10 +108,10 @@ const SelayangPandang = () => {
 
         {/* Kondisi Demografis Section */}
         <div className="flex flex-col space-y-8 sm:space-y-12">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-white text-center md:text-left">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-white text-center md:text-left">
             Kondisi Demografis
           </h2>
-          
+
           {/* Statistics Cards */}
           <div ref={ref} className="relative w-full pb-20 sm:pb-32 md:pb-40">
             {/* Decorative Elements */}
@@ -125,7 +125,7 @@ const SelayangPandang = () => {
               src="img/bulat2.png"
               alt="Decoration"
             />
-            
+
             {/* Mobile Layout - 2x2 Grid */}
             <div className="grid grid-cols-2 gap-3 sm:gap-4 md:hidden place-items-center max-w-sm mx-auto">
               <div className="rounded-3xl w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center transform rotate-45 bg-white">
