@@ -50,9 +50,8 @@ const ProfilPage = () => {
     { id: 7, text: "Inovatif" },
   ];
 
-  // Map selectedProfil to image URLs, with fallbacks
   const gambarMap: Record<typeof selectedProfil, string> = {
-    lpmd: profilData?.pkkUrl || "/img/pkk.png", // Assuming 'lpmd' corresponds to PKK image
+    lpmd: profilData?.pkkUrl || "/img/pkk.png", 
     bpd: profilData?.bpdUrl || "/img/bpd.png",
     desa: profilData?.desaUrl || "/img/desa.png",
   };

@@ -45,18 +45,18 @@ export default function GalleryListPage() {
   };
 
   return (
-    <div className="px-24 mx-auto px-4 sm:px-6 py-8">
+    <div className="mx-auto px-4 sm:px-6 py-8 lg:px-8"> {/* Adjusted padding */}
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#0E4D45]">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-[#0E4D45]"> {/* Adjusted text size */}
           Edit Galeri
         </h1>
         <Link
           href={`${BASE_PATH}/add`}
-          className="inline-flex items-center justify-center w-11 h-11 rounded-2xl shadow-md bg-[#0E4D45] text-white hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0E4D45]"
+          className="inline-flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-2xl shadow-md bg-[#0E4D45] text-white hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0E4D45]"
           aria-label="Tambah Item"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 sm:w-6 sm:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M12 5v14M5 12h14" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </Link>
@@ -81,9 +81,9 @@ export default function GalleryListPage() {
         ) : (
           items.map((it) => (
             <article key={it.id} className="rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
-              <div className="flex flex-col sm:flex-row">
+              <div className="flex flex-col sm:flex-row"> {/* Changed to flex-col by default, flex-row on sm screens and up */}
                 {/* Thumbnail kiri */}
-                <div className="sm:w-72 p-4 sm:p-5">
+                <div className="p-4 sm:p-5 sm:w-72 flex-shrink-0"> {/* Adjusted padding and added flex-shrink-0 */}
                   <div className="h-44 w-full overflow-hidden rounded-xl">
                     <img
                       src={it.imageUrl || '/placeholder.jpg'}
@@ -94,7 +94,7 @@ export default function GalleryListPage() {
                 </div>
 
                 {/* Konten tengah */}
-                <div className="flex-1 px-4 sm:px-6 py-4 sm:py-5">
+                <div className="flex-1 px-4 py-4 sm:px-6 sm:py-5"> {/* Adjusted padding */}
                   <h3 className="text-lg sm:text-xl font-semibold text-[#0E4D45] leading-snug">
                     {it.title}
                   </h3>
@@ -104,10 +104,11 @@ export default function GalleryListPage() {
                 </div>
 
                 {/* Panel aksi kanan */}
-                <div className="sm:w-24 flex sm:flex-col items-center justify-center gap-3 bg-[#0E4D45] px-4 py-3 sm:py-0">
+                {/* Changed to flex-row by default, sm:flex-col, justify-end on small screens, items-center on larger */}
+                <div className="flex flex-row sm:flex-col items-center justify-end sm:justify-center gap-3 bg-[#0E4D45] px-4 py-3 sm:py-4"> {/* Adjusted padding and alignment */}
                   <button
                     onClick={() => router.push(`${BASE_PATH}/edit/${it.slug}`)}
-                    className="p-3 rounded-xl border border-white/20 bg-white/10 hover:bg-white/20 text-white transition focus:outline-none focus:ring-2 focus:ring-white/50"
+                    className="p-2 sm:p-3 rounded-xl border border-white/20 bg-white/10 hover:bg-white/20 text-white transition focus:outline-none focus:ring-2 focus:ring-white/50"
                     title="Edit"
                     aria-label="Edit"
                   >
@@ -115,7 +116,7 @@ export default function GalleryListPage() {
                   </button>
                   <button
                     onClick={() => handleDelete(it.slug)}
-                    className="p-3 rounded-xl border border-white/20 bg-white/10 hover:bg-white/20 text-white transition focus:outline-none focus:ring-2 focus:ring-white/50"
+                    className="p-2 sm:p-3 rounded-xl border border-white/20 bg-white/10 hover:bg-white/20 text-white transition focus:outline-none focus:ring-2 focus:ring-white/50"
                     title="Hapus"
                     aria-label="Hapus"
                   >
@@ -142,8 +143,8 @@ function ClientSideFormattedDate({ timestamp }: { timestamp: number }) {
     );
   }, [timestamp]);
   return (
-    <p className="text-sm text-gray-600 inline-flex items-center gap-2">
-      <CalendarIcon className="w-4 h-4 text-gray-500" />
+    <p className="text-xs sm:text-sm text-gray-600 inline-flex items-center gap-2"> {/* Adjusted text size */}
+      <CalendarIcon className="w-3 h-3 sm:w-4 sm:h-4 text-gray-500" /> {/* Adjusted icon size */}
       {formattedDate || ''}
     </p>
   );
@@ -166,7 +167,7 @@ function PencilIcon(props: React.SVGProps<SVGSVGElement>) {
 }
 function TrashIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5" {...props}>
       <path d="M4 7h16" strokeLinecap="round" />
       <path d="M10 11v6M14 11v6" strokeLinecap="round" />
       <path d="M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12" />

@@ -167,7 +167,7 @@ export default function ManageProfilDesaPage() {
     <div className="px-4 sm:px-6 py-8">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold">Kelola Profil Desa</h1>
+        <h1 className="text-[#0E4D45] text-2xl sm:text-3xl font-bold">Kelola Profil Desa</h1>
         <Link
           href={BASE_PATH}
           className="rounded-xl border px-4 py-2 text-sm hover:bg-gray-50"
