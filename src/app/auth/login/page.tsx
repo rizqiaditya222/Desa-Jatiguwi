@@ -148,11 +148,6 @@ const AuthComponent = () => {
               required
             />
           </div>
-          <div className="flex justify-end">
-            <a href="#" className="text-sm text-[#0E4D45] hover:underline">
-              Lupa Password?
-            </a>
-          </div>
           <button
             type="submit"
             className="w-full bg-[#0E4D45] text-white font-semibold py-3 rounded-lg hover:bg-[#0A3B35] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
